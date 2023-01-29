@@ -5,7 +5,7 @@
   class Config {
     private $configs = [];
 
-    private function getPath($name) {
+    private function GetPath($name) {
       return CONFPATH . '/' . $name . '.php';
     }
 
@@ -13,8 +13,8 @@
 
       if (!isset($this->configs[$name])) {
 
-        if (is_file($this->getPath($name))) {
-          $this->configs[$name] = require $this->getPath($name);
+        if (is_file($this->GetPath($name))) {
+          $this->configs[$name] = require $this->GetPath($name);
         } else {
           $this->configs[$name] = [];
         }
@@ -24,9 +24,7 @@
       return $this->configs[$name];
       
     }
-
-    /* Singleton */
-
+    
     protected static $_instance;
 
     private function __construct() {}

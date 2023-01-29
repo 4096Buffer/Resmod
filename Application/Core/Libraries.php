@@ -24,12 +24,12 @@
           continue;
         }
 
-        $pathFile = $path . '/' . $file;
+        $path_file = $path . '/' . $file;
 
-        if (is_dir($pathFile)) {
-          $directories[] = $pathFile;
+        if (is_dir($path_file)) {
+          $directories[] = $path_file;
         } else {
-          require_once $pathFile;
+          require_once $path_file;
         }
       }
 
@@ -43,15 +43,20 @@
         return $this->libraries[$name];
       }
 
-      if (is_dir($directoryPath = $this->GetDirectoryPath($name)) && is_file($this->GetLibraryDirPath($name))) {
+      $directoryPath = $this->GetDirectoryPath($name);
+
+      if (is_dir($directoryPath) && is_file($this->GetLibraryDirPath($name))) {
+
         $this->LoadDirectory($directoryPath);
       } else if (is_file($this->GetLibraryPath($name))) {
+
         require_once $this->GetLibraryPath($name);
       }
 
-      $librarySpace = '\Code\Libraries\\' . $name;
-      if (class_exists($librarySpace)) {
-        $this->libraries[$name] = new $librarySpace();
+      $library_space = '\Code\Libraries\\' . $name;
+      
+      if (class_exists($library_space)) {
+        $this->libraries[$name] = new $library_space();
       } else {
         $this->libraries[$name] = null;
       }

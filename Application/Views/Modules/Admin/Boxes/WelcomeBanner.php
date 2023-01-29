@@ -2,8 +2,6 @@
 
 $login = $_SESSION['login'] ?? null;
 
-
-
 ?>
 
 <div class="dashboard-box welcome-box">

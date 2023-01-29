@@ -77,7 +77,6 @@ class Route extends \Code\Core\BaseController {
             $page_uri    = $route['uri'];
             $page_uri_ex = explode('/', $route['uri'])[1];
             
-            //var_dump($layout);
             if($page_uri_ex == $uri_ex) {
                 return $route;
             }

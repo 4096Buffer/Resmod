@@ -13,12 +13,8 @@ var lo_ = (e) => {
                 action     : 'AddView',
                 id         : id
             }
-
-            console.log(sd_)
             AJAX.Post(location.href, sd_).success(data => {
                 var ro_ = data
-
-                console.log(ro_)
                 var de_ = JSON.parse(ro_)
 
             })
@@ -27,21 +23,16 @@ var lo_ = (e) => {
         
         AJAX.Post(location.href, sd).success(data => {
             var ro = data
-            console.log(ro)
             var de = JSON.parse(ro)
             
             if(de.response == 'Success') {
                 id = de.data.id
                 se()
             } 
-            console.log(de.response)
-            
-            
-            
         })
         
     } catch(e) {
-        console.error(e)
+        
     }
 }
 

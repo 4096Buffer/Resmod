@@ -2,17 +2,14 @@
 
 namespace Code\Controllers;
 
-
-
 class ViewController extends \Code\Core\BaseController {
 	
-	private $routes          = [];
+	private $routes = [];
 	
 	public function __construct() {
     	parent::__construct();
 
     	$this->LoadLibrary(['Route']);
-    	
     }
     
 	public function Run() {
@@ -25,10 +22,6 @@ class ViewController extends \Code\Core\BaseController {
         $this->Route->LoadRoute($current_page);
         
 	}
-
-    
-
-    
 }
 
 

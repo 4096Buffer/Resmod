@@ -1,5 +1,19 @@
+
 DOMHelper.waitForAllElm().then(() => {
 	setTimeout(() => {
+        (() => {
+            var warningHack = () => {
+                console.log('%cDo not type anything to this console if you dont know what you are doing. If someone told you to type something here he probably wants to hack you!', 'font-size:40px;color:red')
+            }
+
+            if(!localStorage.getItem('warningHack')) {
+                warningHack()
+            }
+
+        })();
+
+        
+        
         (() => {
             var opacity = 0
             var max = 100
@@ -42,12 +56,10 @@ DOMHelper.waitForAllElm().then(() => {
                     }
                     var login = (data) => {
                         try {
-                            console.log(data)
                             var decodedJson = JSON.parse(data)
                         }
                         catch(e) {  
                             console.log("Can't parse json. (responseObject)")
-                            console.log(responseObject)
                         }
                             
                         var response = decodedJson.response
@@ -58,17 +70,12 @@ DOMHelper.waitForAllElm().then(() => {
                                 
                         } else if(response == "Success") {
                             location.href = "/panel"
-                            
                         } else {
                             alert("Invalid response data")
-                            
                         }
                     }
 
                     AJAX.Post(location.href, sendData).success(login)
-                    console.log(responseObject)
-                    
-                    
                 }
 
                 adminForm.addEventListener('submit', adminFormSubmit)
@@ -77,6 +84,16 @@ DOMHelper.waitForAllElm().then(() => {
         
     }, 500)
 }).catch(e => {
+     /*
+    *  This is only for developers
+    */
     console.error(e)
 })
 
+/*
+* A few functions that can be used while developing the application
+*/
+
+var acceptWarning = () => {
+    localStorage.setItem('warningHack', true)
+}

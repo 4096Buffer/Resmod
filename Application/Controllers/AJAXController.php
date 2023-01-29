@@ -33,10 +33,8 @@ class AJAXController extends \Code\Core\BaseController {
         $class_space = '\Code\Controllers\\AJAX\\' . $controller;
         $class = new $class_space(); 
         
-        if(method_exists($class, $action)) { //validate input
-            
+        if(method_exists($class, $action)) { 
             call_user_func(array($class, $action));
-            
         }
     }
     

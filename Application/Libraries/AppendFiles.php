@@ -37,8 +37,6 @@ class AppendFiles extends \Code\Core\BaseController {
 					break;
 			}
 
-
-
 		}
 	}
 
@@ -80,8 +78,6 @@ class AppendFiles extends \Code\Core\BaseController {
 			 echo $main;
 		    }
         }
-
-
 
 	}
 }

@@ -15,12 +15,9 @@ DOMHelper.waitForAllElm().then(() => {
                     
                     if(decode.response = 'Success') {
                         location.href = '/'
-                    } else {
-                        alert(decode.reason)
                     }
+
                 })
-                
-                
             }
             
             logoutBtn.addEventListener('click', logout);
@@ -57,9 +54,7 @@ DOMHelper.waitForAllElm().then(() => {
                     yValues = data
                 }
             }
-            
-            
-            
+
             var createChart = () => {
                 generateColors()
                 
@@ -98,8 +93,7 @@ DOMHelper.waitForAllElm().then(() => {
                        setValues(false, decode.data)
                        createChart()
                    }
-                   
-                   
+
                })
             }
             
@@ -130,6 +124,9 @@ DOMHelper.waitForAllElm().then(() => {
         })();
         
     }, 500)
-}).catch(e => {
-    console.error(e)
+}).catch(err => {
+    /*
+    *  This is only for developers
+    */
+    console.error(err)
 })

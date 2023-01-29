@@ -10,7 +10,7 @@ class DataBase extends \Code\Core\BaseController {
     public function __construct() {
       parent::__construct();
 
-      $this->config = $this->Config->Get('DataBase');
+      $this->config = $this->config_->Get('DataBase');
       $this->connect = mysqli_connect(
         $this->config["Host"],
         $this->config["User"],

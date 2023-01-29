@@ -10,20 +10,6 @@ class Login extends \Code\Core\BaseController {
 		$this->LoadLibrary(['DataBase', 'View', 'RequestHelper', 'Auth']);
 	}
     
-    /*
-    private function GetUserId($login) {
-        $result = $this->DataBase->DoQuery("SELECT * FROM users WHERE login = ?", [ $login ]);
-        
-        if($result->num_rows == 1) {
-            $rows = $result->fetch_assoc();
-            return $rows['id'];
-        } 
-        
-        return 0;
-    }
-    
-    */
-    
     public function Login() {
         $data = $this->RequestHelper->GetObjectFromJson();
         if(isset($data['login']) && isset($data['password'])) {
@@ -51,7 +37,6 @@ class Login extends \Code\Core\BaseController {
                     $this->RequestHelper->SendJsonData(true, $send_data);
                     
                 } else {
-                   
                     $this->RequestHelper->SendJsonData(false, null, 'Invalid password');
                 }
                 
@@ -86,7 +71,6 @@ class Login extends \Code\Core\BaseController {
         } else {
             $this->RequestHelper->SendJsonData(false, null, 'User is not logged');
         }
-        
     }
     
 }

@@ -37,7 +37,6 @@
     public function Load(string $name, array $data = null) {
         $path = $this->getPath($name);
         
-        
         if (!is_file($path)) {
           echo $path;
           return false;

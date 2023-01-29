@@ -10,7 +10,7 @@ class Module extends \Code\Core\BaseController {
 	public function __construct($page_id = null) {
 		parent::__construct();
 
-		$this->LoadLibrary(['DataBase', 'View', 'Variables', 'AppendFiles']);
+		$this->LoadLibrary(['DataBase', 'View', 'AppendFiles']);
 		$this->page_id = $page_id;
 	}
 

@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	
 	<?php 
 		include VIEWPATH . DIRECTORY_SEPARATOR . 'Partials' . DIRECTORY_SEPARATOR . 'Head.php'
 	?>
-
 </head>
 <body>
     <form class="admin-login-form" ajax-controller="Login" ajax-action="Login">

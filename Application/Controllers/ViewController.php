@@ -15,7 +15,11 @@ class ViewController extends \Code\Core\BaseController {
 
     	$this->LoadLibrary(['Route']);
     }
-    
+
+    private function GetControllerPath($path) {
+        VIEWPATH . '/' . $path . '.php';
+    }
+
     /**
      * If current page exists in database show it if it doesnt show 404 page
     */
@@ -27,8 +31,17 @@ class ViewController extends \Code\Core\BaseController {
             $this->Route->LoadRouteByUri('/404');
             return;
         }
-        
+
         $current_page = $this->Route->GetCurrentPage();
+        if($current_page['controller'] != null) {
+            require_once $this->GetControllerPath($module['controller']);
+
+            $class_space = '\Code\Controllers\\' . $module['controller'];
+            $class = new $class_space();
+
+            call_user_func(array($class, $module['action']));
+        }
+
         $this->Route->LoadRoute($current_page);
         
 	}

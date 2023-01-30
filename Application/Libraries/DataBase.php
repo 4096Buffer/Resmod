@@ -115,6 +115,10 @@ class DataBase extends \Code\Core\BaseController {
 
       return $fetch;
     }
+
+    public function GetMysqlServerInfo() {
+      return mysql_get_server_info();
+    }
 }
 
 

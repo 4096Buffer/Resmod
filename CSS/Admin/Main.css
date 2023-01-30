@@ -132,12 +132,13 @@ body {
 
 .header-admin-profile-context-menu {
   color:#fff;
-  padding: 2%;
+  padding: 2.5%;
   background-color: #111;
   position: fixed;
   top: 0%;
   left: 89%;
   display:none;
+  
 }
 
 .header-admin-profile-context-menu ol {
@@ -147,7 +148,22 @@ body {
 
 .header-admin-profile-context-menu ol li {
   list-style: none;
-  border-bottom: 1px solid #fff;
+  width:100%;
   margin: 2vh;
+  cursor: pointer;
+  position:relative;
+  padding:0.8%;
 }
+
+.header-admin-profile-context-menu ol li:after {
+  margin-bottom: -6%;
+  content: "";
+  background: #fff;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+}
+
 

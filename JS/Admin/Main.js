@@ -22,7 +22,6 @@ DOMHelper.waitForAllElm().then(() => {
                 }
                 
                 AJAX.Post(location.href, sendData).success(data => {
-                    console.log(data)
                     var decode = JSON.parse(data)
                     
                     if(decode.response = 'Success') {

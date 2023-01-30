@@ -2,6 +2,10 @@
 
   namespace Code\Libraries;
 
+  /**
+   * Library for viewing pages with its own variables that you can add using 'AddData' method
+   */
+
   class View extends \Code\Core\BaseController {
     private $data = [];
 
@@ -30,7 +34,7 @@
     
     public function LoadViewLibraries() {
         $this->LoadLibrary([
-            'AppendFiles', 'Route', 'Auth'
+            'AppendFiles', 'Route', 'Auth', 'RequestHelper'
         ]);
     }
     

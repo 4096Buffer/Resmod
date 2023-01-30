@@ -1,6 +1,11 @@
 <?php 
 namespace Code\Libraries\Variables;
 
+/**
+ * Library for variable objects
+ * Variables/Types/....
+*/
+
 class ModuleVariableObject extends \Code\Core\BaseController {
     
     protected $id;
@@ -9,7 +14,7 @@ class ModuleVariableObject extends \Code\Core\BaseController {
     protected $type_id;
     protected $module_id;
     protected $deleted;
-    protected $page_id;
+    //protected $page_id;
     protected $value;
     
     
@@ -24,7 +29,7 @@ class ModuleVariableObject extends \Code\Core\BaseController {
         $this->type_id       = $variable['id_type'];
         $this->module_id     = $variable['id_module'];
         $this->deleted       = 0;
-        $this->page_id       = $variable['id_page'];
+       // $this->page_id       = $variable['id_page'];
         $this->value         = $variable['value'];
 	}
     

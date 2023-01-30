@@ -11,8 +11,6 @@ DOMHelper.waitForAllElm().then(() => {
             }
 
         })();
-
-        
         
         (() => {
             var opacity = 0
@@ -57,11 +55,13 @@ DOMHelper.waitForAllElm().then(() => {
                     var login = (data) => {
                         try {
                             var decodedJson = JSON.parse(data)
+                            
                         }
-                        catch(e) {  
+                        catch(e) { 
+                            console.log(data)
                             console.log("Can't parse json. (responseObject)")
                         }
-                            
+                        
                         var response = decodedJson.response
                         var reason   = decodedJson.reason
                         
@@ -69,7 +69,7 @@ DOMHelper.waitForAllElm().then(() => {
                             adminFormInfoText.innerHTML = reason
                                 
                         } else if(response == "Success") {
-                            location.href = "/panel"
+                            location.href = "/dashboard-admin"
                         } else {
                             alert("Invalid response data")
                         }

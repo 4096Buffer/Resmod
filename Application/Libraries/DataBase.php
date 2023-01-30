@@ -1,7 +1,10 @@
 <?php 
 
-
 namespace Code\Libraries;
+
+/**
+ * Library that works as helper for any database thingss
+ */
 
 class DataBase extends \Code\Core\BaseController {
     private $config;

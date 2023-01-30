@@ -1,5 +1,9 @@
 <?php 
-    
+  
+  /**
+   * Core.php - include files run, controllers
+  */
+
   session_start();
     
   require_once COREPATH . DIRECTORY_SEPARATOR . 'Core.php';

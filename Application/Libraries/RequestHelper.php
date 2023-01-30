@@ -2,6 +2,10 @@
 
 namespace Code\Libraries;
 
+/**
+ * Helper for request actions getting ip, getting sent json, or sending json back
+ */
+
 class RequestHelper extends \Code\Core\BaseController {
     
 	public function __construct() {
@@ -42,7 +46,7 @@ class RequestHelper extends \Code\Core\BaseController {
         return $data;
     }
 
-    protected function GetIpAdress() {
+    public function GetIpAdress() {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
           return $_SERVER['HTTP_CLIENT_IP'];
         } else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -54,9 +58,13 @@ class RequestHelper extends \Code\Core\BaseController {
         return '';
     }
   
-    protected function Redirect(string $url, int $statusCode = 301) {
+    public function Redirect(string $url, int $statusCode = 301) {
         header('Location: ' . $url, true, $statusCode);
         die();
+    }
+
+    public function RandomHash($len = 22) {
+        return bin2hex(mcrypt_create_iv($len, MCRYPT_DEV_URANDOM));
     }
     
 }

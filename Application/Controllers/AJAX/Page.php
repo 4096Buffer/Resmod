@@ -2,6 +2,11 @@
 	
 namespace Code\Controllers\AJAX;
 
+/**
+ * AJAX class
+ * Page ajax controler
+*/
+
 class Page extends \Code\Core\BaseController {
 
 	public function __construct() {
@@ -9,6 +14,10 @@ class Page extends \Code\Core\BaseController {
 
 		$this->LoadLibrary(['DataBase', 'View', 'RequestHelper', 'Auth']);
 	}
+
+    /**
+     * Get id of page by given pathname
+    */
     
     public function GetPageId() {
         $data     = $this->RequestHelper->GetObjectFromJson();
@@ -29,6 +38,11 @@ class Page extends \Code\Core\BaseController {
         $this->RequestHelper->SendJsonData(false, null, 'No page found');
     }
     
+    /**
+     * Add view (+1)
+     * to page for statistics
+    */
+
     public function AddView() {
         $data   = $this->RequestHelper->GetObjectFromJson();
         $id     = $data['id'];
@@ -41,6 +55,10 @@ class Page extends \Code\Core\BaseController {
         
         $this->RequestHelper->SendJsonData(true);
     }
+
+    /**
+     * Get all pages from database
+    */
     
     public function GetPages() {
         $result = $this->DataBase->DoQuery("SELECT * FROM pages WHERE hidden = 0");
@@ -65,7 +83,6 @@ class Page extends \Code\Core\BaseController {
         
         $this->RequestHelper->SendJsonData(true, $views);
     }
-    
     
 }
 

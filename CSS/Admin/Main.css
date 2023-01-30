@@ -5,11 +5,15 @@ body {
   margin:0;
 }
 
+.main {
+  padding-top: calc(4vh + 0.8%);
+}
+
 .sidenav {
   height: 100%;
   width: 24vh;
   position: fixed;
-  z-index: 1;
+  z-index: 9999;
   top: 0;
   left: 0;
   background-color: #111;
@@ -33,6 +37,7 @@ body {
    -o-transition: all 200ms ease-in;
     /* Standard */
    transition: all 200ms ease-in;
+  
   
 }
 
@@ -66,5 +71,83 @@ body {
     position: relative;
     width: 60vh !important;
     height: 20vh !important;
-    
 }
+
+.header-admin-panel {
+  width: 100%;
+  background: #111;
+  position: fixed;
+  z-index: 999;
+  padding: 0.8%;
+  
+}
+
+.header-admin-user {
+  display: flex;
+  justify-content: right;
+  margin-right: 4%;
+}
+
+.header-admin-user span {
+  color: #fff;
+  margin-right: 2vh;
+  position: relative;
+  top: 0.5vh;
+    /* Firefox */
+  -moz-transition: all 200ms ease-in;
+    /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+    /* Opera */
+  -o-transition: all 200ms ease-in;
+    /* Standard */
+  transition: all 200ms ease-in;
+}
+
+.header-admin-user span:hover {
+  color:#888888;
+}
+
+
+.header-admin-profile {
+  background-size: cover;
+  width: 28px;
+  border-radius: 30px;
+  height:28px;
+  cursor:pointer;
+     /* Firefox */
+  -moz-transition: all 200ms ease-in;
+     /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+     /* Opera */
+  -o-transition: all 200ms ease-in;
+     /* Standard */
+  transition: all 200ms ease-in;
+  position:relative;
+}
+
+.header-admin-profile:hover {
+  -webkit-filter: brightness(50%);
+  filter: brightness(50%);
+}
+
+.header-admin-profile-context-menu {
+  color:#fff;
+  padding: 2%;
+  background-color: #111;
+  position: fixed;
+  top: 0%;
+  left: 89%;
+  display:none;
+}
+
+.header-admin-profile-context-menu ol {
+  padding:0;
+  margin:0;
+}
+
+.header-admin-profile-context-menu ol li {
+  list-style: none;
+  border-bottom: 1px solid #fff;
+  margin: 2vh;
+}
+

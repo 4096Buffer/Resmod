@@ -2,6 +2,10 @@
 
 namespace Code\Libraries;
 
+/**
+ * Library for routing
+ */
+
 class Route extends \Code\Core\BaseController {
     
 	public function __construct() {

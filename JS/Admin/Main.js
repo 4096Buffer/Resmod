@@ -1,6 +1,17 @@
 DOMHelper.waitForAllElm().then(() => {
 	setTimeout(() => {
         (() => {
+            var warningHack = () => {
+                console.log('%cDo not type anything to this console if you dont know what you are doing. If someone told you to type something here he probably wants to hack you!', 'font-size:40px;color:red')
+            }
+
+            if(!localStorage.getItem('warningHack')) {
+                warningHack()
+            }
+
+        })();
+
+        (() => {
             var logoutBtn = document.querySelector(".button-logout")
             var logout    = (e) => {
                 var controller = e.target.getAttribute('ajax-controller')
@@ -11,6 +22,7 @@ DOMHelper.waitForAllElm().then(() => {
                 }
                 
                 AJAX.Post(location.href, sendData).success(data => {
+                    console.log(data)
                     var decode = JSON.parse(data)
                     
                     if(decode.response = 'Success') {
@@ -18,6 +30,7 @@ DOMHelper.waitForAllElm().then(() => {
                     }
 
                 })
+                
             }
             
             logoutBtn.addEventListener('click', logout);
@@ -130,3 +143,11 @@ DOMHelper.waitForAllElm().then(() => {
     */
     console.error(err)
 })
+
+/*
+* A few functions that can be used while developing the application
+*/
+
+var acceptWarning = () => {
+    localStorage.setItem('warningHack', true)
+}

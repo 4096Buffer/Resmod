@@ -2,6 +2,11 @@
 
 namespace Code\Libraries;
 
+/**
+ * Library for adding files to <head> tag
+ * CSS/JS
+ */
+
 class AppendFiles extends \Code\Core\BaseController {
 	private $css = [];
 	private $js = [];

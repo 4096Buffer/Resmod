@@ -2,6 +2,10 @@
 
 namespace Code\Libraries;
 
+/**
+ * Library for adding modules to layouts
+ */
+
 class Module extends \Code\Core\BaseController {
 
 	private $modules = [];
@@ -35,35 +39,35 @@ class Module extends \Code\Core\BaseController {
 				"title"      => $fetchA['title'],
 				"view"       => $fetchA['view'],
 				"controller" => $fetchA['controller'],
-				"action"     => $fetchA['action']
+				"action"     => $fetchA['action'],
+				"active"     => $fetch['active']
 			];
 
 			$this->modules[] = $module;
 		}
 	}
-
+	
 	public function LoadModules() {
 
 		$this->GetModules($this->page_id);
 
 		foreach($this->modules as $module) {
+			if($module['active'] == 1) {
+				if($module['controller'] != null) {
+					require_once $this->GetControllerPath($module['controller']);
 
-			if($module['controller'] != null) {
-				require_once $this->GetControllerPath($module['controller']);
+					$class_space = '\Code\Controllers\\' . $module['controller'];
+					$class = new $class_space();
 
-				$class_space = '\Code\Controllers\\' . $module['controller'];
-				$class = new $class_space();
+					call_user_func(array($class, $module['action']));
+				}
 
-				call_user_func(array($class, $module['action']));
+				$mvars_c = new \Code\Libraries\Variables\ModuleVariables($module['id'], $this->page_id);
+				
+				$this->View->AddData('mvars', $mvars_c);
+				$this->View->Load($this->GetPath($module['view']));
 			}
-
-			$mvars_c = new \Code\Libraries\Variables\ModuleVariables($module['id'], $this->page_id);
-			
-			$this->View->AddData('mvars', $mvars_c);
-			$this->View->Load($this->GetPath($module['view']));
-
 		}
-
 
 	}
 

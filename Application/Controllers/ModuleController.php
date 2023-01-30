@@ -2,6 +2,11 @@
 	
 namespace Code\Controllers;
 
+/**
+ * Controller for modules
+ * Used for getting data from database etc.
+*/
+
 class ModuleController extends \Code\Core\BaseController {
 
 	public function __construct() {
@@ -10,18 +15,9 @@ class ModuleController extends \Code\Core\BaseController {
 		$this->LoadLibrary(['DataBase', 'View']);
 	}
 
-	public function GetProducts() {
-		$result = $this->DataBase->DoQuery("SELECT * FROM products");
-		$rows   = $this->DataBase->FetchRows($result);
-		$products = $rows;
-		
-		$this->View->AddData('products', $products);
-		
-	}
-
-	
-
-	
+	/**
+	 * Here add actions
+	*/
 }
 
 ?>

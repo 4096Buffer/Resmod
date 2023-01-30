@@ -2,6 +2,10 @@
 
 namespace Code\Libraries;
 
+/**
+ * Library for getting the PAGE variables
+ */
+
 class Variables extends \Code\Core\BaseController {
 
 	private $variables = [];

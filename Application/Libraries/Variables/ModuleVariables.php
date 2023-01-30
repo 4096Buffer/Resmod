@@ -2,6 +2,10 @@
 
 namespace Code\Libraries\Variables;
 
+/**
+ * Module variables class for getting the object of variable
+*/
+
 class ModuleVariables extends \Code\Core\BaseController {
 
 	private $variables = [];
@@ -37,7 +41,7 @@ class ModuleVariables extends \Code\Core\BaseController {
 			$fetch['name']          = $this->GetDefVariable($fetch['id_variable'])['name'];
             $fetch['default_value'] = $this->GetDefVariable($fetch['id_variable'])['default_value'];
             $fetch['id_type']       = $this->GetDefVariable($fetch['id_variable'])['id_type'];
-            $fetch['id_page']       = $this->GetDefVariable($fetch['id_variable'])['id_page'];
+            //$fetch['id_page']       = $this->GetDefVariable($fetch['id_variable'])['id_page'];
             
 			$this->variables[] = $fetch;
 		}

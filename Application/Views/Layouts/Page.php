@@ -6,11 +6,8 @@
 	?>
 </head>
 <body>
-<?php 
-
-$module->LoadModules();
-
-?>
-
+	<?php 
+		$module->LoadModules();
+	?>
 </body>
 </html>

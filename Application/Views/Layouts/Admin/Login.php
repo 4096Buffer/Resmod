@@ -1,3 +1,10 @@
+<?php 
+
+if($this->Auth->IsAuth()) {
+    $this->RequestHelper->Redirect('/dashboard-admin');
+}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,7 +13,7 @@
 	?>
 </head>
 <body>
-    <form class="admin-login-form" ajax-controller="Login" ajax-action="Login">
+    <form class="admin-login-form" ajax-controller="AdminProfile" ajax-action="Login">
         <div class="login-box">
             <input type="text" id="admin-login-form-name" name="login" required>
             <label>Login:</label>

@@ -2,6 +2,10 @@
 
 namespace Code\Libraries;
 
+/**
+ * A helper for HTML actions
+ */
+
 class HTML extends \Code\Core\BaseController {
 
 	public function __construct() {

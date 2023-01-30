@@ -7,10 +7,10 @@
   $librariesFolder   = 'Libraries';
   $controllersFolder = 'Controllers';
   $viewsFolder       = 'Views';
-  $ajaxFolder        = 'AJAX';
 
   $styleFolder       =  'CSS';
   $scriptFolder      =  'JS';
+  $uploadFolder      =  'Uploads';
 
   define('SELFPATH', pathinfo(__FILE__, PATHINFO_DIRNAME));
   define('APPPATH', SELFPATH . DIRECTORY_SEPARATOR . $applicationFolder);
@@ -23,10 +23,10 @@
   define('LIBPATH',   $appPath . $librariesFolder);
   define('VIEWPATH',  $appPath . $viewsFolder);
   define('CONSPATH',  $appPath . $controllersFolder);
-  define('AJAXPATH',  $appPath . $ajaxFolder);
   define('CSSPATH',   $styleFolder);
   define('JSPATH' ,   $scriptFolder);
-
+  define('UPLPATH',   $uploadFolder);
+  
   require_once(COREPATH . '/Core.php');
   
 ?>

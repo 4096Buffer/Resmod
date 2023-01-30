@@ -32,14 +32,16 @@ class Route extends \Code\Core\BaseController {
 		$fetches = $this->DataBase->FetchRows($result);
         
 		foreach($fetches as $fetch) {
-            
+            $layout = $this->GetLayout($fetch['id_layout']);
 			$new_route = [ 
-                "uri"    => $fetch['route address'],
-                "layout" => $this->GetLayout($fetch['id_layout']),
-                "id"     => $fetch['id']
+                "uri"        => $fetch['route address'],
+                "layout"     => $layout,
+                "id"         => $fetch['id'],
+                "controller" => $layout['controller'],
+                "action"     => $layout['action']
             ];
+
 			$this->routes[] = $new_route;
-			
 		}
 	}
     
@@ -50,7 +52,7 @@ class Route extends \Code\Core\BaseController {
         $this->View->AddData('vars', $vars_c);
         $this->View->AddData('module', $module_c);
     }
-    
+
     public function LoadRoute($route) {
         $layout = $route['layout'];
         $layout_path = $this->GetLayoutPath($layout['view']);

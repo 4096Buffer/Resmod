@@ -19,7 +19,7 @@ class Module extends \Code\Core\BaseController {
 	}
 
 	private function GetControllerPath($controller) {
-		return CONSPATH . DIRECTORY_SEPARATOR . $controller . '.php';
+		return CONSPATH . '/' . $controller . '.php';
 	}
 
 	private function GetPath($name) {

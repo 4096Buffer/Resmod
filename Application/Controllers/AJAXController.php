@@ -16,7 +16,7 @@ class AJAXController extends \Code\Core\BaseController {
     
     private function GetControllerPath($controller) {
     
-		return CONSPATH . DIRECTORY_SEPARATOR . 'AJAX' . DIRECTORY_SEPARATOR . $controller . '.php';
+		return CONSPATH . '/' . 'AJAX' . '/' . $controller . '.php';
 	}
     
     /**

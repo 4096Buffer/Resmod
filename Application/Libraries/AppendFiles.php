@@ -30,13 +30,13 @@ class AppendFiles extends \Code\Core\BaseController {
 
 			switch ($fetch['type']) {
 				case 'Script':
-					$html = '<script type="text/javascript" src="'. JSPATH . DIRECTORY_SEPARATOR . $fetch['path'] . '" ></script>';
+					$html = '<script type="text/javascript" src="'. JSPATH . '/' . $fetch['path'] . '" ></script>';
 					$this->js[] = $html;
 
 					break;
 				
 				default:
-					$html = '<link rel="stylesheet" href="' . CSSPATH . DIRECTORY_SEPARATOR . $fetch['path'] . '" />';
+					$html = '<link rel="stylesheet" href="' . CSSPATH . '/' . $fetch['path'] . '" />';
 					$this->css[] = $html;
 					
 					break;

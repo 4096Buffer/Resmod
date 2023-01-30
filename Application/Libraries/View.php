@@ -15,11 +15,11 @@
     }
 
     private function getPath($name) {
-      return VIEWPATH . DIRECTORY_SEPARATOR . $name;
+      return VIEWPATH . '/' . $name;
     }
 
     private function getAJAXPath($name) {
-      return AJAXPATH . DIRECTORY_SEPARATOR . $name;
+      return AJAXPATH . '/' . $name;
     }
     
     public function AddData(string $name, $value) {

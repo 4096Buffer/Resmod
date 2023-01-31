@@ -4,28 +4,20 @@ if(!$this->Auth->IsAuth()) {
   $this->RequestHelper->Redirect('/');
 }
 
-$login   = $_SESSION['login'] ?? null;
-$avatar  = 'Uploads/Avatars/' . $_SESSION['avatar'] ?? null;
-$name    = $_SESSION['name'];
-$surname = $_SESSION['surname'];
-$email   = $_SESSION['email'];
-
 ?>
 
 <!DOCTYPE HTML>
 <html>
 <head>
-    
-<?php 
-    include VIEWPATH . DIRECTORY_SEPARATOR . 'Partials' . DIRECTORY_SEPARATOR . 'HeadAdmin.php'
-?>
-
+  <?php 
+      include VIEWPATH . '/' . 'Partials' . '/' . 'HeadAdmin.php'
+  ?>
 </head>
 <body>
   
   <?php 
-    include VIEWPATH . DIRECTORY_SEPARATOR . 'Partials' . DIRECTORY_SEPARATOR . 'Admin' . DIRECTORY_SEPARATOR . 'Header.php';
-    include VIEWPATH . DIRECTORY_SEPARATOR . 'Partials' . DIRECTORY_SEPARATOR . 'Admin' . DIRECTORY_SEPARATOR . 'SideNav.php';
+    include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'Header.php';
+    include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'SideNav.php';
   ?>
 
     <div class="dashboard-box welcome-box">
@@ -39,6 +31,36 @@ $email   = $_SESSION['email'];
           <li>Dodaj pierwszą podstronę!</li>
         </ol>
     </div>
+    <div class="dashboard-box system-info-box">
+        <h3>
+          Informacje o systemie
+        </h3>
+        <ol>
+          <li>
+            <label>Baza danych: </label>
+            <span><?=$database_info?></span>
+          </li>
+          <li>
+            <label>Wersja PHP: </label>
+            <span><?=$php_info?></span>
+          </li>
+          <li>
+            <label>Administratorzy: </label>
+            <span><?=count($admin_users)?></span>
+          </li>
+          <li>
+            <label>Użytkownicy: </label>
+            <span><?=$users ? count($users) : 'N/A'?></span>
+          </li>
+          <li>
+            <label>Użycie pamięci: </label>
+            <span>
+              <?=$memory_usage?> / <?=$max_memory_usage?> (MB)
+            </span>
+          </li>
+        </ol>
+    </div>
+    
     <!--
 
       <div class="solid-chart-container">

@@ -117,7 +117,7 @@ class DataBase extends \Code\Core\BaseController {
     }
 
     public function GetMysqlServerInfo() {
-      return mysql_get_server_info();
+      return $this->connect->server_info;
     }
 }
 

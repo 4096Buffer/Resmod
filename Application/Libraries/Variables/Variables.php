@@ -47,12 +47,9 @@ class Variables extends \Code\Core\BaseController {
 		}
         
 		foreach($this->variables as $variable) {
-            
             if($variable["name"] == $name) {
-                
 				if($variable["id_page"] == $this->page_id) {
 					return $variable['value'];
-
 				} else {
 					if($variable["global"] == 1) {
 						return $variable['value'];

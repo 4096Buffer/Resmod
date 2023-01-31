@@ -7,6 +7,7 @@ body {
 
 .main {
   padding-top: calc(4vh + 0.8%);
+  margin-left: 24vh; /* Same as the width of the sidenav */
 }
 
 .sidenav {
@@ -24,7 +25,7 @@ body {
 .sidenav a {
   padding: 6px 6px 6px 32px;
   text-decoration: none;
-  font-size: 25px;
+  font-size: 1.5rem;
   color: #818181;
   display: flex;
   justify-content: left;
@@ -45,9 +46,6 @@ body {
   color: #f1f1f1;
 }
 
-.main {
-  margin-left: 24vh; /* Same as the width of the sidenav */
-}
 
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
@@ -61,11 +59,10 @@ body {
     -webkit-box-shadow: 0px 13px 43px -13px rgba(66, 68, 90, 1);
     -moz-box-shadow: 0px 13px 43px -13px rgba(66, 68, 90, 1);
     box-shadow: 0px 13px 43px -13px rgba(66, 68, 90, 1);
-}
-
-.welcome-box {
+    height: 18vh;
     display: inline-flex;
 }
+
 
 .solid-chart-container {
     position: relative;
@@ -132,11 +129,11 @@ body {
 
 .header-admin-profile-context-menu {
   color:#fff;
-  padding: 2.5%;
+  padding: 2%;
   background-color: #111;
   position: fixed;
-  top: 0%;
-  left: 89%;
+  top: 5%;
+  left: 87%;
   display:none;
   
 }
@@ -144,15 +141,30 @@ body {
 .header-admin-profile-context-menu ol {
   padding:0;
   margin:0;
+  display: grid;
+  justify-items: center;
 }
 
 .header-admin-profile-context-menu ol li {
   list-style: none;
   width:100%;
-  margin: 2vh;
+  margin: 1.2vh;
   cursor: pointer;
   position:relative;
-  padding:0.8%;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+     /* Firefox */
+  -moz-transition: all 200ms ease-in;
+     /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+     /* Opera */
+  -o-transition: all 200ms ease-in;
+     /* Standard */
+  transition: all 200ms ease-in;
+}
+
+.header-admin-profile-context-menu ol li:hover {
+  background-color: #323232
 }
 
 .header-admin-profile-context-menu ol li:after {
@@ -166,4 +178,7 @@ body {
   width: 100%;
 }
 
+.system-info-box ol {
+  list-style: disc;
+}
 

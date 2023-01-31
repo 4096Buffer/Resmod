@@ -17,7 +17,7 @@ class ViewController extends \Code\Core\BaseController {
     }
 
     private function GetControllerPath($path) {
-        VIEWPATH . '/' . $path . '.php';
+        return CONSPATH . '/' . $path . '.php';
     }
 
     /**
@@ -34,12 +34,12 @@ class ViewController extends \Code\Core\BaseController {
 
         $current_page = $this->Route->GetCurrentPage();
         if($current_page['controller'] != null) {
-            require_once $this->GetControllerPath($module['controller']);
+            require_once $this->GetControllerPath($current_page['controller']);
 
-            $class_space = '\Code\Controllers\\' . $module['controller'];
+            $class_space = '\Code\Controllers\\' . $current_page['controller'];
             $class = new $class_space();
 
-            call_user_func(array($class, $module['action']));
+            call_user_func(array($class, $current_page['action']));
         }
 
         $this->Route->LoadRoute($current_page);

@@ -134,6 +134,24 @@ DOMHelper.waitForAllElm().then(() => {
             }
             
         })();
+
+        (() => {
+            var avatar = document.querySelector('.header-admin-profile')
+            var contextMenu = document.querySelector('.header-admin-profile-context-menu')
+
+            var avatarClick = () => {
+                var openAttr = contextMenu.getAttribute('open')
+                if(openAttr == 'false') {
+                    contextMenu.setAttribute('open', 'true')
+                    contextMenu.style.display = 'block';
+                } else {
+                    contextMenu.setAttribute('open', 'false')
+                    contextMenu.style.display = 'none';
+                }
+            }
+
+            avatar.addEventListener('click', avatarClick)
+        })();
         
     }, 500)
 }).catch(err => {

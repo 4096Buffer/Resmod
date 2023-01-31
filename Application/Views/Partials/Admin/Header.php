@@ -8,14 +8,14 @@
 
         
     </div>
-    <div class="header-admin-profile-context-menu">
-            <ol>
-                <li><?=$name . ' ' . $surname;?></li>
-                <li>Twój profile</li>
-                <li>Ustawienia</li>
-                <li href="javascript:void(0)" class="button-logout" ajax-controller="AdminProfile", ajax-action="Logout">Wyloguj się</li>
-                <li>Pomoc</li>
-            </ol>
+    <div class="header-admin-profile-context-menu" open="false">
+        <ol>
+            <li><?=$name . ' ' . $surname;?></li>
+            <li>Twój profile</li>
+            <li>Ustawienia</li>
+            <li href="javascript:void(0)" class="button-logout" ajax-controller="AdminProfile", ajax-action="Logout">Wyloguj się</li>
+            <li>Pomoc</li>
+        </ol>
     </div>
 </header>
 

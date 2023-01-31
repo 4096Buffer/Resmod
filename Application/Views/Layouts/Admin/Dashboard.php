@@ -33,7 +33,7 @@ if(!$this->Auth->IsAuth()) {
     </div>
     <div class="dashboard-box system-info-box">
         <h3>
-          Informacje o systemie
+          Informacje o stronie
         </h3>
         <ol>
           <li>

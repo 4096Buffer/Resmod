@@ -20,12 +20,16 @@ class LayoutController extends \Code\Core\BaseController {
 	*/
 
 	public function DashboardAdmin() {
+		/**
+		 * Get all admin user data from session
+		*/
+
 		$login   = $_SESSION['login'] ?? null;
 		$avatar  = 'Uploads/Avatars/' . $_SESSION['avatar'] ?? null;
 		$name    = $_SESSION['name'];
 		$surname = $_SESSION['surname'];
 		$email   = $_SESSION['email'];
-
+		
 		$database_info  = $this->DataBase->GetMysqlServerInfo();
 		$php_info       = \phpversion();
 		$admin_users    = 0;

@@ -22,7 +22,7 @@ var lo_ = (e) => {
         
         
         AJAX.Post(location.href, sd).success(data => {
-            var ro = data
+            var ro = data;
             var de = JSON.parse(ro)
             
             if(de.response == 'Success') {
@@ -36,4 +36,8 @@ var lo_ = (e) => {
     }
 }
 
-window.addEventListener('load', lo_)
+var requestMethod = document.querySelector('#request-method').getAttribute('content');
+
+if(requestMethod == 'GET') {
+    window.addEventListener('load', lo_)
+}

@@ -34,7 +34,7 @@
     
     public function LoadViewLibraries() {
         $this->LoadLibrary([
-            'AppendFiles', 'Route', 'Auth', 'RequestHelper'
+            'AppendFiles', 'Route', 'Auth', 'RequestHelper', 'DataBase'
         ]);
     }
     

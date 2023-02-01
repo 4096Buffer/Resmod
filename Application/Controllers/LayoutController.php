@@ -29,7 +29,7 @@ class LayoutController extends \Code\Core\BaseController {
 		$name    = $_SESSION['name'];
 		$surname = $_SESSION['surname'];
 		$email   = $_SESSION['email'];
-		
+
 		$database_info  = $this->DataBase->GetMysqlServerInfo();
 		$php_info       = \phpversion();
 		$admin_users    = 0;
@@ -62,6 +62,10 @@ class LayoutController extends \Code\Core\BaseController {
 			$max_memory_usage *= 1024;
 		}
 
+		$pages_result = $this->DataBase->DoQuery("SELECT * FROM pages WHERE hidden = 0");
+		$pages        = $this->DataBase->FetchRows($pages_result);
+
+
 		/**
 		 * Add all variables to the 'View' class
 		*/
@@ -78,6 +82,7 @@ class LayoutController extends \Code\Core\BaseController {
 		$this->View->AddData('users', $rows_users);
 		$this->View->AddData('memory_usage', $memory_usage);
 		$this->View->AddData('max_memory_usage', $max_memory_usage);
+		$this->View->AddData('pages', $pages);
 	}
 
 	

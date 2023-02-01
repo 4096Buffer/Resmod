@@ -18,6 +18,8 @@ if(!$this->Auth->IsAuth()) {
   <?php 
     include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'Header.php';
     include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'SideNav.php';
+    
+
   ?>
 
     <div class="dashboard-box welcome-box">
@@ -59,6 +61,18 @@ if(!$this->Auth->IsAuth()) {
             </span>
           </li>
         </ol>
+    </div>
+    <div class="dashboard-box views-page-info-box">
+      <h3>
+        Top 10 <br> wyświetlanych stron <br>w tym miesiącu
+      </h3>
+      <ol>
+        <?php foreach($pages as $page) { ?>
+          <li>
+            <?=$page['description']?> - <?=$page['views']?>
+          </li>
+        <?php } ?>
+      </ol>
     </div>
     
     <!--

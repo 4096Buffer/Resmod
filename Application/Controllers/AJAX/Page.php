@@ -49,7 +49,9 @@ class Page extends \Code\Core\BaseController {
         $current_time   = \date('m/d/Y h:i:s a', \time());
         $date_current   = new \DateTime($current_time);
         $date_last_view = new \DateTime($last_view);
+        
         $diffrence_date = $date_current->diff($date_last_view); //->format('%d-%m-%Y %H-%m-%i-%s');
+
         if($diffrence_date->m >= 1) { //m
             $result = $this->DataBase->DoQuery("UPDATE pages SET views = '1' WHERE id = ?", [ $id ]);
             $result_date = $this->DataBase->DoQuery("UPDATE pages SET last_views = CURRENT_TIMESTAMP() WHERE id = ?", [ $id ]);

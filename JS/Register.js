@@ -13,11 +13,7 @@ var lo_ = (e) => {
                 action     : 'AddView',
                 id         : id
             }
-            AJAX.Post(location.href, sd_).success(data => {
-                var ro_ = data
-                var de_ = JSON.parse(ro_)
-
-            })
+            AJAX.Post(location.href, sd_)
         }
         
         

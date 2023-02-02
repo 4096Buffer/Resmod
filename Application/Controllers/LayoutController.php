@@ -62,8 +62,30 @@ class LayoutController extends \Code\Core\BaseController {
 			$max_memory_usage *= 1024;
 		}
 
-		$pages_result = $this->DataBase->DoQuery("SELECT * FROM pages WHERE hidden = 0");
-		$pages        = $this->DataBase->FetchRows($pages_result);
+		$pages_result          = $this->DataBase->DoQuery("SELECT * FROM pages WHERE hidden = 0");
+		$pages                 = $this->DataBase->FetchRows($pages_result);
+
+		$pages_views_result    = $this->DataBase->DoQuery("SELECT * FROM pages WHERE hidden = 0 ORDER BY views ASC");
+		$pages_views           = $this->DataBase->FetchRows($pages_views_result);
+
+		$modules_result        = $this->DataBase->DoQuery("SELECT * FROM modules");
+		$modules               = $this->DataBase->FetchRows($modules_result);
+
+		$modules_groups_result = $this->DataBase->DoQuery("SELECT * FROM modules_groups");
+		$modules_groups        = $this->DataBase->FetchRows($modules_groups_result);
+
+
+		foreach($modules_groups as &$group) {
+			$group['modules'] = [];
+
+			foreach($modules as $module) {
+				if($module['id_group'] == $group['id']) {
+					$group['modules'][] = $module;
+				}
+			}
+		}
+
+		
 
 
 		/**
@@ -82,7 +104,13 @@ class LayoutController extends \Code\Core\BaseController {
 		$this->View->AddData('users', $rows_users);
 		$this->View->AddData('memory_usage', $memory_usage);
 		$this->View->AddData('max_memory_usage', $max_memory_usage);
+
 		$this->View->AddData('pages', $pages);
+		$this->View->AddData('pages_views', $pages_views);
+
+		$this->View->AddData('modules', $modules);
+		$this->View->AddData('modules_groups', $modules_groups);
+		
 	}
 
 	

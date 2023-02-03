@@ -42,6 +42,33 @@ body {
   
 }
 
+.sidenav button {
+  padding: 6px 6px 6px 32px;
+  font-size: 1.5rem;
+  color: #818181;
+  display: flex;
+  margin-bottom: 2vh;
+  /* Firefox */
+  -moz-transition: all 200ms ease-in;
+   /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+   /* Opera */
+   -o-transition: all 200ms ease-in;
+   /* Standard */
+   transition: all 200ms ease-in;
+   background: none;
+   border: none;
+   cursor:pointer;
+   width: 100%;
+   padding:6%;
+   align-items: center;
+   justify-content: center;
+  }
+
+.sidenav button:hover {
+  color: #f1f1f1;
+}
+
 .sidenav a:hover {
   color: #f1f1f1;
 }
@@ -194,4 +221,46 @@ body {
 
 .modules-add-list-box {
   display:none;
+}
+.collapsible-sidenav-content {
+  display: none;
+}
+
+.collapsible-sidenav-content ol {
+  display: flex;
+  list-style: none;
+  flex-direction: column;
+  align-items: left;
+  justify-content: left;
+  font-size:1.1rem;
+}
+
+.collapsible-sidenav-content ol li {
+  /* Firefox */
+  -moz-transition: all 200ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+  /* Opera */
+  -o-transition: all 200ms ease-in;
+  /* Standard */
+  transition: all 200ms ease-in;
+  color: #818181;
+  padding:0;
+  margin-bottom: 1rem;
+  cursor:pointer;
+}
+
+
+.collapsible-sidenav-content ol li:hover {
+  color: #fff;
+}
+
+.collapsible-sidenav-content .space-line{
+  width: 24vh;
+  height: 1px;
+  background-color: #818181;
+  display: flex;
+  position: relative;
+  margin-top:10%;
+  right:20%;
 }

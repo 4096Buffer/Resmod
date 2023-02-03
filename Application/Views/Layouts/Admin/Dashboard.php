@@ -82,7 +82,7 @@ if(!$this->Auth->IsAuth()) {
           <?php } ?>
         </div>
     </div>
-
+                    
     <div class="dashboard-box system-info-box">
         <h2>
           Informacje o stronie

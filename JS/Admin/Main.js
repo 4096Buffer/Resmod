@@ -176,6 +176,36 @@ DOMHelper.waitForAllElm().then(() => {
 
             modulesList.addEventListener('change', onChange)
         })();
+
+        (() => {
+            var collaps = document.getElementsByClassName('collapsible-sidenav')
+
+            for(var i = 0; i < collaps.length; i++) {
+                var openClose = (e) => {
+                    var content = e.target.nextElementSibling
+                    if(content) {
+                        if(content.getAttribute('active') == 'false') {
+                            content.style.display          = 'block'
+                            e.target.style.background      = 'none'
+                            e.target.style.backgroundColor = '#262626'
+
+                            content.setAttribute('active', 'true')
+                        } else {
+                            content.style.display          = 'none'
+                            e.target.style.backgroundColor = null
+                            e.target.style.background      = 'none'
+
+                            content.setAttribute('active', 'false')
+                        }
+                    }
+
+                    
+
+                }
+
+                collaps[i].addEventListener('click', openClose)
+            }
+        })();
         
     }, 500)
 }).catch(err => {

@@ -182,3 +182,16 @@ body {
   list-style: disc;
 }
 
+.modules-add {
+  /* flex-direction: column !important; */
+}
+
+.modules-add-right {
+  display: inline-flex;
+  justify-content: left;
+  text-align: left;
+}
+
+.modules-add-list-box {
+  display:none;
+}

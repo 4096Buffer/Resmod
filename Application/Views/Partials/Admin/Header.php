@@ -1,16 +1,14 @@
 <header class="header-admin-panel">
     <div class="header-admin-user">
         <span>
-            <?=$login?>
+            <?=$name?> <?=$surname?>
         </span>
 
-        <div class="header-admin-profile" style="background-image:url('<?=$avatar?>')"></div>
-
-        
+        <div class="header-admin-profile" style="background-image:url('<?=$avatar?>')"></div>  
     </div>
     <div class="header-admin-profile-context-menu" open="false">
         <ol>
-            <li><?=$name . ' ' . $surname;?></li>
+            <li>@<?=$login?></li>
             <li>Twój profile</li>
             <li>Ustawienia</li>
             <li href="javascript:void(0)" class="button-logout" ajax-controller="AdminProfile", ajax-action="Logout">Wyloguj się</li>
@@ -18,4 +16,3 @@
         </ol>
     </div>
 </header>
-

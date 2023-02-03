@@ -13,16 +13,12 @@ var lo_ = (e) => {
                 action     : 'AddView',
                 id         : id
             }
-            AJAX.Post(location.href, sd_).success(data => {
-                var ro_ = data
-                var de_ = JSON.parse(ro_)
-
-            })
+            AJAX.Post(location.href, sd_)
         }
         
         
         AJAX.Post(location.href, sd).success(data => {
-            var ro = data
+            var ro = data;
             var de = JSON.parse(ro)
             
             if(de.response == 'Success') {
@@ -36,4 +32,8 @@ var lo_ = (e) => {
     }
 }
 
-window.addEventListener('load', lo_)
+var requestMethod = document.querySelector('#request-method').getAttribute('content');
+
+if(requestMethod == 'GET') {
+    window.addEventListener('load', lo_)
+}

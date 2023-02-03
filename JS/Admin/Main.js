@@ -105,7 +105,6 @@ DOMHelper.waitForAllElm().then(() => {
                        setValues(false, decode.data)
                        createChart()
                    }
-
                })
             }
             
@@ -119,10 +118,8 @@ DOMHelper.waitForAllElm().then(() => {
                 
                 AJAX.Post(location.href, sendData).success(data => {
                     var decode = JSON.parse(data)
-                    
                     if(decode.response == 'Success') {
                         setValues(true, decode.data)
-                        
                         getViews()
                     }
                 })
@@ -151,6 +148,33 @@ DOMHelper.waitForAllElm().then(() => {
             }
 
             avatar.addEventListener('click', avatarClick)
+        })();
+
+        (() => {
+            var modulesList = document.querySelector('#modules-list');
+            var onChange = (e) => {
+                var target = e.target.options[e.target.selectedIndex]
+                var boxes  = document.getElementsByClassName('modules-add-list-box')
+                var find   = undefined
+
+                for(var i = 0; i < boxes.length; i++) {
+                    if(boxes[i].getAttribute('show-value') == target.value) {
+                        find = boxes[i]
+                        break;
+                    }
+                }
+
+                if(!find) {
+                    for(var i = 0; i < boxes.length; i++) {
+                        boxes[i].style.display = 'none'
+                    }
+                } else {
+                    find.style.display = 'block';
+                }
+                
+            }
+
+            modulesList.addEventListener('change', onChange)
         })();
         
     }, 500)

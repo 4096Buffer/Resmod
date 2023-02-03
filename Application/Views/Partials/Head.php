@@ -28,7 +28,8 @@
 	<meta property="og:image"  content="<?= $requestScheme ?>://<?= $serverName . $vars->Get('seo_image') ?>">
     <meta itemprop="image" content="<?= $requestScheme ?>://<?= $serverName . $vars->Get('seo_image')?>">
     <meta name="twitter:image:src" content="<?= $requestScheme ?>://<?= $serverName . $vars->Get('seo_image')?>">
-    
+    <meta id="request-method" name="request-method" content="<?= htmlentities($_SERVER['REQUEST_METHOD'])?>">
+
 	<?php $this->AppendFiles->Append(false); ?>
     
 	<link rel="preconnect" href="https://fonts.googleapis.com">

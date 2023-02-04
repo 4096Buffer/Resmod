@@ -12,7 +12,7 @@ body {
 
 .sidenav {
   height: 100%;
-  width: 24vh;
+  width: 20vh;
   position: fixed;
   z-index: 9999;
   top: 0;
@@ -22,29 +22,10 @@ body {
   padding-top: 20px;
 }
 
-.sidenav a {
-  padding: 6px 6px 6px 32px;
-  text-decoration: none;
-  font-size: 1.5rem;
-  color: #818181;
-  display: flex;
-  justify-content: left;
-  margin-bottom: 4vh;
-    /* Firefox */
-  -moz-transition: all 200ms ease-in;
-    /* WebKit */
-  -webkit-transition: all 200ms ease-in;
-    /* Opera */
-   -o-transition: all 200ms ease-in;
-    /* Standard */
-   transition: all 200ms ease-in;
-  
-  
-}
 
 .sidenav button {
   padding: 6px 6px 6px 32px;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #818181;
   display: flex;
   margin-bottom: 2vh;
@@ -69,14 +50,10 @@ body {
   color: #f1f1f1;
 }
 
-.sidenav a:hover {
-  color: #f1f1f1;
-}
-
 
 @media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
+  .sidenav {padding-top: 0.9rem;}
+  .sidenav button {font-size: 1.125rem;}
 }
 
 .dashboard-box {
@@ -180,13 +157,13 @@ body {
   position:relative;
   padding: 0.5rem;
   font-size: 0.9rem;
-     /* Firefox */
+  /* Firefox */
   -moz-transition: all 200ms ease-in;
-     /* WebKit */
+  /* WebKit */
   -webkit-transition: all 200ms ease-in;
-     /* Opera */
+  /* Opera */
   -o-transition: all 200ms ease-in;
-     /* Standard */
+  /* Standard */
   transition: all 200ms ease-in;
 }
 
@@ -222,6 +199,34 @@ body {
 .modules-add-list-box {
   display:none;
 }
+
+.modules-add-list-box ol {
+  list-style:disc;
+}
+
+.modules-add-list-box ol li {
+  margin-bottom: 5%;
+}
+
+.modules-add-list-box ol li a {
+  color: #000;
+  text-decoration: none;
+  /* Firefox */
+  -moz-transition: all 200ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+  /* Opera */
+  -o-transition: all 200ms ease-in;
+  /* Standard */
+  transition: all 200ms ease-in;
+}
+
+.modules-add-list-box ol li a:hover {
+  color: #888888;
+}
+
+
+
 .collapsible-sidenav-content {
   display: none;
 }
@@ -232,7 +237,7 @@ body {
   flex-direction: column;
   align-items: left;
   justify-content: left;
-  font-size:1.1rem;
+  font-size:1.0rem;
 }
 
 .collapsible-sidenav-content ol li {
@@ -250,6 +255,9 @@ body {
   cursor:pointer;
 }
 
+.collapsible-sidenav-content ol a {
+  text-decoration: none;
+}
 
 .collapsible-sidenav-content ol li:hover {
   color: #fff;
@@ -263,4 +271,196 @@ body {
   position: relative;
   margin-top:10%;
   right:20%;
+}
+
+.main-title-page h1 {
+  font-weight: 100;
+  font-size: 2.5rem;
+}
+
+.h2-main-add-templates {
+  font-weight: 500;
+  margin-top: 4vh;
+  font-size: 1.8rem;
+  margin-left: 2vh;;
+}
+
+.form-add-template {
+  margin-left: 6vh;
+}
+
+.form-add-template label {
+  font-size: 1.2rem;
+}
+
+.form-add-template table {
+  background-color: #686868;
+  border-collapse: collapse;
+  margin: 3vh 0 3vh 2vh;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  color: #ffffff;
+}
+
+.form-add-template table thead tr {
+  background-color: #111;
+  text-align: left;
+}
+
+.form-add-template table th,
+.form-add-template table td {
+  padding: 1rem 0.9375rem;
+  font-weight: 100;
+  /* Firefox */
+  -moz-transition: all 200ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+  /* Opera */
+  -o-transition: all 200ms ease-in;
+  /* Standard */
+  transition: all 200ms ease-in;
+}
+
+
+.form-add-template table tbody tr {
+  border-bottom: 1px solid #dddddd;
+  /* Firefox */
+  -moz-transition: all 200ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+  /* Opera */
+  -o-transition: all 200ms ease-in;
+  /* Standard */
+  transition: all 200ms ease-in;
+}
+
+.check-icon {
+  position:sticky;
+  height: 3rem;
+  width: 3rem;
+  top:0;
+  right:0;
+  --checkicon-b-background: #fff;
+  --checkicon-a-background: #fff;
+  cursor:pointer;
+}
+
+.check-icon:before {
+  content: '';
+  width: 1.5rem;
+  height: 0.4rem;
+  position: absolute;
+  transform: translate(-100%, 100%) rotate(40deg);
+  border-radius: 0.4rem;
+  top:50%;
+  left:50%;
+  background: var(--checkicon-b-background);
+  /* Firefox */
+  -moz-transition: all 200ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+  /* Opera */
+  -o-transition: all 200ms ease-in;
+  /* Standard */
+  transition: all 200ms ease-in;
+}
+
+.check-icon:after {
+  content: '';
+  width: 2.4rem;
+  height: 0.4rem;
+  position: absolute;
+  transform: translate(-30%, 0%) rotate(-45deg);
+  border-radius: 0.4rem;
+  top:50%;
+  left:50%;
+  background: var(--checkicon-a-background);
+  /* Firefox */
+  -moz-transition: all 200ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+  /* Opera */
+  -o-transition: all 200ms ease-in;
+  /* Standard */
+  transition: all 200ms ease-in;
+}
+
+.active-row-pages-templates {
+  background-color: #424242 !important;
+}
+
+.templates-select-current {
+  position: relative;
+  background-color: #888888;
+  padding: 0.9rem;
+  width: 12rem;
+  font-size: 1rem;
+  cursor:pointer;
+  color:#111;
+  --arrow-select-transform: rotate(0deg);
+}
+
+.templates-select-current:after {
+  content: "";
+  position:absolute;
+  /* Firefox */
+  -moz-transition: all 100ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 100ms ease-in;
+  /* Opera */
+  -o-transition: all 100ms ease-in;
+  /* Standard */
+  transition: all 100ms ease-in;
+  background-image: url('/Images/Icons/arrow_icon.svg');
+  height: 15px;
+  width: 15px;
+  left: 85%;
+  transform: var(--arrow-select-transform);
+}
+
+.templates-select {
+  display:none;
+  opacity:0%;
+  /* Firefox */
+  -moz-transition: all 100ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 100ms ease-in;
+  /* Opera */
+  -o-transition: all 100ms ease-in;
+  /* Standard */
+  transition: all 100ms ease-in;
+  background-color: #b9b9b9;
+  width:12rem;
+  padding:0.9rem;
+  max-height: 20rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.templates-select-option {
+  display:block;
+  margin-bottom: 0.3vh;
+  padding: 2%;
+  width: 100%;
+}
+
+.templates-select-option {
+  display:block;
+  margin-bottom: 0.3vh;
+  padding: 3%;
+  width: 100%;
+  /* Firefox */
+  -moz-transition: all 200ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+  /* Opera */
+  -o-transition: all 200ms ease-in;
+  /* Standard */
+  transition: all 200ms ease-in;
+}
+
+.templates-select-option:hover {
+  background-color: #858383;
 }

@@ -113,6 +113,44 @@ class LayoutController extends \Code\Core\BaseController {
 		
 	}
 
+	public function TemplatesAdmin() {
+		/**
+		 * Get all admin user data from session
+		*/
+
+		$login   = $_SESSION['login'] ?? null;
+		$avatar  = 'Uploads/Avatars/' . $_SESSION['avatar'] ?? null;
+		$name    = $_SESSION['name'];
+		$surname = $_SESSION['surname'];
+		$email   = $_SESSION['email'];
+
+		$pages_result          = $this->DataBase->DoQuery("SELECT * FROM pages WHERE hidden = 0");
+		$pages                 = $this->DataBase->FetchRows($pages_result);
+
+		$pages_columns_uf      = $this->DataBase->GetColumnsNames('pages');
+
+		$templates_result      = $this->DataBase->DoQuery("SELECT * FROM layouts WHERE hidden = 0");
+		$templates_rows        = $this->DataBase->FetchRows($templates_result);
+		$templates = [];
+
+		foreach($templates_rows as $template) {
+			$templates[$template['id']] = $template;
+		}
+		
+		/**
+		 * Add all variables to the 'View' class
+		*/
+
+		$this->View->AddData('login', $login);
+		$this->View->AddData('avatar', $avatar);
+		$this->View->AddData('name', $name);
+		$this->View->AddData('surname', $surname);
+		$this->View->AddData('email', $email);
+
+		$this->View->AddData('pages', $pages);
+		$this->View->AddData('pages_columns', $pages_columns_uf);
+		$this->View->AddData('templates', $templates);
+	}
 	
 }
 

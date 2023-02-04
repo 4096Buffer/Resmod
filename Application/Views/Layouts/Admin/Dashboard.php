@@ -16,12 +16,17 @@ if(!$this->Auth->IsAuth()) {
 <body>
   
   <?php 
+
     include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'Header.php';
     include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'SideNav.php';
-    
 
   ?>
 
+  <div class="main">
+    <?php 
+        include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'MainTitle.php';
+    ?>
+    
     <div class="dashboard-box welcome-box">
         <h2>
             Witaj, <?=$login?>
@@ -39,11 +44,12 @@ if(!$this->Auth->IsAuth()) {
       </h2>
       <ol>
         <?php $i = 0;
-          foreach($pages_views as $page) { 
-            $i++;
-            if($i > 8) {
-              break;
-            }
+          foreach($pages_views as $page) { ?>
+            <?php 
+              $i++;
+              if($i > 8) {
+                break;
+              }
             ?>
             <li>
               <?=$page['description']?> - <?=$page['views']?>
@@ -70,9 +76,17 @@ if(!$this->Auth->IsAuth()) {
           <?php foreach($modules_groups as $group) {?>
             <div class="modules-add-list-box" show-value="<?=strtolower($group['title'])?>">
                 <ol>
-                  <?php foreach($group['modules'] as $module) {?>
+                  <?php 
+                    $i = 0;
+                    foreach($group['modules'] as $module) { ?>
+                    <?php 
+                      $i++;
+                      if($i > 8) {
+                        break;
+                      }
+                    ?>
                     <li>
-                      <a href="/add-module?module=<?=$module['title']?>">
+                      <a href="/add-module?module=<?=$module['id']?>">
                         <?=$module['title']?>
                       </a>
                     </li>
@@ -82,7 +96,7 @@ if(!$this->Auth->IsAuth()) {
           <?php } ?>
         </div>
     </div>
-                    
+
     <div class="dashboard-box system-info-box">
         <h2>
           Informacje o stronie

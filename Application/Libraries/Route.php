@@ -7,13 +7,16 @@ namespace Code\Libraries;
  */
 
 class Route extends \Code\Core\BaseController {
-    
+
+    private $path;
+
 	public function __construct() {
 		parent::__construct();
         
 		$this->LoadLibrary([ 'DataBase', 'View', 'Variables', 'AppendFiles', 'Module', 'Auth' ]);
         
         $this->SetupRoute();
+        $this->PreparePath();
 	}
 
     private function GetLayoutPath($path) {
@@ -26,6 +29,9 @@ class Route extends \Code\Core\BaseController {
         
     } 
 
+    private function PreparePath() {
+        $this->path = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    }
 
 	private function SetupRoute() {
 		$result = $this->DataBase->DoQuery("SELECT * FROM pages");
@@ -33,31 +39,33 @@ class Route extends \Code\Core\BaseController {
         
 		foreach($fetches as $fetch) {
             $layout = $this->GetLayout($fetch['id_layout']);
-			$new_route = [ 
-                "uri"        => $fetch['route address'],
-                "layout"     => $layout,
-                "id"         => $fetch['id'],
-                "controller" => $layout['controller'],
-                "action"     => $layout['action']
-            ];
+            $new_route = $fetch;
+            
+            $new_route['layout']     = $layout;
+            $new_route['controller'] = $layout['controller'];
+            $new_route['action']     = $layout['action'];
+            unset($new_route['route address']);
+
+            $new_route['uri']        = $fetch['route address'];
 
 			$this->routes[] = $new_route;
 		}
 	}
     
-    private function AddVariables($id) {
-        $vars_c = new \Code\Libraries\Variables($id);
-        $module_c = new \Code\Libraries\Module($id);
+    private function AddVariables($page) {
+        $vars_c = new \Code\Libraries\Variables($page['id']);
+        $module_c = new \Code\Libraries\Module($page['id']);
                 
         $this->View->AddData('vars', $vars_c);
         $this->View->AddData('module', $module_c);
+        $this->View->AddData('current_page', $page);
     }
 
     public function LoadRoute($route) {
         $layout = $route['layout'];
         $layout_path = $this->GetLayoutPath($layout['view']);
         
-        $this->AddVariables($route['id']);
+        $this->AddVariables($route);
         
         $this->View->LoadViewLibraries();
         $this->View->Load($layout_path);
@@ -74,17 +82,25 @@ class Route extends \Code\Core\BaseController {
     }
     
     public function GetCurrentPage() {
-        $uri = $_SERVER['REQUEST_URI'];
-        $uri_ex = explode('/', $uri)[1];
         $found = false;
         
         foreach($this->routes as $route) {
             $layout      = $route['layout'];
             $page_uri    = $route['uri'];
-            $page_uri_ex = explode('/', $route['uri'])[1];
-            
-            if($page_uri_ex == $uri_ex) {
-                return $route;
+
+            if(preg_match('/^(\/\/)?([^\/]+)?(\/[\s\S]*)?$/', $this->path, $match)) {
+                $uri = $match[3];
+                $uri_na = '';
+
+                if($pos = \strpos($uri, '?')) {
+                    $uri_na = substr($uri, 0, $pos);
+                } else {
+                    $uri_na = $uri;
+                }
+
+                if($uri_na == $page_uri) {
+                    return $route;
+                }
             }
         }
         

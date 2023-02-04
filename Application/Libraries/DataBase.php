@@ -63,6 +63,7 @@ class DataBase extends \Code\Core\BaseController {
     
     public function DoQuery(string $sql, array $bind = null) {
       if (!($stmt = $this->connect->prepare($sql))) {
+        echo $this->Error();
         return null;
       }
 
@@ -88,6 +89,14 @@ class DataBase extends \Code\Core\BaseController {
         $row = $result->fetch_assoc();
         return $row;
     }
+
+    public function GetColumnsNames($table_name) {
+      $result = $this->DoQuery("SHOW COLUMNS FROM " . $table_name);
+      $names  = $this->FetchRows($result);
+      
+      return $names;
+    }
+
     public function Error() {
       return $this->connect->error;
     }

@@ -13,7 +13,7 @@ DOMHelper.waitForAllElm().then(() => {
 
         (() => {
             var logoutBtn = document.querySelector(".button-logout")
-            var logout    = (e) => {
+            var logout    = e => {
                 var controller = e.target.getAttribute('ajax-controller')
                 var action     = e.target.getAttribute('ajax-action')
                 var sendData = {
@@ -152,7 +152,7 @@ DOMHelper.waitForAllElm().then(() => {
 
         (() => {
             var modulesList = document.querySelector('#modules-list');
-            var onChange = (e) => {
+            var onChange = e => {
                 var target = e.target.options[e.target.selectedIndex]
                 var boxes  = document.getElementsByClassName('modules-add-list-box')
                 var find   = undefined
@@ -174,16 +174,19 @@ DOMHelper.waitForAllElm().then(() => {
                 
             }
 
-            modulesList.addEventListener('change', onChange)
+            if(modulesList) {
+                modulesList.addEventListener('change', onChange)
+            }
         })();
 
         (() => {
             var collaps = document.getElementsByClassName('collapsible-sidenav')
 
             for(var i = 0; i < collaps.length; i++) {
-                var openClose = (e) => {
-                    var content = e.target.nextElementSibling
-                    if(content) {
+                var openClose = e => {
+                    if(e.target.getAttribute('collapsible') == 'true') {
+                        var content = e.target.nextElementSibling
+
                         if(content.getAttribute('active') == 'false') {
                             content.style.display          = 'block'
                             e.target.style.background      = 'none'
@@ -197,15 +200,91 @@ DOMHelper.waitForAllElm().then(() => {
 
                             content.setAttribute('active', 'false')
                         }
+                    } else {
+                        location.href = e.target.getAttribute('href')
                     }
-
-                    
-
                 }
 
                 collaps[i].addEventListener('click', openClose)
             }
         })();
+
+        (() => {
+            var checkIcons = document.getElementsByClassName('check-icon')
+            var active = undefined
+
+            var setActive = el => {
+                active = el
+            }
+
+            var clickCheckIcon = e => {
+                var rows = e.target.parentElement.parentElement.parentElement.children
+                
+                for(var i = 0; i < rows.length; i++) {
+                    if(rows[i].getAttribute('active') == 'true') {
+                        
+                        var checkIcon = rows[i].querySelector('.check-icon')
+                        
+                        checkIcon.style.setProperty('--checkicon-b-background', '#fff')
+                        checkIcon.style.setProperty('--checkicon-a-background', '#fff')
+
+                        rows[i].setAttribute('active', 'false')
+                        rows[i].classList.remove('active-row-pages-templates')
+                    }
+                }
+
+                var row = e.target.parentElement.parentElement
+
+                e.target.style.setProperty('--checkicon-b-background', '#2a2a2a')
+                e.target.style.setProperty('--checkicon-a-background', '#2a2a2a')
+
+                row.setAttribute('active', 'true')
+                row.classList.add('active-row-pages-templates')
+
+                active = row
+            }
+            
+            for(var i = 0; i < checkIcons.length; i++) {
+                checkIcons[i].addEventListener('click', clickCheckIcon)
+            }
+
+            var selectText = document.querySelector('.templates-select-current');
+            var selectClick = e => {
+                var selectDiv = document.querySelector('.templates-select')
+                if(selectDiv.getAttribute('open') == 'false') {
+                    selectText.style.setProperty('--arrow-select-transform', 'rotate(180deg)')
+                    selectDiv.style.display = 'flex'
+                    
+                    setTimeout(() => {
+                        selectDiv.style.opacity = '100%'
+                    }, 50)
+
+                    selectDiv.setAttribute('open', 'true')
+                } else {
+                    selectText.style.setProperty('--arrow-select-transform', 'rotate(0deg)')
+                    selectDiv.style.opacity = '0%'
+
+                    setTimeout(() => {
+                        selectDiv.style.display = 'none'
+                    }, 100)
+
+                    selectDiv.setAttribute('open', 'false')
+                }
+            }
+
+            selectText.addEventListener('click', selectClick);
+
+            var selectOptions = document.getElementsByClassName('templates-select-option')
+            
+            var selectOptionClick = e => {
+                selectText.innerText = e.target.innerText
+            }
+            for(var i = 0; i < selectOptions.length; i++) {
+                selectOptions[i].addEventListener('click', selectOptionClick)
+            }
+
+        })();
+
         
     }, 500)
 }).catch(err => {

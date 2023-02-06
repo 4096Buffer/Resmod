@@ -18,8 +18,7 @@ class ModuleVariables extends \Code\Core\BaseController {
 		$this->LoadLibrary(['DataBase']);
 
 		$this->module_id = $id_module;
-		$this->page_id   = $id_page;
-
+		$this->page_id      = $id_page;
 
 	}
 
@@ -40,23 +39,17 @@ class ModuleVariables extends \Code\Core\BaseController {
 		foreach($fetches as $fetch) {
 			$fetch['name']          = $this->GetDefVariable($fetch['id_variable'])['name'];
             $fetch['default_value'] = $this->GetDefVariable($fetch['id_variable'])['default_value'];
-            $fetch['id_type']       = $this->GetDefVariable($fetch['id_variable'])['id_type'];
+            $fetch['type']       = $this->GetDefVariable($fetch['id_variable'])['type'];
             //$fetch['id_page']       = $this->GetDefVariable($fetch['id_variable'])['id_page'];
             
 			$this->variables[] = $fetch;
 		}
-
 	}
-    
-    private function GetVariableType($id) {
-        $row = $this->DataBase->GetFirstRow("SELECT * FROM variable_types WHERE id = ?", [ $id ]);
-        return $row['name'];
-    }
     
     private function CreateObjectValue($variable) {
         $object = null;
         
-        $type = $this->GetVariableType($variable['id_type']);
+        $type = $variable['type'];
         
         $object_space = '\Code\Libraries\Variables\Types\\' . $type;
         if(class_exists($object_space)) {

@@ -66,7 +66,39 @@ class RequestHelper extends \Code\Core\BaseController {
     public function RandomHash($len = 22) {
         return bin2hex(mcrypt_create_iv($len, MCRYPT_DEV_URANDOM));
     }
-    
+
+    public function GetHref() {
+        return $_SERVER['REQUEST_URI'] ?? '/';
+    }
+
+    public function GetPathname() {
+        return explode('?', $this->GetHref())[0];
+    }
+
+    public function GetQueryString() {
+        //$uri = substr_replace($_SERVER['REQUEST_URI'], '', 0, strpos($_SERVER['REQUEST_URI'], '?'));
+        $query = explode('?', $this->GetHref())[1] ?? null;
+        return $query;
+    }
+
+    public function GetQueryFragments() {
+        $query_fragments = explode('&', $this->GetQueryString());
+        $frags = [];
+
+        foreach($query_fragments as $frag) {
+            $frag = trim($frag);
+
+            if($frag === '') {
+                continue;
+            }
+
+            $frag_ex = explode('=', $frag);
+            $frags[$frag_ex[0]] = $frag_ex[1] ?? null;
+        }
+
+        return $frags;
+    }
+
 }
 
 

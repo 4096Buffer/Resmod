@@ -25,13 +25,17 @@ if(!$this->Auth->IsAuth()) {
     <?php 
         include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'MainTitle.php';
     ?>
-
-    <h2 class="h2-main-add-templates">
-        Dodaj szablon
-    </h2>
+    
+    <div class="main-add-templates-box">
+        <h2 class="h2-main-add-templates">
+            Dodaj szablon
+        </h2>
+    </div>
 
     <form class="form-add-template">
-        <label>Wybierz stronę:</label>
+        <div class="label-container">
+            <label>Wybierz stronę:</label>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -82,39 +86,27 @@ if(!$this->Auth->IsAuth()) {
                 <?php } ?>
             </tbody>
         </table>
-
-        <label>Wybierz szablon:</label>
-        
+        <div class="label-container">
+            <label>Wybierz szablon:</label>
+        </div>
+        <!--
         <div class="templates-select-current">
             Wybierz strone
         </div>
         <div class="templates-select" open="false">
             <?php foreach($templates as $template) { ?>
                 <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-                <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
-
-                
             <?php } ?>
         </select>
+        -->
         
+        <?php foreach($templates as $template) { ?>
+            <div class="templates-list-select">
+                
+            </div>
+        <?php } ?>
+        
+        </div>
     </form>
 
 </div>

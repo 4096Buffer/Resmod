@@ -29,7 +29,7 @@ class HTML extends \Code\Core\BaseController {
         return $arg;
     }
     
-    public function CreateHTMLElement($tag, array $args = null) {
+    public function CreateHTMLElement($tag, $inner, array $args = null) {
         if(is_null($tag)) {
             return '';
         }
@@ -41,7 +41,7 @@ class HTML extends \Code\Core\BaseController {
             $arg = $this->PrepareArguments($args);
         }
         
-        $html = '<' . $tag . ' ' . $arg . '>';
+        $html = '<' . $tag . ' ' . $arg . '>' . $inner . '</' . $tag . '>';
         
         return $html;
     }

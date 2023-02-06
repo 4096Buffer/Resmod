@@ -15,33 +15,31 @@ class AppendFiles extends \Code\Core\BaseController {
 	public function __construct() {
 		parent::__construct();
 
-		$this->LoadLibrary('DataBase');
+		$this->LoadLibrary(['DataBase', 'HTML']);
 	}
 
 	private function GetAllFiles() {
 		$this->css = [];
 		$this->js  = [];
 
-		$result = $this->DataBase->DoQuery("SELECT * FROM append_files");
+		$result = $this->DataBase->DoQuery("SELECT * FROM append_files ORDER BY sort ASC");
 		$fetches = $this->DataBase->FetchRows($result);
 		
 
 		foreach($fetches as $fetch) {
-
 			switch ($fetch['type']) {
 				case 'Script':
 					$html = '<script type="text/javascript" src="'. JSPATH . '/' . $fetch['path'] . '" ></script>';
-					$this->js[] = $html;
-
-					break;
-				
-				default:
-					$html = '<link rel="stylesheet" href="' . CSSPATH . '/' . $fetch['path'] . '" />';
-					$this->css[] = $html;
+					$fetch['html'] = $html;
+					$this->js[] = $fetch;
 					
 					break;
+				default:
+					$html = '<link rel="stylesheet" href="' . CSSPATH . '/' . $fetch['path'] . '" />';
+					$fetch['html'] = $html;
+					$this->css[] = $fetch;
+					break;
 			}
-
 		}
 	}
 
@@ -49,40 +47,35 @@ class AppendFiles extends \Code\Core\BaseController {
 		$this->GetAllFiles();
 
 		foreach($this->css as $file) {
-			echo $file;
+			echo $file['html'];
 		}
 
-		$helpers = [];
 		$mains   = [];
         $admins  = [];
 
 
 		foreach($this->js as $file) {
-
-			if(\strpos($file, 'Helpers') !== false) {
-				$helpers[] = $file;
+			if($file['isadmin'] == '1') {
+				$admins[] = $file;
 				continue;
-			} else if(\strpos($file, 'Admin') !== false) {
-                $admins[] = $file;
-                continue;
-            }
+			}
 
 			$mains[] = $file;
         }
 
-		foreach($helpers as $helper) {
-			echo $helper;
-		}
         
-        if($is_admin) {
+
+        foreach($mains as $main) {
+			echo $main['html'];
+		}
+
+		if($is_admin) {
             foreach($admins as $admin) {
-                echo $admin;
+                echo $admin['html'];
             }
-        } else {
-            foreach($mains as $main) {
-			 echo $main;
-		    }
         }
+		
+		$this->HTML->Create//dodaj skrypt
 
 	}
 }

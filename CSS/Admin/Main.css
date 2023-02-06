@@ -3,11 +3,12 @@ body {
   opacity : 100% !important;
   background-color:#dfdfdf;
   margin:0;
+  overflow-x: hidden;
 }
 
 .main {
   padding-top: calc(4vh + 0.8%);
-  margin-left: 24vh; /* Same as the width of the sidenav */
+  margin-left: 20.01vh; /* Same as the width of the sidenav */
 }
 
 .sidenav {
@@ -229,6 +230,15 @@ body {
 
 .collapsible-sidenav-content {
   display: none;
+  opacity: 0%;
+  /* Firefox */
+  -moz-transition: all 100ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 100ms ease-in;
+  /* Opera */
+  -o-transition: all 100ms ease-in;
+  /* Standard */
+  transition: all 100ms ease-in;
 }
 
 .collapsible-sidenav-content ol {
@@ -273,33 +283,32 @@ body {
   right:20%;
 }
 
-.main-title-page h1 {
-  font-weight: 100;
-  font-size: 2.5rem;
-}
+
 
 .h2-main-add-templates {
   font-weight: 500;
   margin-top: 4vh;
   font-size: 1.8rem;
-  margin-left: 2vh;;
+  margin-left:calc(50% - 20vh);
 }
 
 .form-add-template {
-  margin-left: 6vh;
+  /*margin-left: 6vh;*/
 }
 
 .form-add-template label {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  
 }
 
 .form-add-template table {
   background-color: #686868;
   border-collapse: collapse;
-  margin: 3vh 0 3vh 2vh;
+  margin: 3vh 3vh 3vh 2vh;
   font-size: 0.9em;
   font-family: sans-serif;
   color: #ffffff;
+  width: calc(95%);
 }
 
 .form-add-template table thead tr {
@@ -463,4 +472,30 @@ body {
 
 .templates-select-option:hover {
   background-color: #858383;
+}
+
+.main-add-templates-box {
+  padding: 0.1vh;
+  background-color: #b5b4b4;
+  width:100%;
+  margin-bottom:4vh;
+}
+
+.main-title-page {
+  padding: 0.1vh;
+  background-color: #666;
+  width:100%;
+  display: inline-flex;
+  
+}
+
+.main-title-page h1 {
+  font-weight: 400;
+  font-size: 2.5rem;
+  margin-left:2.5rem;
+  color: #fff;
+}
+
+.label-container {
+  margin-left:calc(50% - 20vh);
 }

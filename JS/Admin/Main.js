@@ -1,4 +1,5 @@
-DOMHelper.waitForAllElm().then(() => {
+console.log(Helpers)
+Helpers.DOMHelper.waitForAllElm().then(() => {
 	setTimeout(() => {
         (() => {
             var warningHack = () => {
@@ -189,12 +190,19 @@ DOMHelper.waitForAllElm().then(() => {
 
                         if(content.getAttribute('active') == 'false') {
                             content.style.display          = 'block'
+                            setTimeout(() => {
+                                content.style.opacity          = '100%'
+                            }, 50)
                             e.target.style.background      = 'none'
                             e.target.style.backgroundColor = '#262626'
 
                             content.setAttribute('active', 'true')
                         } else {
-                            content.style.display          = 'none'
+                            content.style.opacity          = '0%'
+                            setTimeout(() => {
+                                content.style.display      = 'none'
+                            }, 100)
+
                             e.target.style.backgroundColor = null
                             e.target.style.background      = 'none'
 
@@ -272,7 +280,9 @@ DOMHelper.waitForAllElm().then(() => {
                 }
             }
 
-            selectText.addEventListener('click', selectClick);
+            if(selectText) {
+                selectText.addEventListener('click', selectClick);
+            }
 
             var selectOptions = document.getElementsByClassName('templates-select-option')
             

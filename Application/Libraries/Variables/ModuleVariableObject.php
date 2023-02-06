@@ -11,7 +11,7 @@ class ModuleVariableObject extends \Code\Core\BaseController {
     protected $id;
     protected $name;
     protected $default_value;
-    protected $type_id;
+    protected $type;
     protected $module_id;
     protected $deleted;
     //protected $page_id;
@@ -26,25 +26,26 @@ class ModuleVariableObject extends \Code\Core\BaseController {
         $this->id            = $variable['id'];
         $this->name          = $variable['name'];
         $this->default_value = $variable['default_value'];
-        $this->type_id       = $variable['id_type'];
+        $this->type          = $variable['type'];
         $this->module_id     = $variable['id_module'];
         $this->deleted       = 0;
        // $this->page_id       = $variable['id_page'];
         $this->value         = $variable['value'];
 	}
     
-    public function EchoContent($content, $admin = false) {
-        if(!$admin) {
+    public function EchoContent($content) {
+        if(!$this->Auth->IsAuth()) {
             echo $content;
         } else {
             $html_args = [
                 [
-                    'name'  => 'elmname',
+                    'name'  => 'var-name',
                     'value' => $this->name
                 ]
             ];
             
-            $this->HTML->CreateHTMLElement('cmselement', $html_args);
+            
+            echo $this->HTML->CreateHTMLElement('cmselement', $content, $html_args);
         }
     }
     

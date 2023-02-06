@@ -1,4 +1,4 @@
-<h2>    
+<h2>
     <?php 
         $mvars->Get('title')->Render();
     ?>

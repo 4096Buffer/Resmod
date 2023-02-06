@@ -6,14 +6,13 @@ class InputType extends \Code\Libraries\Variables\ModuleVariableObject {
     
     public function Render() {
         $this->EchoContent($this->GetHTML());
-
     }
     
     public function GetHTML() {
-        $value = $this->GetValue();
         
+        $value = $this->GetValue();
         if(is_null($value)) {
-            $value = '';
+            $value =$this->GetDefValue();
         }
         
         return $value;

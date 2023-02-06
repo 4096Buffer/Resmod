@@ -42,7 +42,7 @@
         $path = $this->getPath($name);
         
         if (!is_file($path)) {
-          echo $path;
+          
           return false;
         }
 
@@ -55,7 +55,7 @@
             $$key = $value;
           }
         }
-
+        
         include $path;
         return true;
     }

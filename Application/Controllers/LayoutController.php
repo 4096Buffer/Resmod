@@ -12,7 +12,7 @@ class LayoutController extends \Code\Core\BaseController {
 	public function __construct() {
 		parent::__construct();
 
-		$this->LoadLibrary(['DataBase', 'View', 'Variables']);
+		$this->LoadLibrary(['DataBase', 'View', 'Variables', 'RequestHelper']);
 	}
 
 	/**
@@ -79,14 +79,11 @@ class LayoutController extends \Code\Core\BaseController {
 			$group['modules'] = [];
 
 			foreach($modules as $module) {
-				if($module['id_group'] == $group['id']) {
+				if($module['group'] == $group['name']) {
 					$group['modules'][] = $module;
 				}
 			}
 		}
-
-		
-
 
 		/**
 		 * Add all variables to the 'View' class
@@ -150,6 +147,17 @@ class LayoutController extends \Code\Core\BaseController {
 		$this->View->AddData('pages', $pages);
 		$this->View->AddData('pages_columns', $pages_columns_uf);
 		$this->View->AddData('templates', $templates);
+	}
+
+	public function ExampleShow() {
+		$example_id     = $this->RequestHelper->GetQueryFragments()['id'] ?? null;
+		$example_layout = $this->DataBase->GetFirstRow("SELECT * FROM layouts WHERE id = ? AND hidden = 0", [ $example_id ]);
+		$view           = new \Code\Libraries\View();
+		$request_helper = new \Code\Libraries\RequestHelper();
+
+		$this->View->AddData('example_layout', $example_layout);
+		$this->View->AddData('view', $view);
+		$this->View->AddData('request_helper', $request_helper);
 	}
 	
 }

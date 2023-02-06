@@ -17,7 +17,8 @@
 	<title>
 		<?= $vars->Get('title')?>
 	</title>
-    
+	
+    <meta id="request-method" name="request-method" content="<?= htmlentities($_SERVER['REQUEST_METHOD'])?>">
     <script type="text/javascript" src="<?=$vars->Get('addon')?>"></script>
 	<?php $this->AppendFiles->Append(true); ?>
 

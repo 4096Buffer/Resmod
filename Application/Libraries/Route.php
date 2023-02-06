@@ -13,14 +13,18 @@ class Route extends \Code\Core\BaseController {
 	public function __construct() {
 		parent::__construct();
         
-		$this->LoadLibrary([ 'DataBase', 'View', 'Variables', 'AppendFiles', 'Module', 'Auth' ]);
+		$this->LoadLibrary([ 'DataBase', 'View', 'Variables', 'AppendFiles', 'Module', 'Auth', 'RequestHelper']);
         
         $this->SetupRoute();
         $this->PreparePath();
 	}
 
     private function GetLayoutPath($path) {
-        return $path . '.php';   
+        return $path . '/Layout.php';   
+    }
+
+    private function GetLayoutHiddenPath($path) {
+        return $path . '.php';
     }
     
     private function GetLayout($id) {
@@ -62,8 +66,17 @@ class Route extends \Code\Core\BaseController {
     }
 
     public function LoadRoute($route) {
-        $layout = $route['layout'];
-        $layout_path = $this->GetLayoutPath($layout['view']);
+        $layout      = $route['layout'];
+        $layout_path = '';
+
+        switch($layout['hidden']) {
+            case '0':
+                $layout_path = $this->GetLayoutPath($layout['view']);
+                break;
+            case '1':
+                $layout_path = $this->GetLayoutHiddenPath($layout['view']);
+                break;
+        }
         
         $this->AddVariables($route);
         

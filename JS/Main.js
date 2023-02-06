@@ -1,5 +1,4 @@
-
-DOMHelper.waitForAllElm().then(() => {
+Helpers.DOMHelper.waitForAllElm().then(() => {
 	setTimeout(() => {
         (() => {
             var warningHack = () => {

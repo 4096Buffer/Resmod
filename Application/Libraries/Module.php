@@ -27,45 +27,81 @@ class Module extends \Code\Core\BaseController {
 	}
 
 	private function GetModules() {
-		$result = $this->DataBase->DoQuery("SELECT * FROM modules_added WHERE id_page=? ORDER BY sort ASC", [ $this->page_id ]);
+		$result = $this->DataBase->DoQuery("SELECT * FROM modules_added ORDER BY sort ASC");
 		$fetches = $this->DataBase->FetchRows($result);
 
 		foreach($fetches as $fetch) {
-			$resultA = $this->DataBase->DoQuery("SELECT * FROM modules WHERE id=?", [ $fetch['id_module'] ]);
-			$fetchA  = $resultA->fetch_assoc();
+			$fetchA = $this->DataBase->GetFirstRow("SELECT * FROM modules WHERE id=?", [ $fetch['id_module'] ]);
 
 			$module = [
-				"id"         => $fetch['id'],
-				"title"      => $fetchA['title'],
-				"view"       => $fetchA['view'],
-				"controller" => $fetchA['controller'],
-				"action"     => $fetchA['action'],
-				"active"     => $fetch['active']
+				"id"            => $fetch['id'],
+				"title"         => $fetchA['title'],
+				"view"          => $fetchA['view'],
+				"controller"    => $fetchA['controller'],
+				"action"        => $fetchA['action'],
+				"active"        => $fetch['active'],
+				"global"        => $fetch['global'],
+				"global_except" => $fetch['global_except'],
+				"id_page"       => $fetch['id_page']
 			];
 
 			$this->modules[] = $module;
 		}
 	}
 	
+	
+	private function LoadModule($module) {
+		if($module['controller'] != null) {
+			require_once $this->GetControllerPath($module['controller']);
+
+			$class_space = '\Code\Controllers\\' . $module['controller'];
+			$class = new $class_space();
+
+			call_user_func(array($class, $module['action']));
+		}
+
+		$mvars_c = new \Code\Libraries\Variables\ModuleVariables($module['id'], $this->page_id);
+		
+		$this->View->AddData('mvars', $mvars_c);
+		$this->View->Load($this->GetPath($module['view']));
+	}
+
+	
+
 	public function LoadModules() {
 
-		$this->GetModules($this->page_id);
+		$this->GetModules();
 
 		foreach($this->modules as $module) {
+			$found = false;
 			if($module['active'] == 1) {
-				if($module['controller'] != null) {
-					require_once $this->GetControllerPath($module['controller']);
+				if($module['global'] == 1) {
+					$except = $module['global_except'];
+					if($except != '[]' || $except != '') {
+						$r = str_replace('[' , '', $except);
+						$r = str_replace(']', '', $r);
+						$e = explode(',', $r);
+						
+						foreach($e as $v) {
+							if($v == $this->page_id) {
+								$found = false;
+								break;
+							}
+						}
 
-					$class_space = '\Code\Controllers\\' . $module['controller'];
-					$class = new $class_space();
-
-					call_user_func(array($class, $module['action']));
+					} else {
+						$found = true;
+					}
 				}
 
-				$mvars_c = new \Code\Libraries\Variables\ModuleVariables($module['id'], $this->page_id);
+				if($module['id_page'] == $this->page_id) {
+					$found = true;
+				}
 				
-				$this->View->AddData('mvars', $mvars_c);
-				$this->View->Load($this->GetPath($module['view']));
+			}
+
+			if($found) {
+				$this->LoadModule($module);
 			}
 		}
 

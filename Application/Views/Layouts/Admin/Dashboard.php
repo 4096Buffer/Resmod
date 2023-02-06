@@ -66,15 +66,15 @@ if(!$this->Auth->IsAuth()) {
           <select name="modules-list" id="modules-list">
             <?php foreach($modules_groups as $group) { ?>
                 <option value="select"></option>
-                <option value="<?=strtolower($group['title'])?>">
-                  <?=$group['title']?>
+                <option value="<?=strtolower($group['name'])?>">
+                  <?=$group['name']?>
                 </option>
             <?php } ?>
           </select>
         </div>
         <div class="modules-add-right">
           <?php foreach($modules_groups as $group) {?>
-            <div class="modules-add-list-box" show-value="<?=strtolower($group['title'])?>">
+            <div class="modules-add-list-box" show-value="<?=strtolower($group['name'])?>">
                 <ol>
                   <?php 
                     $i = 0;

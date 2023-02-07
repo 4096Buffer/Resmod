@@ -13,11 +13,12 @@ var lo_ = (e) => {
                 action     : 'AddView',
                 id         : id
             }
-            AJAX.Post(location.href, sd_)
+            
+            Helpers.AJAX.Post(location.href, sd_)
         }
         
         
-        AJAX.Post(location.href, sd).success(data => {
+        Helpers.AJAX.Post(location.href, sd).success(data => {
             var ro = data;
             var de = JSON.parse(ro)
             

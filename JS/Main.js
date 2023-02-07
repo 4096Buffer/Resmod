@@ -74,7 +74,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                         }
                     }
 
-                    AJAX.Post(location.href, sendData).success(login)
+                    Helpers.AJAX.Post(location.href, sendData).success(login)
                 }
 
                 adminForm.addEventListener('submit', adminFormSubmit)

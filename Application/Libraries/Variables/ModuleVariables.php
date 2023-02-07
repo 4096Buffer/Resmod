@@ -19,27 +19,35 @@ class ModuleVariables extends \Code\Core\BaseController {
 
 		$this->module_id = $id_module;
 		$this->page_id      = $id_page;
-
+		
+		if(!is_null($id_module) && !is_null($id_page)) {
+			$this->FetchVariables();
+		}
+		
 	}
 
-	private function GetDefVariable($id) {
-		$result = $this->DataBase->DoQuery("SELECT * FROM modules_variables WHERE id=?", [ $id ]);
-		echo $this->DataBase->Error();
-		$fetch =  $result->fetch_assoc();
+	//private function GetDefVariable($id) {
+	//	$result = $this->DataBase->DoQuery("SELECT * FROM modules_variables WHERE id=?", [ $id ]);
+	//	echo $this->DataBase->Error();
+	//	$fetch =  $result->fetch_assoc();
 
-		return $fetch;
-	}
-
+	//	return $fetch;
+	//}
 
 	private function FetchVariables() {
-		$result = $this->DataBase->DoQuery("SELECT * FROM modules_variables_values WHERE id_module=?", [ $this->module_id ]);
-
+		$result = $this->DataBase->DoQuery("
+			SELECT
+			mvv.*, mv.*
+			FROM
+			modules_variables_values 
+			mvv INNER JOIN modules_variables mv 
+			ON mv.id = mvv.id_variable WHERE id_module=?", [ $this->module_id ]);
 		$fetches = $this->DataBase->FetchRows($result);
 
 		foreach($fetches as $fetch) {
-			$fetch['name']          = $this->GetDefVariable($fetch['id_variable'])['name'];
-            $fetch['default_value'] = $this->GetDefVariable($fetch['id_variable'])['default_value'];
-            $fetch['type']       = $this->GetDefVariable($fetch['id_variable'])['type'];
+			//$fetch['name']          = $this->GetDefVariable($fetch['id_variable'])['name'];
+           // $fetch['default_value'] = $this->GetDefVariable($fetch['id_variable'])['default_value'];
+            //$fetch['type']       = $this->GetDefVariable($fetch['id_variable'])['type'];
             //$fetch['id_page']       = $this->GetDefVariable($fetch['id_variable'])['id_page'];
             
 			$this->variables[] = $fetch;
@@ -48,7 +56,6 @@ class ModuleVariables extends \Code\Core\BaseController {
     
     private function CreateObjectValue($variable) {
         $object = null;
-        
         $type = $variable['type'];
         
         $object_space = '\Code\Libraries\Variables\Types\\' . $type;
@@ -61,10 +68,6 @@ class ModuleVariables extends \Code\Core\BaseController {
     
 	public function Get($name) {
 		$find = null;
-
-		if(count($this->variables) == 0) {
-			$this->FetchVariables();
-		}
 
 		foreach($this->variables as $variable) {
 			if($variable['name'] == $name) {

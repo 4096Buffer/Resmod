@@ -2,23 +2,23 @@ Helpers.AJAX = (() => {
   return {
     Post: (url, data = null) => {
       var xhr = new XMLHttpRequest();
-          var success = undefined;
-          var error   = undefined;
-          var finish  = undefined;
-          var funs = {
-            success: function(fun) {
-              success = fun;
-              return funs;
-            },
-            error: function(fun) {
-              error = fun;
-              return funs;
-            },
-            finish: function(fun) {
-              finish = fun;
-              return funs;
-            }
-          };
+      var success = undefined;
+      var error   = undefined;
+      var finish  = undefined;
+      var funs = {
+        success: function(fun) {
+          success = fun;
+          return funs;
+        },
+        error: function(fun) {
+          error = fun;
+          return funs;
+        },
+        finish: function(fun) {
+          finish = fun;
+          return funs;
+        }
+      };
           
           
       xhr.open("POST", url, true);
@@ -62,4 +62,4 @@ Helpers.AJAX = (() => {
   } 
 
   
-})
+})()

@@ -12,7 +12,7 @@ class LayoutController extends \Code\Core\BaseController {
 	public function __construct() {
 		parent::__construct();
 
-		$this->LoadLibrary(['DataBase', 'View', 'Variables', 'RequestHelper']);
+		$this->LoadLibrary(['DataBase', 'View', 'Variables', 'RequestHelper', 'Auth']);
 	}
 
 	/**
@@ -24,11 +24,11 @@ class LayoutController extends \Code\Core\BaseController {
 		 * Get all admin user data from session
 		*/
 
-		$login   = $_SESSION['login'] ?? null;
-		$avatar  = 'Uploads/Avatars/' . $_SESSION['avatar'] ?? null;
-		$name    = $_SESSION['name'];
-		$surname = $_SESSION['surname'];
-		$email   = $_SESSION['email'];
+		$login   = $this->Auth->GetProfile()['login'];
+		$avatar  = $this->Auth->GetProfile()['avatar'];
+		$name    = $this->Auth->GetProfile()['name'];
+		$surname = $this->Auth->GetProfile()['surname'];
+		$email   = $this->Auth->GetProfile()['email'];
 
 		$database_info  = $this->DataBase->GetMysqlServerInfo();
 		$php_info       = \phpversion();
@@ -115,11 +115,11 @@ class LayoutController extends \Code\Core\BaseController {
 		 * Get all admin user data from session
 		*/
 
-		$login   = $_SESSION['login'] ?? null;
-		$avatar  = 'Uploads/Avatars/' . $_SESSION['avatar'] ?? null;
-		$name    = $_SESSION['name'];
-		$surname = $_SESSION['surname'];
-		$email   = $_SESSION['email'];
+		$login   = $this->Auth->GetProfile()['login'];
+		$avatar  = $this->Auth->GetProfile()['avatar'];
+		$name    = $this->Auth->GetProfile()['name'];
+		$surname = $this->Auth->GetProfile()['surname'];
+		$email   = $this->Auth->GetProfile()['email'];
 
 		$pages_result          = $this->DataBase->DoQuery("SELECT * FROM pages WHERE hidden = 0");
 		$pages                 = $this->DataBase->FetchRows($pages_result);

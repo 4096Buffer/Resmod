@@ -22,7 +22,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                     action     : action
                 }
                 
-                AJAX.Post(location.href, sendData).success(data => {
+                Helpers.AJAX.Post(location.href, sendData).success(data => {
                     var decode = JSON.parse(data)
                     
                     if(decode.response = 'Success') {
@@ -99,7 +99,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                }
                var views = [];
 
-               AJAX.Post(location.href, sendData).success(data => {
+               Helpers.AJAX.Post(location.href, sendData).success(data => {
                    var decode = JSON.parse(data)
                    
                    if(decode.response == 'Success') {
@@ -117,7 +117,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 
                 var pages = []
                 
-                AJAX.Post(location.href, sendData).success(data => {
+                Helpers.AJAX.Post(location.href, sendData).success(data => {
                     var decode = JSON.parse(data)
                     if(decode.response == 'Success') {
                         setValues(true, decode.data)

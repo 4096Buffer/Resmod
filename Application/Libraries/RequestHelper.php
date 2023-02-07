@@ -59,8 +59,9 @@ class RequestHelper extends \Code\Core\BaseController {
     }
   
     public function Redirect(string $url, int $statusCode = 301) {
-        header('Location: ' . $url, true, $statusCode);
-        die();
+        echo 'i did it';
+        //header('Location: ' . $url, true, $statusCode);
+        //die();
     }
 
     public function RandomHash($len = 22) {

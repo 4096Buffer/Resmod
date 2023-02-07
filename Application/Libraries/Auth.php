@@ -89,11 +89,37 @@ class Auth extends \Code\Core\BaseController {
     }
     
     public function UnAuth($user_id) {
-        if(isset($_SESSION['login'])) {
+        if($this->IsAuth()) {
             $result = $this->DataBase->DoQuery("UPDATE admin_users SET active = ? WHERE id = ?", [ '0', $user_id ]);
 
             unset($_SESSION['id']);
             unset($_SESSION['login']);
+        }
+    }
+
+    public function GetProfile($id = null) {
+        if($this->IsAuth()) {
+            if(!$id) {
+                return [
+                    "id"      => $_SESSION['id'] ?? 0,
+                    "login"   => $_SESSION['login'] ?? '',
+                    "avatar"  => 'Uploads/Avatars/' . $_SESSION['avatar'] ?? '',
+                    "name"    => $_SESSION['name'] ?? '',
+                    "surname" => $_SESSION['surname'] ?? '',
+                    "email"   => $_SESSION['email'] ?? ''
+                ];
+            } else {
+                $profile = $this->DataBase->GetFirstRow("SELECT * FROM admin_users WHERE id = ?", [ $id ]);
+                
+                return [
+                    "id"      => $profile['id'] ?? 0,
+                    "login"   => $profile['login'] ?? '',
+                    "avatar"  => 'Uploads/Avatars/' . $profile['avatar'] ?? '',
+                    "name"    => $profile['name'] ?? '',
+                    "surname" => $profile['surname'] ?? '',
+                    "email"   => $profile['email'] ?? ''
+                ];
+            }
         }
     }
 }

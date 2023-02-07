@@ -12,7 +12,7 @@ class Page extends \Code\Core\BaseController {
 	public function __construct() {
 		parent::__construct();
 
-		$this->LoadLibrary(['DataBase', 'View', 'RequestHelper', 'Auth']);
+		$this->LoadLibrary(['DataBase', 'View', 'RequestHelper', 'Auth', 'Module']);
 	}
 
     /**
@@ -100,6 +100,49 @@ class Page extends \Code\Core\BaseController {
         
         $this->RequestHelper->SendJsonData(true, $views);
     }
+
+    public function GetPageVariables() {
+        $data        = $this->RequestHelper->GetObjectFromJson();
+        $id          = $data['id'];
+        $variables = [];
+
+        if(is_null($data)) {
+            $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
+            return;
+        }
+        
+        //$page_hidden = $this->DataBase->GetFirstRow("SELECT * FROM pages WHERE id = ?");
+
+        $modules = $this->Module->GetModules();
+        
+        foreach($modules as $module) {
+            if($module['id_page'] !== $id) {
+                continue;
+            }
+        
+            $result = $this->DataBase->DoQuery("
+                SELECT
+                mvv.*, mv.name, mv.type, mv.default_value
+                FROM
+                modules_variables_values 
+                mvv INNER JOIN modules_variables mv 
+                ON mv.id = mvv.id_variable WHERE mvv.id_module = ?", [ $module['id'] ]);
+            $get_variables = $this->DataBase->FetchRows($result);
+
+            $module_variables = [
+                "module"    => $module,
+                "variables" => []
+            ];
+
+            foreach($get_variables as $variable) {
+                $module_variables["variables"][] = $variable;
+            }
+
+            $variables[] = $module_variables;
+        }
+        
+        $this->RequestHelper->SendJsonData(true, $variables);
+    }   
     
 }
 

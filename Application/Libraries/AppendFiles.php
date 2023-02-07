@@ -8,8 +8,9 @@ namespace Code\Libraries;
  */
 
 class AppendFiles extends \Code\Core\BaseController {
-	private $css = [];
-	private $js = [];
+	private $css  = [];
+	private $js   = [];
+	private $data = [];
 
 
 	public function __construct() {
@@ -74,9 +75,13 @@ class AppendFiles extends \Code\Core\BaseController {
                 echo $admin['html'];
             }
         }
-		
-		$this->HTML->Create//dodaj skrypt
 
+		$script = 'Helpers.Data.AddData(' . json_encode($this->data) . ')';
+		echo $this->HTML->CreateHTMLElement('script', $script, [ ['name' => 'type', 'value' => 'text/javascript']]);
+	}
+
+	public function AddData($key, $value) {
+		$this->data[$key] = $value;
 	}
 }
 

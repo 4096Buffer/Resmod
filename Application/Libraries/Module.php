@@ -26,7 +26,18 @@ class Module extends \Code\Core\BaseController {
 		return $name . '.php';
 	}
 
-	private function GetModules() {
+	public function GetModules() {
+		$result  = $this->DataBase->DoQuery("SELECT * FROM modules_added");
+		$modules = $this->DataBase->FetchRows($result);
+		
+		if(!is_null($modules) && gettype($modules) == 'array') {
+			return $modules;
+		}
+
+		return null;
+	}
+
+	private function FetchModules() {
 		$result = $this->DataBase->DoQuery("SELECT * FROM modules_added ORDER BY sort ASC");
 		$fetches = $this->DataBase->FetchRows($result);
 
@@ -70,7 +81,7 @@ class Module extends \Code\Core\BaseController {
 
 	public function LoadModules() {
 
-		$this->GetModules();
+		$this->FetchModules();
 
 		foreach($this->modules as $module) {
 			$found = false;

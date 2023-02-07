@@ -19,18 +19,9 @@ class Route extends \Code\Core\BaseController {
         $this->PreparePath();
 	}
 
-    private function GetLayoutPath($path) {
-        return $path . '/Layout.php';   
-    }
-
-    private function GetLayoutHiddenPath($path) {
-        return $path . '.php';
-    }
-    
     private function GetLayout($id) {
         $row = $this->DataBase->GetFirstRow("SELECT * FROM layouts WHERE id = ?", [ $id ]);
         return $row;
-        
     } 
 
     private function PreparePath() {
@@ -38,7 +29,7 @@ class Route extends \Code\Core\BaseController {
     }
 
 	private function SetupRoute() {
-		$result = $this->DataBase->DoQuery("SELECT * FROM pages");
+		$result = $this->DataBase->DoQuery("SELECT *  FROM pages");
 		$fetches = $this->DataBase->FetchRows($result);
         
 		foreach($fetches as $fetch) {
@@ -46,8 +37,6 @@ class Route extends \Code\Core\BaseController {
             $new_route = $fetch;
             
             $new_route['layout']     = $layout;
-            $new_route['controller'] = $layout['controller'];
-            $new_route['action']     = $layout['action'];
             unset($new_route['route address']);
 
             $new_route['uri']        = $fetch['route address'];
@@ -63,25 +52,23 @@ class Route extends \Code\Core\BaseController {
         $this->View->AddData('vars', $vars_c);
         $this->View->AddData('module', $module_c);
         $this->View->AddData('current_page', $page);
-    }
+        
+        $data = [
+            "profile" => $this->Auth->GetProfile(),
+            "page"    => null
+        ];
 
-    public function LoadRoute($route) {
-        $layout      = $route['layout'];
-        $layout_path = '';
-
-        switch($layout['hidden']) {
-            case '0':
-                $layout_path = $this->GetLayoutPath($layout['view']);
-                break;
-            case '1':
-                $layout_path = $this->GetLayoutHiddenPath($layout['view']);
-                break;
+        if($this->GetCurrentPage()['hidden'] == 1) {
+            if($this->Auth->IsAuth()) {
+                $data['page'] = $this->GetCurrentPage();
+            }
+        } else {
+            $data['page'] = $this->GetCurrentPage();
         }
-        
-        $this->AddVariables($route);
-        
-        $this->View->LoadViewLibraries();
-        $this->View->Load($layout_path);
+
+        foreach($data as $key => $value) {
+            $this->AppendFiles->AddData($key, $value);
+        }
     }
     
     public function LoadRouteByUri($uri) {
@@ -117,10 +104,13 @@ class Route extends \Code\Core\BaseController {
             }
         }
         
-        return null;
+        foreach($this->routes as $rf) {
+            if($rf['uri'] == '/404') {
+                return $rf;
+                break;
+            }
+        }
     }
-    
-    
     
 }
 

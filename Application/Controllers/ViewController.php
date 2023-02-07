@@ -13,7 +13,7 @@ class ViewController extends \Code\Core\BaseController {
 	public function __construct() {
     	parent::__construct();
 
-    	$this->LoadLibrary(['Route']);
+    	$this->LoadLibrary(['Route', 'View', 'Auth', 'AppendFiles']);
     }
 
     private function GetControllerPath($path) {
@@ -23,6 +23,14 @@ class ViewController extends \Code\Core\BaseController {
     /**
      * If current page exists in database show it if it doesnt show 404 page
     */
+    private function GetLayoutPath($path) {
+        return $path . '/Layout.php';   
+    }
+
+    private function GetLayoutHiddenPath($path) {
+        return $path . '.php';
+    }
+    
 
 	public function Run() {
         if($this->Route->GetCurrentPage() == null) {
@@ -31,16 +39,53 @@ class ViewController extends \Code\Core\BaseController {
         }
 
         $current_page = $this->Route->GetCurrentPage();
-        if($current_page['controller'] != null) {
-            require_once $this->GetControllerPath($current_page['controller']);
+        if($current_page['layout']['controller'] != null) {
+            require_once $this->GetControllerPath($current_page['layout']['controller']);
             
-            $class_space = '\Code\Controllers\\' . $current_page['controller'];
+            $class_space = '\Code\Controllers\\' . $current_page['layout']['controller'];
             $class = new $class_space();
 
-            call_user_func(array($class, $current_page['action']));
+            call_user_func(array($class, $current_page['layout']['action']));
+        }
+
+        $layout      = $current_page['layout'];
+        $layout_path = '';
+
+        switch($layout['hidden']) {
+            case '0':
+                $layout_path = $this->GetLayoutPath($layout['view']);
+                break;
+            case '1':
+                $layout_path = $this->GetLayoutHiddenPath($layout['view']);
+                break;
         }
         
-        $this->Route->LoadRoute($current_page);
+        $vars_c = new \Code\Libraries\Variables($current_page['id']);
+        $module_c = new \Code\Libraries\Module($current_page['id']);
+                
+        $this->View->AddData('vars', $vars_c);
+        $this->View->AddData('module', $module_c);
+        $this->View->AddData('current_page', $current_page);
+        
+        $data = [
+            "profile" => $this->Auth->GetProfile(),
+            "page"    => null
+        ];
+
+        if($this->Route->GetCurrentPage()['hidden'] == 1) {
+            if($this->Auth->IsAuth()) {
+                $data['page'] = $this->Route->GetCurrentPage();
+            }
+        } else {
+            $data['page'] = $this->Route->GetCurrentPage();
+        }
+
+        foreach($data as $key => $value) {
+            $this->AppendFiles->AddData($key, $value);
+        }
+        
+        $this->View->LoadViewLibraries();
+        $this->View->Load($layout_path);
         
 	}
 }

@@ -6,7 +6,7 @@ Helpers.Data = (() => {
             if(typeof obj !== 'object') {
                 return;
             }
-
+            
             for(var key in obj) {
                 data[key] = obj[key];
             }
@@ -15,9 +15,9 @@ Helpers.Data = (() => {
         GetData: name => {
             if(name in data) {
                 return data[name];
+            } else {
+                return null;
             }
-
-            return null;
         }
     }
 })()

@@ -1,51 +1,66 @@
 Helpers.Scope = (() => {
     var scopes = []
-    var ScopeObject = function(name, variables = []) {
+    var ScopeObject = function(name, variables = {}) {
         this.name       = name
-        this.variables  = []
+        this.variables  = variables
     }
 
     ScopeObject.prototype.name      = null
     ScopeObject.prototype.variables = null
     
 
-    ScopeObject.prototype.SetVariable = function(name, value, static = false) {
-        object = {
-            name   : name,
-            value  : value,
-            static : static
-        }
+    ScopeObject.prototype.SetVariable = function(name, value) {
 
-        for(var i = 0; i < this.variables.length; i++) {
-            if(this.variables[i] == object) {
-                if(this.variables[i].static) {
-                    console.error('Cannot edit static variable \'' + this.variables[i].name + '\' ')
-                    return;
-                }
+        //for(var i = 0; i < this.variables.length; i++) {
+        //    if(this.variables[i] == object) {
+        //        if(this.variables[i].static) {
+        //            console.error('Cannot edit static variable \'' + this.variables[i].name + '\' ')
+        //            return;
+        //        }
+        //    }
+        //}
+
+        this.variables[name] = value
+    }
+
+    ScopeObject.prototype.Callfunction = function(name, args = []) {
+        if(name in this.variables) {
+            var variable = this.variables[name]
+
+            if(typeof variable == 'function') {
+                return variable.apply(this, args)
             }
         }
-        this.variables.push(object)
+
+        console.error('Cannot call function. The function doesnt exists \'' + name + '\' or the variable is not function')
     }
 
     ScopeObject.prototype.GetVariable = function(name) {
-        for(var i = 0; i < this.variables.length; i++) {
-            if(this.variables[i].name = name) {
-                return this.variables[i]
-            }
+        if(name in this.variables) {
+            return this.variables[name]
         }
+
+        return null
     }
 
     ScopeObject.prototype.RemoveVariable = function(name) {
-        for(var i = 0; i < this.variables.length; i++) {
-            if(this.variables[i].name = name) {
-                this.variables.shift(this.variables[i])
-            }
+        if(name in this.variables) {
+            delete this.variables[name]
         }
     }
 
-    var x = new ScopeObject()
+    var globalScope = undefined
+
+    window.addEventListener('load',function(e) {
+        document.GlobalScope = globalScope = new ScopeObject() 
+    })
+
     return {
-        CreateScope : function(name, variables = []) {
+        CreateScope : function(name, variables = {}) {
+            if(!name) {
+                name = 'Scope-' + Math.round(Math.random() * 10000000).toString(16)
+            }
+
             var scope = new ScopeObject(name, variables)
             scopes.push(scope)
             return scope

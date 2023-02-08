@@ -21,7 +21,7 @@ class Page extends \Code\Core\BaseController {
     
     public function GetPageId() {
         $data     = $this->RequestHelper->GetObjectFromJson();
-        $pathname = $data['pathname'];
+        $pathname = $data['pathname'] ?? null;
         //$pathname = '/' . $pathname;
         $result   = $this->DataBase->DoQuery("SELECT * FROM `pages` WHERE `route address` = ?", [ $pathname ]);
         $rows = $this->DataBase->FetchRows($result); 
@@ -60,7 +60,7 @@ class Page extends \Code\Core\BaseController {
 
     public function AddView() {
         $data   = $this->RequestHelper->GetObjectFromJson();
-        $id     = $data['id'];
+        $id     = $data['id'] ?? null;
         $result = $this->DataBase->DoQuery("UPDATE pages SET views = views + 1 WHERE id = ?", [ $id ]);
         
         $this->UpdateLastView($id);
@@ -103,7 +103,7 @@ class Page extends \Code\Core\BaseController {
 
     public function GetPageVariables() {
         $data        = $this->RequestHelper->GetObjectFromJson();
-        $id          = $data['id'];
+        $id          = $data['id'] ?? null;
         $variables = [];
 
         if(is_null($data)) {
@@ -142,7 +142,36 @@ class Page extends \Code\Core\BaseController {
         }
         
         $this->RequestHelper->SendJsonData(true, $variables);
-    }   
+    }
+
+    public function ChangeTemplate() {
+        $data = $this->RequestHelper->GetObjectFromJson();
+
+        $id_page     = $data['id_page'] ?? null;
+        $id_template = $data['id_template'] ?? null;
+
+        if(is_null($data)) {
+            $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
+            return;
+        }
+
+        if(!$this->Auth->IsAuth()) {
+            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
+            return;
+        }
+
+        $page = $this->DataBase->GetFirstRow("SELECT * FROM pages WHERE id = ?", [ $id_page ]);
+        $update_result = $this->DataBase->DoQuery("UPDATE pages SET id_layout = ? WHERE id = ?", [ $id_template, $page['id']]);
+
+        if($this->DataBase->ErrorCode() !== 0) {
+            $this->RequestHelper->SendJsonData(false, null, 'Unknown database error!');
+            return;
+        }
+
+        $this->RequestHelper->SendJsonData(true);
+    }
+
+
     
 }
 

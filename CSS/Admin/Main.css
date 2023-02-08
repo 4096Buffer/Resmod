@@ -498,4 +498,58 @@ body {
 
 .label-container {
   margin-left:calc(50% - 20vh);
+  margin-bottom: 3%;
+}
+
+.templates-list-select {
+  padding: 40px;
+  background: white;
+  max-width: 40vh;
+  cursor: pointer;
+  /* Firefox */
+  -moz-transition: all 200ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 200ms ease-in;
+  /* Opera */
+  -o-transition: all 200ms ease-in;
+  /* Standard */
+  transition: all 200ms ease-in;
+  max-height: 50vh;
+}
+
+.templates-list-select iframe {
+  border: 2px solid grey;
+}
+
+.templates-list-select .label-template {
+  text-align: center;
+}
+
+.templates-list-select .description-template {
+  text-align: center;
+  margin-bottom:4%;
+}
+
+.templates-list-data {
+  display: flex;
+  flex-direction: column;
+  background: #b7b7b7;
+  width: 30vh;
+  height: 30vh;
+  margin-top:2%;
+}
+
+.templates-list-data .data-list {
+  border: 1px solid #666;
+  background-color: #c4c4c4;
+  width: 20vh;
+  padding: 5%;
+  border-radius: 2px;
+  margin: 2vh;
+  cursor: pointer;
+}
+
+.templates-list-data label {
+  font-size: 1.2rem;
+  padding: 5%;
 }

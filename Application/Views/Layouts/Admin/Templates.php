@@ -28,7 +28,7 @@ if(!$this->Auth->IsAuth()) {
     
     <div class="main-add-templates-box">
         <h2 class="h2-main-add-templates">
-            Dodaj szablon
+            Ustaw szablon
         </h2>
     </div>
 
@@ -49,7 +49,7 @@ if(!$this->Auth->IsAuth()) {
             </thead>
             <tbody>
                 <?php foreach($pages as $page) {?>
-                    <tr>
+                    <tr id-page="<?=$page['id']?>">
                         <td><div class="check-icon"></div></td>
                         <td><?=$page['id']?></td>
                         <td><?=$page['title']?></td>
@@ -101,11 +101,43 @@ if(!$this->Auth->IsAuth()) {
         -->
         
         <?php foreach($templates as $template) { ?>
-            <div class="templates-list-select">
-                
+            <div class="templates-list-select" template-id="<?=$template['id']?>">
+                <div class="label-template">
+                    <label>
+                        <?=$template['title']?>
+                    </label>
+                </div>
+                <div class="description-template">
+                    <?=$template['description']?>
+                </div>
+                <div class="label-template" style="margin-bottom:4%">
+                    <label style="font-size:1.1rem">
+                        Example page with this layout:
+                    </label>
+                </div>
+                <iframe src="/example-template?id=<?=$template['id']?>" width="100%"></iframe>
             </div>
         <?php } ?>
-        
+            <div class="templates-list-data">
+                <label>
+                    Strona:
+                </label>
+                
+                <div class="data-list" id="data-list-page">
+                    Strona
+                </div>
+                
+                <label>
+                    Szablon:
+                </label>
+                <div class="data-list" id="data-list-template">
+                    Szablon
+                </div>
+                
+            </div>
+            
+            <input type="submit" value="Dodaj szablon" class="templates-change-submit">
+            
         </div>
     </form>
 

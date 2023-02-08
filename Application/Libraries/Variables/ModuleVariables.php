@@ -19,7 +19,7 @@ class ModuleVariables extends \Code\Core\BaseController {
 
 		$this->module_id = $id_module;
 		$this->page_id      = $id_page;
-		
+
 		if(!is_null($id_module) && !is_null($id_page)) {
 			$this->FetchVariables();
 		}
@@ -41,7 +41,7 @@ class ModuleVariables extends \Code\Core\BaseController {
 			FROM
 			modules_variables_values 
 			mvv INNER JOIN modules_variables mv 
-			ON mv.id = mvv.id_variable WHERE id_module=?", [ $this->module_id ]);
+			ON mv.id = mvv.id_variable WHERE mvv.id_module=?", [ $this->module_id ]);
 		$fetches = $this->DataBase->FetchRows($result);
 
 		foreach($fetches as $fetch) {
@@ -57,11 +57,11 @@ class ModuleVariables extends \Code\Core\BaseController {
     private function CreateObjectValue($variable) {
         $object = null;
         $type = $variable['type'];
-        
+
         $object_space = '\Code\Libraries\Variables\Types\\' . $type;
         if(class_exists($object_space)) {
             $object = new $object_space($variable);
-        }
+        } 
         
         return $object;
     }
@@ -76,7 +76,7 @@ class ModuleVariables extends \Code\Core\BaseController {
 		}
 
         if(is_null($find)) {
-            return null;
+			return null;
         }
         
 		return $find;

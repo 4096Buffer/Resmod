@@ -1,4 +1,3 @@
-console.log(Helpers)
 Helpers.DOMHelper.waitForAllElm().then(() => {
 	setTimeout(() => {
         (() => {
@@ -13,6 +12,20 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
         })();
 
         (() => {
+            
+            var pagesScope = [
+                'dashboard-scope',
+                'templates-scope'
+            ]
+
+            for(var i = 0; i < pagesScope.length; i++) {
+                var scope = Helpers.Scope.CreateScope(pagesScope[i])
+                document.GlobalScope.SetVariable(pagesScope[i], scope)
+            }
+
+        })();
+
+        (function() {
             var logoutBtn = document.querySelector(".button-logout")
             var logout    = e => {
                 var controller = e.target.getAttribute('ajax-controller')
@@ -44,7 +57,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
             '1' + ')'
             
             return r
-        }
+        };
         
         (() => {
             var xValues = []
@@ -214,23 +227,20 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 }
 
                 collaps[i].addEventListener('click', openClose)
-            }
-        })();
+            };
 
+        })();
+        
         (() => {
             var checkIcons = document.getElementsByClassName('check-icon')
-            var active = undefined
-
-            var setActive = el => {
-                active = el
-            }
-
+            var scope = document.GlobalScope.GetVariable('templates-scope')
+            var templatesListData = document.querySelector('.templates-list-data')
+            
             var clickCheckIcon = e => {
                 var rows = e.target.parentElement.parentElement.parentElement.children
                 
                 for(var i = 0; i < rows.length; i++) {
                     if(rows[i].getAttribute('active') == 'true') {
-                        
                         var checkIcon = rows[i].querySelector('.check-icon')
                         
                         checkIcon.style.setProperty('--checkicon-b-background', '#fff')
@@ -242,14 +252,24 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 }
 
                 var row = e.target.parentElement.parentElement
+                var dataListPage = templatesListData.querySelector('#data-list-page')
+                var childsRow = row.children
+                var title     = childsRow[2].innerText
 
                 e.target.style.setProperty('--checkicon-b-background', '#2a2a2a')
                 e.target.style.setProperty('--checkicon-a-background', '#2a2a2a')
 
                 row.setAttribute('active', 'true')
                 row.classList.add('active-row-pages-templates')
+                
+                scope.SetVariable('ajax-page-id', row.getAttribute('id-page'))
 
-                active = row
+                dataListPage.addEventListener('click', () => {
+                    //console.log(childsRow[4].innerText)
+                    location.href = childsRow[4].innerText
+                })
+
+                dataListPage.innerText = title
             }
             
             for(var i = 0; i < checkIcons.length; i++) {
@@ -289,12 +309,67 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
             var selectOptionClick = e => {
                 selectText.innerText = e.target.innerText
             }
+
             for(var i = 0; i < selectOptions.length; i++) {
                 selectOptions[i].addEventListener('click', selectOptionClick)
             }
 
-        })();
+            var templatesBoxes = document.getElementsByClassName('templates-list-select')
+            var templatesListData = document.querySelector('.templates-list-data')
 
+            var onClick = (e) => {
+                var title = e.currentTarget.querySelector('.label-template').innerText
+                var dataListTemplate = templatesListData.querySelector('#data-list-template')
+                
+                e.currentTarget.style.backgroundColor = '#424242'
+                e.currentTarget.style.color = '#fff'
+
+                scope.SetVariable('ajax-template-id', e.currentTarget.getAttribute('template-id'))
+                
+                dataListTemplate.addEventListener('click', () => {
+                    location.href = '/example-template?id=' + scope.GetVariable('ajax-template-id').toString()
+                })
+
+                dataListTemplate.innerText = title;
+            };
+
+            for(var i = 0; i < templatesBoxes.length; i++) {
+                templatesBoxes[i].addEventListener('click', onClick)
+            }
+
+            var submitForm = document.querySelector('.templates-change-submit')
+
+            var submit = (e) => {
+                e.preventDefault();
+                var pageId     = scope.GetVariable('ajax-page-id')
+                var templateId = scope.GetVariable('ajax-template-id')
+
+                if(pageId == null|| templateId == null) {
+                    alert('Please select page and template')
+                    return;
+                }
+
+                Helpers.AJAX.Post(location.href, {
+                    controller  : 'Page',
+                    action      : 'ChangeTemplate',
+                    id_page     : pageId,
+                    id_template : templateId
+
+                }).success(data => {
+                    data = JSON.parse(data)
+
+                    if(data.response == 'Success') {
+                        alert('Successfully changed template!')
+                        location.reload()
+                    } else {
+                        alert('Unknown error! Please refresh the page and try again')
+                    }
+                })
+            }
+
+            submitForm.parentElement.addEventListener('submit', submit)
+
+        })();
         
     }, 500)
 }).catch(err => {

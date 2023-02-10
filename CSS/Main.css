@@ -2,3 +2,33 @@ body {
   font-family: "Lato", sans-serif;
   opacity:0%;
 }
+
+.admin-login-container {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(11deg, #111, #666);
+  background-position: center;
+  background-size: cover;
+  position: absolute;
+}
+
+.admin-login-form-box {
+  width: 40vh;
+  height: 50vh;
+  position: relative;
+  margin: 6% auto;
+  background: #6a6a6a;
+  padding: 5px;
+}
+
+#admin-login-form-submit {
+  width: 20vh;
+  margin: auto;
+  position: relative;
+  background: #4e4e4e;
+  border-radius: 5px;
+  color: #fff;
+  border: 0;
+  padding: 2%;
+  font-size: 1rem;
+}

@@ -9,9 +9,11 @@
           Szablony
         </li>
       </a>
-      <li>
-        Moduły
-      </li>
+      <a href="/download-templates">
+        <li>
+          Dodaj szablony
+        </li>
+      </a>
       <div class="space-line"></div>
     </ol>
   </div>
@@ -19,9 +21,11 @@
   <button class="collapsible-sidenav" collapsible="true">Strony</button>
   <div class="collapsible-sidenav-content" active="false">
     <ol>
-      <li>
-        Lista stron
-      </li>
+      <a href="/pages-list">
+        <li>
+          Lista stron
+        </li>
+      </a>  
       <li>
         Dodaj nową
       </li>

@@ -29,8 +29,7 @@ class Route extends \Code\Core\BaseController {
     }
 
 	private function SetupRoute() {
-		$result = $this->DataBase->DoQuery("SELECT *  FROM pages");
-		$fetches = $this->DataBase->FetchRows($result);
+		$fetches = $this->DataBase->Get("SELECT *  FROM pages");
         
 		foreach($fetches as $fetch) {
             $layout = $this->GetLayout($fetch['id_layout']);
@@ -87,7 +86,7 @@ class Route extends \Code\Core\BaseController {
         foreach($this->routes as $route) {
             $layout      = $route['layout'];
             $page_uri    = $route['uri'];
-
+            
             if(preg_match('/^(\/\/)?([^\/]+)?(\/[\s\S]*)?$/', $this->path, $match)) {
                 $uri = $match[3];
                 $uri_na = '';
@@ -99,7 +98,9 @@ class Route extends \Code\Core\BaseController {
                 }
 
                 if($uri_na == $page_uri) {
-                    return $route;
+                    if($route['active'] == 1) {
+                        return $route;
+                    }
                 }
             }
         }

@@ -35,15 +35,14 @@ class ModuleVariables extends \Code\Core\BaseController {
 	//}
 
 	private function FetchVariables() {
-		$result = $this->DataBase->DoQuery("
+		$fetches = $this->DataBase->Get("
 			SELECT
 			mvv.*, mv.*
 			FROM
 			modules_variables_values 
 			mvv INNER JOIN modules_variables mv 
 			ON mv.id = mvv.id_variable WHERE mvv.id_module=?", [ $this->module_id ]);
-		$fetches = $this->DataBase->FetchRows($result);
-
+			
 		foreach($fetches as $fetch) {
 			//$fetch['name']          = $this->GetDefVariable($fetch['id_variable'])['name'];
            // $fetch['default_value'] = $this->GetDefVariable($fetch['id_variable'])['default_value'];

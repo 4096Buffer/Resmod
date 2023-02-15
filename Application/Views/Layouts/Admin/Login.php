@@ -13,6 +13,9 @@ if($this->Auth->IsAuth()) {
 	?>
 </head>
 <body>
+    <?php 
+        include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'LoadScreen.php';
+    ?>
     <div class="admin-login-container">
         <div class="admin-login-form-box">
             <form ajax-controller="AdminProfile" ajax-action="Login">

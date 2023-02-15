@@ -16,7 +16,7 @@ if(!$this->Auth->IsAuth()) {
 <body>
   
   <?php 
-  
+    include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'LoadScreen.php';
     include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'Header.php';
     include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'SideNav.php';
   ?>
@@ -31,26 +31,24 @@ if(!$this->Auth->IsAuth()) {
             Ustaw szablon
         </h2>
     </div>
-
     <form class="form-add-template">
         <div class="label-container">
             <label>Wybierz stronę:</label>
         </div>
-        <table>
+        <table class="table-main">
             <thead>
                 <tr>
-                    <th></th>
                     <th>Id</th>
                     <th>Title</th>
                     <th>Description</th>
                     <th>Address URI</th>
                     <th>Template</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach($pages as $page) {?>
                     <tr id-page="<?=$page['id']?>">
-                        <td><div class="check-icon"></div></td>
                         <td><?=$page['id']?></td>
                         <td><?=$page['title']?></td>
                         <td>
@@ -82,6 +80,7 @@ if(!$this->Auth->IsAuth()) {
                                 echo $template['title'];
                             ?>
                         </td>
+                        <td><div class="check-icon templates"></div></td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -97,47 +96,45 @@ if(!$this->Auth->IsAuth()) {
             <?php foreach($templates as $template) { ?>
                 <label class="templates-select-option" id="<?=$template['id']?>" active="false"><?=$template['title']?></label>
             <?php } ?>
-        </select>
+        </div>
         -->
-        
-        <?php foreach($templates as $template) { ?>
-            <div class="templates-list-select" template-id="<?=$template['id']?>">
-                <div class="label-template">
-                    <label>
-                        <?=$template['title']?>
-                    </label>
+        <div class="templates-list-select-container">
+            <?php foreach($templates as $template) { ?>
+                <div class="templates-list-select" template-id="<?=$template['id']?>">
+                    <div class="label-template">
+                        <label>
+                            <?=$template['title']?>
+                        </label>
+                    </div>
+                    <div class="description-template">
+                        <?=$template['description']?>
+                    </div>
+                    <div class="label-template" style="margin-bottom:4%">
+                        <label style="font-size:1.1rem">
+                            Example page with this layout:
+                        </label>
+                    </div>
+                    <iframe src="/example-template?id=<?=$template['id']?>" width="100%"></iframe>
                 </div>
-                <div class="description-template">
-                    <?=$template['description']?>
-                </div>
-                <div class="label-template" style="margin-bottom:4%">
-                    <label style="font-size:1.1rem">
-                        Example page with this layout:
-                    </label>
-                </div>
-                <iframe src="/example-template?id=<?=$template['id']?>" width="100%"></iframe>
-            </div>
-        <?php } ?>
+            <?php } ?>
+        </div>
+        <div class="templates-form-data-submit">
             <div class="templates-list-data">
                 <label>
                     Strona:
                 </label>
-                
                 <div class="data-list" id="data-list-page">
-                    Strona
+                    Nie wybrano
                 </div>
-                
                 <label>
                     Szablon:
                 </label>
                 <div class="data-list" id="data-list-template">
-                    Szablon
-                </div>
-                
+                    Nie wybrano
+                </div>  
             </div>
-            
             <input type="submit" value="Dodaj szablon" class="templates-change-submit">
-            
+        </div>
         </div>
     </form>
 

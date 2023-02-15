@@ -14,7 +14,8 @@ var lo_ = (e) => {
                 id         : id
             }
             
-            Helpers.AJAX.Post(location.href, sd_)
+            Helpers.AJAX.Post(location.href, sd_).success(data => {
+            })
         }
         
         
@@ -35,6 +36,6 @@ var lo_ = (e) => {
 
 var requestMethod = document.querySelector('#request-method').getAttribute('content');
 
-if(requestMethod == 'GET') {
+if(requestMethod == 'GET') { // We don't want to count AJAX actions
     window.addEventListener('load', lo_)
 }

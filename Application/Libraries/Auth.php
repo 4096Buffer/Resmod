@@ -16,9 +16,13 @@ class Auth extends \Code\Core\BaseController {
 	}
     
     private function GetActiveUsers() {
-        $result = $this->DataBase->DoQuery("SELECT * FROM admin_users WHERE active = ?", [ '1' ]);
-        $rows = $this->DataBase->FetchRows($result);
-        return $rows;
+        $rows = $this->DataBase->Get("SELECT * FROM admin_users WHERE active = ?", [ '1' ]);
+        
+        if($rows) {
+            return $rows;
+        }
+
+        return [];
     }
     
     private function RemoteLogout($user_id) {
@@ -76,6 +80,7 @@ class Auth extends \Code\Core\BaseController {
 
             if($row) {
                 if($row['active'] == 0) {
+                    $this->UnAuth($id);
                     return false;
                 }
                 

@@ -14,8 +14,11 @@ class Module extends \Code\Core\BaseController {
 	public function __construct($page_id = null) {
 		parent::__construct();
 
-		$this->LoadLibrary(['DataBase', 'View', 'AppendFiles']);
+		$this->LoadLibrary(['DataBase', 'View', 'AppendFiles', 'HTML', 'RequestHelper']);
 		$this->page_id = $page_id;
+
+		$this->FetchModules();
+		
 	}
 
 	private function GetControllerPath($controller) {
@@ -27,8 +30,7 @@ class Module extends \Code\Core\BaseController {
 	}
 
 	public function GetModules() {
-		$result  = $this->DataBase->DoQuery("SELECT * FROM modules_added");
-		$modules = $this->DataBase->FetchRows($result);
+		$modules  = $this->DataBase->Get("SELECT * FROM modules_added");
 		
 		if(!is_null($modules) && gettype($modules) == 'array') {
 			return $modules;
@@ -37,12 +39,24 @@ class Module extends \Code\Core\BaseController {
 		return null;
 	}
 
+	public function LoadSingleModule($id) {
+		$found = null;
+
+		foreach($this->modules as $module) {
+			if($module['id'] == $id) {
+				if($module['active'] == 0) continue;
+				$found = $module;
+			}
+		}
+
+		$this->LoadModule($found);
+	}
+
 	private function FetchModules() {
-		$result = $this->DataBase->DoQuery("SELECT * FROM modules_added ORDER BY sort ASC");
-		$fetches = $this->DataBase->FetchRows($result);
+		$fetches = $this->DataBase->Get("SELECT * FROM modules_added ORDER BY sort ASC");
 
 		foreach($fetches as $fetch) {
-			$fetchA = $this->DataBase->GetFirstRow("SELECT * FROM modules WHERE id=?", [ $fetch['id_module'] ]);
+			$fetchA = $this->DataBase->GetFirstRow("SELECT * FROM modules WHERE id = ?", [ $fetch['id_module'] ]);
 
 			$module = [
 				"id"            => $fetch['id'],
@@ -60,8 +74,51 @@ class Module extends \Code\Core\BaseController {
 		}
 	}
 	
-	
+	public function GetModuleHTML($id, $page_id) {
+		$module = null;
+		
+		foreach($this->modules as $m) {
+			if($m['id'] == $id) {
+				$module = $m;
+			}
+		}
+
+		if(is_null($module)) {
+			return null;
+		}
+
+		$view_mode = $this->RequestHelper->GetViewMode();
+
+		if($module['controller'] != null) {
+			require_once $this->GetControllerPath($module['controller']);
+
+			$class_space = '\Code\Controllers\\' . $module['controller'];
+			$class = new $class_space();
+
+			call_user_func(array($class, $module['action']));
+		}
+
+		$mvars_c = new \Code\Libraries\Variables\ModuleVariables($module['id'], $page_id);
+		
+		$this->View->AddData('mvars', $mvars_c);
+		
+		$html = '';
+
+		$html .= '<cmsmodule module-id="'. $module['id'] . '">';
+			$html .= '<div class="module-live-edit-icon copy">Copy</div>';
+				//echo '<a href="/modules-edit?id='. $module['id'] . '&redirect-back=' . $redirect_back . '"><div class="module-live-edit-icon edit">Edit</div></a>';
+			$html .= '<div class="module-live-edit-icon delete">Delete</div>';
+			$html .= '<div class="module-edit-content">';
+				$html .= $this->View->Get($this->GetPath($module['view']));
+			$html .= '</div>';
+		$html .= '</cmsmodule>';
+		
+
+		return $html;
+	}
+
 	private function LoadModule($module) {
+		$view_mode = $this->RequestHelper->GetViewMode();
 		if($module['controller'] != null) {
 			require_once $this->GetControllerPath($module['controller']);
 
@@ -74,24 +131,36 @@ class Module extends \Code\Core\BaseController {
 		$mvars_c = new \Code\Libraries\Variables\ModuleVariables($module['id'], $this->page_id);
 		
 		$this->View->AddData('mvars', $mvars_c);
-		$this->View->Load($this->GetPath($module['view']));
+		
+		if($view_mode[0] == 'LiveEdit') {
+			$redirect_back = $this->RequestHelper->GetHref();
+
+			echo '<cmsmodule module-id="'. $module['id'] . '">';
+				echo '<div class="module-live-edit-icon copy">Copy</div>';
+				//echo '<a href="/modules-edit?id='. $module['id'] . '&redirect-back=' . $redirect_back . '"><div class="module-live-edit-icon edit">Edit</div></a>';
+				echo '<div class="module-live-edit-icon delete">Delete</div>';
+				echo '<div class="module-edit-content">';
+					$this->View->Load($this->GetPath($module['view']));
+				echo '</div>';
+			echo '</cmsmodule>';
+		} else {
+			$this->View->Load($this->GetPath($module['view']));
+		}
 	}
 
 	
 
 	public function LoadModules() {
 
-		$this->FetchModules();
-
 		foreach($this->modules as $module) {
 			$found = false;
+
 			if($module['active'] == 1) {
 				if($module['global'] == 1) {
 					$except = $module['global_except'];
+					
 					if($except != '[]' || $except != '') {
-						$r = str_replace('[' , '', $except);
-						$r = str_replace(']', '', $r);
-						$e = explode(',', $r);
+						$e = json_decode($except);
 						
 						foreach($e as $v) {
 							if($v == $this->page_id) {

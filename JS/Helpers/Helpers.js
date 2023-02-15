@@ -2,6 +2,10 @@ var Helpers = (() => {
     //Add here a small functions that don't need a whole file
 
     var eventTypes = {}
+    var viewModes  = {
+        'LiveEdit' : 'live-edit',
+        'Standard' : ''
+    }
 
     var AddEventType = function(name, callback) {
         eventTypes[name] = callback
@@ -47,9 +51,47 @@ var Helpers = (() => {
         window.addEventListener('load', callback)
     })
 
+    AddEventType('HTMLModified', function(callback) {
+        window.addEventListener('DOMSubtreeModified', callback)
+    })
+
+    var GetCurrentViewMode = function() {
+        var s = window.location.search.split('?')
+        var send = {}
+
+        for(var i = 0; i < s.length; i++) {
+            var j = s[i].split('=')
+            if(typeof j[0] !== 'undefined') {
+                if(j[0] == 'mode') {
+                    if(j[1] == viewModes['LiveEdit']) {
+                        send = {
+                            mode  : 'LiveEdit',
+                            query : viewModes['LiveEdit']
+                        }
+                    } else {
+                        send =  {
+                            mode  : 'Standard',
+                            query : viewModes['Standard']
+                        }
+                    }
+                } else {
+                    send = {
+                        mode  : 'Standard',
+                        query : viewModes['Standard']
+                    }
+                }
+            }
+        }
+
+        return send
+    } 
+
     return {
         CreateEventManager : function() {
             return new Event()
+        },
+        GetCurrentViewMode : function() {
+            return GetCurrentViewMode()
         }
     }
-})()
+})();

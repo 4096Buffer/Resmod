@@ -23,9 +23,12 @@ class Page extends \Code\Core\BaseController {
         $data     = $this->RequestHelper->GetObjectFromJson();
         $pathname = $data['pathname'] ?? null;
         //$pathname = '/' . $pathname;
-        $result   = $this->DataBase->DoQuery("SELECT * FROM `pages` WHERE `route address` = ?", [ $pathname ]);
-        $rows = $this->DataBase->FetchRows($result); 
+        $rows     = $this->DataBase->Get("SELECT * FROM `pages` WHERE `route address` = ?", [ $pathname ]);
         
+        if(is_null($rows)) {
+            $this->RequestHelper->SendJsonData(false, null, 'No page found');
+        }
+
         foreach($rows as $row) {
             $data = [
                 "id" => $row['id']
@@ -78,8 +81,7 @@ class Page extends \Code\Core\BaseController {
     */
     
     public function GetPages() {
-        $result = $this->DataBase->DoQuery("SELECT * FROM pages WHERE hidden = 0");
-        $rows   = $this->DataBase->FetchRows($result);
+        $rows   = $this->DataBase->Get("SELECT * FROM pages WHERE hidden = 0");
         $descs  = [];
         
         foreach($rows as $row) {
@@ -90,8 +92,7 @@ class Page extends \Code\Core\BaseController {
     }
     
     public function GetViews() {
-        $result = $this->DataBase->DoQuery("SELECT * FROM pages");
-        $rows   = $this->DataBase->FetchRows($result);
+        $rows   = $this->DataBase->Get("SELECT * FROM pages");
         $views  = [];
         
         foreach($rows as $row) {
@@ -113,6 +114,7 @@ class Page extends \Code\Core\BaseController {
         
         //$page_hidden = $this->DataBase->GetFirstRow("SELECT * FROM pages WHERE id = ?");
 
+
         $modules = $this->Module->GetModules();
         
         foreach($modules as $module) {
@@ -120,14 +122,13 @@ class Page extends \Code\Core\BaseController {
                 continue;
             }
         
-            $result = $this->DataBase->DoQuery("
+            $get_variables = $this->DataBase->Get("
                 SELECT
                 mvv.*, mv.name, mv.type, mv.default_value
                 FROM
                 modules_variables_values 
                 mvv INNER JOIN modules_variables mv 
                 ON mv.id = mvv.id_variable WHERE mvv.id_module = ?", [ $module['id'] ]);
-            $get_variables = $this->DataBase->FetchRows($result);
 
             $module_variables = [
                 "module"    => $module,
@@ -140,6 +141,7 @@ class Page extends \Code\Core\BaseController {
 
             $variables[] = $module_variables;
         }
+
         
         $this->RequestHelper->SendJsonData(true, $variables);
     }
@@ -171,6 +173,31 @@ class Page extends \Code\Core\BaseController {
         $this->RequestHelper->SendJsonData(true);
     }
 
+    public function ChangeActive() {
+        $data = $this->RequestHelper->GetObjectFromJson();
+
+        $id_page     = $data['id_page'] ?? null;
+        $active      = $data['active'] ?? null;
+
+        if(is_null($data)) {
+            $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
+            return;
+        }
+
+        if(!$this->Auth->IsAuth()) {
+            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
+            return;
+        }
+
+        $result = $this->DataBase->DoQuery("UPDATE pages SET active = ? WHERE id = ?", [ $active, $id_page ]);
+
+        if($this->DataBase->ErrorCode() != 0) {
+            $this->RequestHelper->SendJsonData(false, null, 'Unknown db error');
+            return;
+        }
+
+        $this->RequestHelper->SendJsonData(true);
+    }
 
     
 }

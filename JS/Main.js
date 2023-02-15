@@ -33,7 +33,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
         (() => {
             if(location.pathname == '/login') {
                 
-                var adminForm = document.querySelector('.admin-login-form')
+                var adminForm = document.querySelector('.admin-login-form-box').querySelector('form')
                 var adminFormLogin = document.querySelector('#admin-login-form-name')
                 var adminFormPassword = document.querySelector('#admin-login-form-pass')
                 var adminFormController = adminForm.getAttribute('ajax-controller')

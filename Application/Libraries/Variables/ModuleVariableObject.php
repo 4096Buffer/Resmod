@@ -21,7 +21,7 @@ class ModuleVariableObject extends \Code\Core\BaseController {
 	public function __construct($variable = null) {
 		parent::__construct();
 
-		$this->LoadLibrary(['DataBase', 'Auth', 'HTML']);
+		$this->LoadLibrary(['DataBase', 'Auth', 'HTML', 'RequestHelper']);
         
         $this->id            = $variable['id'];
         $this->name          = $variable['name'];
@@ -41,6 +41,10 @@ class ModuleVariableObject extends \Code\Core\BaseController {
                 [
                     'name'  => 'var-name',
                     'value' => $this->name
+                ],
+                [
+                    'name'  => 'type',
+                    'value' => 'text'
                 ]
             ];
             

@@ -8,6 +8,10 @@ Helpers.Scope = (() => {
     ScopeObject.prototype.name      = null
     ScopeObject.prototype.variables = null
     
+    ScopeObject.prototype.GetAllVariables = function() {
+        console.log(this.variables)
+        return this.variables
+    }
 
     ScopeObject.prototype.SetVariable = function(name, value) {
 
@@ -23,7 +27,7 @@ Helpers.Scope = (() => {
         this.variables[name] = value
     }
 
-    ScopeObject.prototype.Callfunction = function(name, args = []) {
+    ScopeObject.prototype.CallFunction = function(name, args = []) {
         if(name in this.variables) {
             var variable = this.variables[name]
 

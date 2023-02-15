@@ -34,7 +34,7 @@
     
     public function LoadViewLibraries() {
         $this->LoadLibrary([
-            'AppendFiles', 'Route', 'Auth', 'RequestHelper', 'DataBase'
+            'AppendFiles', 'Route', 'Auth', 'RequestHelper', 'DataBase', 'HTML'
         ]);
     }
     
@@ -42,7 +42,6 @@
         $path = $this->getPath($name);
         
         if (!is_file($path)) {
-          
           return false;
         }
 
@@ -55,7 +54,7 @@
             $$key = $value;
           }
         }
-        
+
         include $path;
         return true;
     }

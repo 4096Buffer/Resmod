@@ -78,6 +78,17 @@ class DataBase extends \Code\Core\BaseController {
 
       return $result;
     }
+
+    public function Get(string $sql, array $bind = null) {
+      $result = $this->DoQuery($sql, $bind);
+      
+      if(!$this->Exists($result)) {
+          return null;
+      } 
+        
+      $rows = $this->FetchRows($result);
+      return $rows;
+    }
     
     public function GetFirstRow($sql, $bind) {
         $result = $this->DoQuery($sql, $bind);
@@ -90,7 +101,7 @@ class DataBase extends \Code\Core\BaseController {
         return $row;
     }
 
-    public function GetColumnsNames($table_name) {
+    public function GetColumnsNames(string $table_name) {
       $result = $this->DoQuery("SHOW COLUMNS FROM " . $table_name);
       $names  = $this->FetchRows($result);
       

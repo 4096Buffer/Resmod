@@ -31,4 +31,5 @@ body {
   border: 0;
   padding: 2%;
   font-size: 1rem;
+  cursor:pointer;
 }

@@ -7,11 +7,16 @@ namespace Code\Libraries;
  */
 
 class RequestHelper extends \Code\Core\BaseController {
-    
+
+    private $view_modes = [];
 	public function __construct() {
 		parent::__construct();
 
 		$this->LoadLibrary('DataBase');
+        $this->view_modes = [
+            'LiveEdit' => 'live-edit',
+            'Standard' => ''
+        ];
 	}
 
     public function SendJsonData($success, $data = null, $reason = null) {
@@ -71,6 +76,7 @@ class RequestHelper extends \Code\Core\BaseController {
         return $_SERVER['REQUEST_URI'] ?? '/';
     }
 
+
     public function GetPathname() {
         return explode('?', $this->GetHref())[0];
     }
@@ -97,6 +103,44 @@ class RequestHelper extends \Code\Core\BaseController {
         }
 
         return $frags;
+    }
+
+    public function GetViewModes() {
+        return $this->view_modes;
+    }
+
+    public function GetViewMode() {
+        $query = $this->GetQueryFragments();
+        $mode = '';
+
+        if(isset($query['mode'])) {
+            switch($query['mode']) {
+                case 'live-edit':
+                    $mode = 'LiveEdit';
+                    break;
+                default:
+                    $mode = 'Standard';
+                    break;
+            }
+        } else {
+            $mode = 'Standard';
+        }
+
+        return array(
+            $mode,
+            $this->view_modes[$mode]
+        );
+    }
+
+    public function SetViewMode($mode) {
+        $query = $this->GetQueryFragments();
+        if(!isset($query[$mode])) {
+            $char = '?';
+            if(!empty($query)) {
+                $char = '&';
+            }
+            $this->Redirect($this->GetHref() . $char . 'mode=' . $this->view_modes[$mode]);
+        }
     }
 
 }

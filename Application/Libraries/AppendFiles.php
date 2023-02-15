@@ -16,17 +16,15 @@ class AppendFiles extends \Code\Core\BaseController {
 	public function __construct() {
 		parent::__construct();
 
-		$this->LoadLibrary(['DataBase', 'HTML']);
+		$this->LoadLibrary(['DataBase', 'HTML', 'Auth']);
 	}
 
 	private function GetAllFiles() {
 		$this->css = [];
 		$this->js  = [];
 
-		$result = $this->DataBase->DoQuery("SELECT * FROM append_files ORDER BY sort ASC");
-		$fetches = $this->DataBase->FetchRows($result);
+		$fetches = $this->DataBase->Get("SELECT * FROM append_files ORDER BY sort ASC");
 		
-
 		foreach($fetches as $fetch) {
 			switch ($fetch['type']) {
 				case 'Script':
@@ -44,7 +42,7 @@ class AppendFiles extends \Code\Core\BaseController {
 		}
 	}
 
-	public function Append($is_admin) {
+	public function Append() {
 		$this->GetAllFiles();
 
 		foreach($this->css as $file) {
@@ -60,17 +58,15 @@ class AppendFiles extends \Code\Core\BaseController {
 				$admins[] = $file;
 				continue;
 			}
-
+			
 			$mains[] = $file;
         }
-
-        
 
         foreach($mains as $main) {
 			echo $main['html'];
 		}
 
-		if($is_admin) {
+		if($this->Auth->IsAuth()) {
             foreach($admins as $admin) {
                 echo $admin['html'];
             }

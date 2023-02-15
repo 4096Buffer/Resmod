@@ -13,7 +13,7 @@ class ViewController extends \Code\Core\BaseController {
 	public function __construct() {
     	parent::__construct();
 
-    	$this->LoadLibrary(['Route', 'View', 'Auth', 'AppendFiles']);
+    	$this->LoadLibrary(['Route', 'View', 'Auth', 'AppendFiles', 'RequestHelper']);
     }
 
     private function GetControllerPath($path) {
@@ -31,14 +31,27 @@ class ViewController extends \Code\Core\BaseController {
         return $path . '.php';
     }
     
-
 	public function Run() {
-        if($this->Route->GetCurrentPage() == null) {
-            $this->Route->LoadRouteByUri('/404');
-            return;
+        $current_page = $this->Route->GetCurrentPage();
+
+        if($this->Auth->IsAuth() && $this->RequestHelper->GetViewMode()[0] == 'Standard') {
+            if($current_page['hidden'] == 0) {
+                $this->RequestHelper->SetViewMode('LiveEdit');
+            }
         }
 
-        $current_page = $this->Route->GetCurrentPage();
+        if($this->RequestHelper->GetViewMode()[0] == 'LiveEdit' && !$this->Auth->IsAuth()) {
+            $this->RequestHelper->Redirect($_SERVER['QUERY_STRING']);
+        }
+
+        if($this->RequestHelper->GetViewMode()[0] == 'LiveEdit') {
+            require_once $this->GetControllerPath('LayoutController');
+            $class_space = '\Code\Controllers\\LayoutController';
+            $class = new $class_space();
+
+            call_user_func(array($class, 'LiveEdit'));
+        }
+
         if($current_page['layout']['controller'] != null) {
             require_once $this->GetControllerPath($current_page['layout']['controller']);
             

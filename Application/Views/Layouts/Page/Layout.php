@@ -2,12 +2,18 @@
 <html>
 <head>
 	<?php 
-		include VIEWPATH . DIRECTORY_SEPARATOR . 'Partials' . DIRECTORY_SEPARATOR . 'Head.php'
+		include VIEWPATH . '/'. 'Partials' . '/' . 'Head.php'
 	?>
 </head>
 <body>
-	<?php 
-		$module->LoadModules();
+	<div class="modules">
+		<?php
+			$module->LoadModules();
+		?>
+	</div>
+	<?php
+		include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'LoadScreen.php';
+		include VIEWPATH . '/' . 'Partials' . '/' . 'Admin' . '/' . 'AddonLiveEdit.php';
 	?>
 </body>
 </html>

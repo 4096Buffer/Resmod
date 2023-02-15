@@ -23,8 +23,7 @@ class Variables extends \Code\Core\BaseController {
 
 
 	private function FetchVariables() {
-		$result = $this->DataBase->DoQuery("SELECT * FROM variables");
-		$fetches = $this->DataBase->FetchRows($result);
+		$fetches = $this->DataBase->Get("SELECT * FROM variables");
 		
 		foreach($fetches as $fetch) {
 			$this->variables[] = [

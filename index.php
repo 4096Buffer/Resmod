@@ -26,6 +26,6 @@
   define('CSSPATH',   $styleFolder);
   define('JSPATH' ,   $scriptFolder);
   define('UPLPATH',   $uploadFolder);
-
+  
   require_once(COREPATH . '/Core.php');
 ?>

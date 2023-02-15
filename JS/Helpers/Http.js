@@ -19,13 +19,24 @@ Helpers.AJAX = (() => {
           return funs;
         }
       };
-          
-          
+
+      var loadScreen = document.querySelector('.load-screen')
+
+      var endLoading = function() {
+        if(loadScreen) {
+          loadScreen.classList.add('load-screen--hidden')
+          loadScreen.addEventListener('transitionend', e => {
+            loadScreen.style.display = 'none'
+          })
+        }
+      }
+      
+      loadScreen.style.display = 'flex'
+      
       xhr.open("POST", url, true);
           
       //xhr.setRequestHeader("Content-type","multipart/form-data; charset=utf-8; boundary=" + Math.random().toString().substr(2));
       xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-
       xhr.send(JSON.stringify(data))
           
       xhr.onreadystatechange = () => {
@@ -33,16 +44,19 @@ Helpers.AJAX = (() => {
               
         if(xhr.status >= 200 && xhr.status < 300) {
           if(success) {
+              endLoading()
               success(xhr.responseText)
           }
                   
         } else {
           if(error) {
+            endLoading()
             error(xhr.responseText)
           }
         }  
 
         if(finish) {
+            endLoading()
             finish(xhr.responseText)
         }
       }

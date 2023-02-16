@@ -21,12 +21,18 @@ class Page extends \Code\Core\BaseController {
     
     public function GetPageId() {
         $data     = $this->RequestHelper->GetObjectFromJson();
+        if(is_null($data)) {
+            $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
+            return;
+        }
+
         $pathname = $data['pathname'] ?? null;
         //$pathname = '/' . $pathname;
         $rows     = $this->DataBase->Get("SELECT * FROM `pages` WHERE `route address` = ?", [ $pathname ]);
         
         if(is_null($rows)) {
             $this->RequestHelper->SendJsonData(false, null, 'No page found');
+            return;
         }
 
         foreach($rows as $row) {
@@ -63,6 +69,12 @@ class Page extends \Code\Core\BaseController {
 
     public function AddView() {
         $data   = $this->RequestHelper->GetObjectFromJson();
+
+        if(is_null($data)) {
+            $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
+            return;
+        }
+
         $id     = $data['id'] ?? null;
         $result = $this->DataBase->DoQuery("UPDATE pages SET views = views + 1 WHERE id = ?", [ $id ]);
         
@@ -81,6 +93,11 @@ class Page extends \Code\Core\BaseController {
     */
     
     public function GetPages() {
+        if(!$this->Auth->IsAuth()) {
+            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
+            return;
+        }
+
         $rows   = $this->DataBase->Get("SELECT * FROM pages WHERE hidden = 0");
         $descs  = [];
         
@@ -92,6 +109,11 @@ class Page extends \Code\Core\BaseController {
     }
     
     public function GetViews() {
+        if(!$this->Auth->IsAuth()) {
+            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
+            return;
+        }
+
         $rows   = $this->DataBase->Get("SELECT * FROM pages");
         $views  = [];
         
@@ -104,13 +126,16 @@ class Page extends \Code\Core\BaseController {
 
     public function GetPageVariables() {
         $data        = $this->RequestHelper->GetObjectFromJson();
-        $id          = $data['id'] ?? null;
-        $variables = [];
 
         if(is_null($data)) {
             $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
             return;
         }
+
+        $id          = $data['id'] ?? null;
+        $variables = [];
+
+        
         
         //$page_hidden = $this->DataBase->GetFirstRow("SELECT * FROM pages WHERE id = ?");
 
@@ -147,20 +172,20 @@ class Page extends \Code\Core\BaseController {
     }
 
     public function ChangeTemplate() {
-        $data = $this->RequestHelper->GetObjectFromJson();
+        if(!$this->Auth->IsAuth()) {
+            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
+            return;
+        }
 
-        $id_page     = $data['id_page'] ?? null;
-        $id_template = $data['id_template'] ?? null;
+        $data = $this->RequestHelper->GetObjectFromJson();
 
         if(is_null($data)) {
             $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
             return;
         }
 
-        if(!$this->Auth->IsAuth()) {
-            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
-            return;
-        }
+        $id_page     = $data['id_page'] ?? null;
+        $id_template = $data['id_template'] ?? null;
 
         $page = $this->DataBase->GetFirstRow("SELECT * FROM pages WHERE id = ?", [ $id_page ]);
         $update_result = $this->DataBase->DoQuery("UPDATE pages SET id_layout = ? WHERE id = ?", [ $id_template, $page['id']]);
@@ -174,20 +199,20 @@ class Page extends \Code\Core\BaseController {
     }
 
     public function ChangeActive() {
-        $data = $this->RequestHelper->GetObjectFromJson();
+        if(!$this->Auth->IsAuth()) {
+            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
+            return;
+        }
 
-        $id_page     = $data['id_page'] ?? null;
-        $active      = $data['active'] ?? null;
+        $data = $this->RequestHelper->GetObjectFromJson();
 
         if(is_null($data)) {
             $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
             return;
         }
 
-        if(!$this->Auth->IsAuth()) {
-            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
-            return;
-        }
+        $id_page     = $data['id_page'] ?? null;
+        $active      = $data['active'] ?? null;
 
         $result = $this->DataBase->DoQuery("UPDATE pages SET active = ? WHERE id = ?", [ $active, $id_page ]);
 
@@ -197,6 +222,91 @@ class Page extends \Code\Core\BaseController {
         }
 
         $this->RequestHelper->SendJsonData(true);
+    }
+
+    public function ChangePageSettings() {
+        if(!$this->Auth->IsAuth()) {
+            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
+            return;
+        }
+
+        $data = $this->RequestHelper->GetObjectFromJson();
+
+        if(is_null($data)) {
+            $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
+            return;
+        }
+
+        $id_page     = $data['id_page'] ?? null;
+        $data_page   = $data['data_page'] ?? null;
+
+        foreach($data_page as $key => $value){
+            $result = $this->DataBase->DoQuery("UPDATE variables SET `value` = ? WHERE `name` = ? AND `id_page` = ?", [ $value, $key, $id_page ]);
+        }
+
+        if($this->DataBase->ErrorCode() !== 0) {
+            $this->RequestHelper->SendJsonData(false, null, 'Unknown DB error');
+            return;
+        }
+
+        $this->RequestHelper->SendJsonData(true);
+    }
+
+    private function LastInsertPage() {
+        $results = $this->DataBase->Get("SELECT * FROM pages");
+        return \end($results);
+    }
+
+    public function CreatePage() {
+        if(!$this->Auth->IsAuth()) {
+            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
+            return;
+        }
+
+        $data = $this->RequestHelper->GetObjectFromJson();
+        
+        if(is_null($data)) {
+            $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
+            return;
+        }
+
+        $page_data = $data['page_data'] ?? null;
+
+        $title        = $page_data['title'];
+        $raddress     = $page_data['raddress'];
+        $seo_desc     = $page_data['seo_desc'];
+        $seo_keywords = $page_data['seo_keywords'];
+        $seo_image    = $page_data['seo_image'];
+        $favicon      = $page_data['favicon'];
+
+        $check = $this->DataBase->GetFirstRow("SELECT * FROM pages WHERE `route address` = ?", [ $raddress ]);
+
+        if(!is_null($check)) {
+            $this->RequestHelper->SendJsonData(false, null, 'This route address is already used by other page!');
+            return;
+        }
+
+        $add_page = $this->DataBase->DoQuery("INSERT INTO pages VALUES(NULL, ?, ?, ?, 0, 0, current_timestamp(), 0, 1)", [ $title, $seo_desc, $raddress ]);
+        $add_page = $this->LastInsertPage();
+
+        $page_variables = [
+            'title'           => $title,
+            'seo_keywords'    => $seo_keywords,
+            'seo_description' => $seo_desc,
+            'seo_image'       => $seo_image,
+            'favicon'         => $favicon
+        ];
+
+        foreach($page_variables as $key => $value) {
+            $add_var_page = $this->DataBase->DoQuery("INSERT INTO variables VALUES(NULL, ?, ?, ?, 0, 0)", [ $key, $value, $add_page['id'] ]);
+        }
+
+        if($this->DataBase->ErrorCode() !== 0) {
+            $this->RequestHelper->SendJsonData(false, null, 'Unknown DB error');
+            return;
+        }
+
+        $this->RequestHelper->SendJsonData(true, $add_page);
     }
 
     

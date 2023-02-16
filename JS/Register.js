@@ -37,5 +37,7 @@ var lo_ = (e) => {
 var requestMethod = document.querySelector('#request-method').getAttribute('content');
 
 if(requestMethod == 'GET') { // We don't want to count AJAX actions
-    window.addEventListener('load', lo_)
+    if(!Helpers.Data.GetData('profile')) {
+        window.addEventListener('load', lo_)
+    }
 }

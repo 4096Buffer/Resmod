@@ -195,10 +195,11 @@ var Content = (function() {
     }
 
     var rebuildContent = function(callback = function() {}) {
+        var pageId = Helpers.Data.GetData('page').id
         Helpers.AJAX.Post('/', {
             controller : 'Page',
             action     : 'GetPageVariables',
-            id         : 2
+            id         : pageId
         }).success(data => {
             var obj = JSON.parse(data)
 
@@ -277,42 +278,6 @@ var Content = (function() {
         })
     })
     
-        /*setTimeout(() => {
-            document.GlobalScope.SetVariable('content-module-upload', () => {
-                var modulesListItem = document.querySelectorAll('.modules-list-item')
-                var moduleAddBox    = document.querySelector('.module-add-box')
-
-                var uploadModule = e => {
-                    var moduleId = e.currentTarget.getAttribute('module-id')
-                    var pageId   = Helpers.Data.GetData('page').id
-
-                    Helpers.AJAX.Post(location.href, {
-                        controller : 'Modules',
-                        action     : 'AddModule',
-                        page_id    : pageId,
-                        module_id  : moduleId
-                    }).success(data => {
-                        try {
-                            var obj = JSON.parse(data)
-
-                            if(obj.response == 'Success') {
-                                moduleAddBox.style.display = 'none'
-                                location.href = '/modules-edit?id=' + obj.data.module_added.id + "&redirect-back=" + location.pathname
-                            } else {
-                                alert('Error adding module! Restart page!')
-                            }
-                        } catch(e) {
-                            alert('Error adding module! Restart page! json')
-                        }
-                    })
-                }
-
-                for(var i = 0; i < modulesListItem.length; i++) {
-                    modulesListItem[i].addEventListener('click', uploadModule)
-                }
-            }, 50)
-        })*/
-
     return {
         GetModules : function() {
             return modules

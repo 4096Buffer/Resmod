@@ -7,12 +7,23 @@ namespace Code\Libraries;
  */
 
 class Auth extends \Code\Core\BaseController {
-
+    private $profile;
 
 	public function __construct() {
 		parent::__construct();
 
 		$this->LoadLibrary('DataBase');
+
+        if(!$this->profile && isset($_SESSION['id'])) {
+            $this->profile = [
+                'id'      => $_SESSION['id'],
+                'login'   => $_SESSION['login'],
+                'avatar'  => 'Uploads/Avatars/' . $_SESSION['avatar'],
+                'name'    => $_SESSION['name'],
+                'surname' => $_SESSION['surname'],
+                'email'   => $_SESSION['email']
+            ];
+        }
 	}
     
     private function GetActiveUsers() {
@@ -37,6 +48,7 @@ class Auth extends \Code\Core\BaseController {
         $mysql_date_now = date("Y-m-d H:i:s");
         $result = $this->DataBase->DoQuery("UPDATE admin_users SET last_active = NOW() WHERE id = ?", [ $user_id ]);
     }
+
     
     public function AuthUser($id, $login, $avatar, $name, $surname, $email) {
         $active_users = $this->GetActiveUsers();
@@ -49,12 +61,19 @@ class Auth extends \Code\Core\BaseController {
             }
         }
         
-        $_SESSION['id']      = $id;
-        $_SESSION['login']   = $login;
-        $_SESSION['avatar']  = $avatar;
-        $_SESSION['name']    = $name;
-        $_SESSION['surname'] = $surname;
-        $_SESSION['email']   = $email;
+        $this->profile = [
+            'id'      => $id,
+            'login'   => $login,
+            'avatar'  => $avatar,
+            'name'    => $name,
+            'surname' => $surname,
+            'email'   => $email
+        ];
+
+        foreach($this->profile as $key => $value) {
+            $_SESSION[$key] = $value;
+        }
+        
         
         $result = $this->DataBase->DoQuery("UPDATE admin_users SET active = ? WHERE id = ?", [ '1', $id ]);
         
@@ -74,7 +93,7 @@ class Auth extends \Code\Core\BaseController {
     }
     
     public function IsAuth() {
-        if(isset($_SESSION['login'])) {
+        if($this->profile) {
             $id = $_SESSION['id'];
             $row = $this->DataBase->GetFirstRow("SELECT * FROM admin_users WHERE id = ?", [ $id ]);
 
@@ -99,20 +118,17 @@ class Auth extends \Code\Core\BaseController {
 
             unset($_SESSION['id']);
             unset($_SESSION['login']);
+            unset($_SESSION['avatar']);
+            unset($_SESSION['name']);
+            unset($_SESSION['surname']);
+            unset($_SESSION['email']);
         }
     }
 
     public function GetProfile($id = null) {
         if($this->IsAuth()) {
             if(!$id) {
-                return [
-                    "id"      => $_SESSION['id'] ?? 0,
-                    "login"   => $_SESSION['login'] ?? '',
-                    "avatar"  => 'Uploads/Avatars/' . $_SESSION['avatar'] ?? '',
-                    "name"    => $_SESSION['name'] ?? '',
-                    "surname" => $_SESSION['surname'] ?? '',
-                    "email"   => $_SESSION['email'] ?? ''
-                ];
+                return $this->profile;
             } else {
                 $profile = $this->DataBase->GetFirstRow("SELECT * FROM admin_users WHERE id = ?", [ $id ]);
                 

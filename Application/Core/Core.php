@@ -15,7 +15,6 @@
 
   $viewController = new \Code\Controllers\ViewController();
   $ajaxController = new \Code\Controllers\AJAXController();
-  
   /*
   Check if request is ajax. if not load normal page or 404 error
   */

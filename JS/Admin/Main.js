@@ -356,14 +356,18 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
             }
 
             var submitForm = document.querySelector('.templates-change-submit')
-
             var submit = (e) => {
-                e.preventDefault();
+                e.preventDefault()
+
                 var pageId     = scope.GetVariable('ajax-page-id')
                 var templateId = scope.GetVariable('ajax-template-id')
 
                 if(pageId == null|| templateId == null) {
-                    alert('Please select page and template')
+                    Helpers.CreateModal({
+                        title : 'Error!',
+                        content : 'Please select template and page',
+                        success : false
+                    })
                     return;
                 }
 
@@ -377,15 +381,23 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                     data = JSON.parse(data)
 
                     if(data.response == 'Success') {
-                        alert('Successfully changed template!')
+                        Helpers.CreateModal({
+                            title : 'Success!',
+                            content : 'Successfully changed template',
+                            success : true
+                        })
                         location.reload()
                     } else {
-                        alert('Unknown error! Please refresh the page and try again')
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error while changing template!',
+                            success : false
+                        })
                     }
                 })
             }
             if(submitForm) {
-                submitForm.parentElement.addEventListener('submit', submit)
+                submitForm.parentElement.parentElement.addEventListener('submit', submit)
             }
 
         })();
@@ -713,7 +725,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 addModuleBar.addEventListener('click', click)
             }
 
-            var buttonSave = document.querySelector('.button-fixed, .save')
+            var buttonSave = document.querySelector('.button-fixed.save')
 
             var saveContent = e => {
                 var sendData = Content.GetSendJSON()
@@ -723,12 +735,28 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                     action     : 'SaveCMS',
                     saveData   : sendData
                 }).success(data => {
-                    var obj = JSON.parse(data)
+                    try {
+                        var obj = JSON.parse(data)
 
-                    if(obj.response == 'Success') {
-                        alert('Success')
-                    } else {
-                        alert('Error')
+                        if(obj.response == 'Success') {
+                            Helpers.CreateModal({
+                                title : 'Success!',
+                                content : 'Successfully saved content',
+                                success : true
+                            })
+                        } else {
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : 'Error while saving content',
+                                success : false
+                            })
+                        }
+                    } catch(e) {
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error while saving content',
+                            success : false
+                        })
                     }
                 })
             }
@@ -737,7 +765,51 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 buttonSave.addEventListener('click', saveContent)
             }
 
-            var moduleDeleteBtn = document.querySelectorAll('.module-live-edit-icon, .delete') //delete button ADD!!!
+            var modulesDeleteBtns = document.querySelectorAll('.module-live-edit-icon.delete') //delete button ADD!!!
+            
+            var deleteModule = e => {
+                var moduleDOM = e.currentTarget.parentElement
+                var moduleId  = moduleDOM.getAttribute('module-id')
+                
+                Helpers.AJAX.Post(location.href, {
+                    controller : 'Modules',
+                    action     : 'DeleteModule',
+                    module_id  : moduleId
+                }).success(data => {
+                    try {
+                        var obj = JSON.parse(data)
+
+                        if(obj.response == 'Success') {
+                            moduleDOM.style.opacity = '0%'
+                            moduleDOM.addEventListener('transitionend', () => {
+                                moduleDOM.remove()
+                            })
+
+                            Helpers.CreateModal({
+                                title : 'Success!',
+                                content : 'Successfully deleted module(id: ' + moduleId + ')',
+                                success : true
+                            })
+                        } else {
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : 'Error while deleting module',
+                                success : false
+                            })
+                        }
+                    } catch(e) {
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error while deleting module',
+                            success : false
+                        })
+                    }
+                })
+            }
+
+            for(var i = 0; i < modulesDeleteBtns.length; i++) {
+                modulesDeleteBtns[i].addEventListener('click', deleteModule)
+            }
         })();
         
         (() => {
@@ -766,12 +838,25 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                                 current.setAttribute('active', '1')
                                 current.style.backgroundColor = '#009921'
                             }
+
+                            Helpers.CreateModal({
+                                title : 'Success!',
+                                content : 'Successfully changed property "active"',
+                                success : true
+                            }, function() {}, 2000)
                         } else {
-                            alert('Error changing active')
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : 'Error changing property "active"',
+                                success : false
+                            })
                         }
                     } catch(e) {
-                        console.log(e)
-                        alert('Error changing active')
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error changing property "active"',
+                            success : false
+                        })
                     }
                 })
             }
@@ -785,13 +870,360 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
 
             var openSettings = e => {
                 var classList = settingsBox.classList
+                var pageId    = e.currentTarget.parentElement.parentElement.getAttribute('id-page')
+                var pages     = Helpers.Data.GetData('pages-list')
 
-                settingsBox.setAttribute('page-id', e.currentTarget.parentElement.parentElement.getAttribute('id-page'))
+                var title       = document.querySelector('.page-setting-value.title')
+                var keywords    = document.querySelector('.page-setting-value.seo-keywords')
+                var description = document.querySelector('.page-setting-value.seo-description')
+                var image       = document.querySelector('.page-setting-value.seo-image')
+                var favicon     = document.querySelector('.page-setting-value.favicon')
+
+                var GetVariableByName = (name,variables) => {
+                    for(var i = 0; i < variables.length; i++) {
+                        if(variables[i].name == name) {
+                            return variables[i]
+                        }
+                    }
+
+                    return {
+                        value : ''
+                    }
+                }
+
+                for(var i = 0; i < pages.length; i++) {
+                    if(pages[i].id == pageId) {
+                        title.value       = GetVariableByName('title',           pages[i].variables).value
+                        keywords.value    = GetVariableByName('seo_keywords',    pages[i].variables).value
+                        description.value = GetVariableByName('seo_description', pages[i].variables).value
+                        image.value       = GetVariableByName('seo_image',       pages[i].variables).value
+                        favicon.value     = GetVariableByName('favicon',         pages[i].variables).value
+                    }
+                }
+
+                settingsBox.setAttribute('page-id', pageId)
                 classList.add('open-flex')
             }
 
             for(var i = 0; i < settingsPageBtn.length; i++) {
                 settingsPageBtn[i].addEventListener('click', openSettings)
+            }
+        })();
+
+        (() => {
+            var savePageSettings = document.querySelector('.save-btn-settings.page')
+
+            var save = e => {
+                var title       = document.querySelector('.page-setting-value.title').value
+                var keywords    = document.querySelector('.page-setting-value.seo-keywords').value
+                var description = document.querySelector('.page-setting-value.seo-description').value
+                var image       = document.querySelector('.page-setting-value.seo-image').value
+                var favicon     = document.querySelector('.page-setting-value.favicon').value
+
+                var pageId = e.currentTarget.parentElement.getAttribute('page-id')
+                
+                var sendData = {
+                    title : title,
+                    keywords : keywords,
+                    description : description,
+                    image : image,
+                    favicon : favicon
+                }
+
+                Helpers.AJAX.Post(location.href, {
+                    controller : 'Page',
+                    action     : 'ChangePageSettings',
+                    id_page    : pageId,
+                    data_page  : sendData
+                }).success(data => {
+                    try {
+                        var obj = JSON.parse(data)
+
+                        if(obj.response == 'Success') {
+                            Helpers.CreateModal({
+                                title : 'Success!',
+                                content : 'Successfully changed page settings',
+                                success : true
+                            }, e => {
+                                location.reload()
+                            }, 1500)
+                        } else {
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : 'Error changing page settings',
+                                success : false
+                            })
+                        }
+                    } catch(e) {
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error changing page settings',
+                            success : false
+                        })
+                    }
+                })
+            }
+            if(savePageSettings) {
+                savePageSettings.addEventListener('click', save)
+            }
+        })();
+
+        (() => {
+            var addPageForm = document.querySelector('.form-add-page') 
+            if(addPageForm){
+                var addPageSubmitBtn  = addPageForm.querySelector('.add-page-submit')
+
+                var addPageSubmit = e => {
+                    var title = addPageForm.querySelector('.add-page-input.title').value
+                    var address = addPageForm.querySelector('.add-page-input.address').value
+                    var seoDesc = addPageForm.querySelector('.add-page-input.seo-description').value
+                    var seoKeywords = addPageForm.querySelector('.add-page-input.seo-keywords').value
+                    var seoImage = addPageForm.querySelector('.add-page-input.seo-image').value
+                    var favicon = addPageForm.querySelector('.add-page-input.favicon').value
+
+                    var pageData = {
+                        title        : title,
+                        raddress     : address,
+                        seo_desc     : seoDesc,
+                        seo_keywords : seoKeywords,
+                        seo_image    : seoImage,
+                        favicon      : favicon
+                    }
+
+                    Helpers.AJAX.Post(location.href, {
+                        controller : 'Page',
+                        action     : 'CreatePage',
+                        page_data  : pageData
+                    }).success(data => {
+                        try {
+                            var obj = JSON.parse(data)
+
+                            if(obj.response == 'Success') {
+                                Helpers.CreateModal({
+                                    title : 'Success!',
+                                    content : 'Successfully created page!',
+                                    success : true
+                                }, e => {
+                                    location.href = '/pages-list'
+                                })
+                            } else {
+                                console.log(data)
+                                Helpers.CreateModal({
+                                    title : 'Error!',
+                                    content : 'Error while creating page',
+                                    success : false
+                                })
+                            }
+                        } catch(e) {
+                            console.log(data)
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : 'Error while creating page',
+                                success : false
+                            })
+                        }
+                    })
+                }
+
+                addPageSubmitBtn.addEventListener('click', addPageSubmit)
+            }
+        })();
+
+        var addTableUsersEvents = () => {
+            var checkActiveUser = document.getElementsByClassName('check-icon mngusers')
+
+            var changeActive = e => {
+                var current = e.currentTarget
+                var userId = current.parentElement.parentElement.getAttribute('id-user')
+                var newVal = current.getAttribute('active') == '1' ? '0' : '1'
+
+                Helpers.AJAX.Post(location.href, {
+                    controller : 'Users', 
+                    action     : 'ChangeActive',
+                    id_user    : userId,
+                    active     : newVal
+                }).success(data => {
+                    try {
+                        var obj = JSON.parse(data)
+                        
+                        if(obj.response == 'Success') {
+                            if(current.getAttribute('active') == '1') {
+                                current.setAttribute('active', '0')
+                                current.style.backgroundColor = '#a50000'
+                            } else {
+                                current.setAttribute('active', '1')
+                                current.style.backgroundColor = '#009921'
+                            }
+
+                            Helpers.CreateModal({
+                                title : 'Success!',
+                                content : 'Successfully changed property "active"',
+                                success : true
+                            })
+                        } else {
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : 'Error changing property "active"',
+                                success : false
+                            })
+                        }
+                    } catch(e) {
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error while changing property "active"',
+                            success : false
+                        })
+                    }
+                })
+            }
+
+            for(var i = 0; i < checkActiveUser.length; i++) {
+                checkActiveUser[i].addEventListener('click', changeActive)
+            }
+
+            var editOpenUsers = document.querySelectorAll('.edit-open.users')
+            var editContainer = document.querySelector('.edit-users-box')
+
+            var openContainer = e => {
+                var userId   = e.currentTarget.parentElement.parentElement.getAttribute('id-user')
+                var users    = Helpers.Data.GetData('users-list')
+                var name     = document.querySelector('.edit-users-setting-value.name')
+                var surname  = document.querySelector('.edit-users-setting-value.surname')
+                var login    = document.querySelector('.edit-users-setting-value.login')
+                var avatar   = document.querySelector('.edit-users-setting-value.avatar')
+                var bio      = document.querySelector('.edit-users-setting-value.bio')
+
+                editContainer.setAttribute('user-id', userId)
+                
+                for(var i = 0; i < users.length; i++) {
+                    if(users[i].id == userId) {
+                        name.value    = users[i].name
+                        surname.value = users[i].surname
+                        login.value   = users[i].login
+                        avatar.value  = users[i].avatar
+                        bio.value     = users[i].bio
+                    }
+                }
+                editContainer.classList.add('open-flex')
+            }
+
+            for(var i = 0; i < editOpenUsers.length; i++) {
+                editOpenUsers[i].addEventListener('click', openContainer)
+            }
+            
+            var saveEditUsers = document.querySelector('.save-btn-settings.users')
+           
+            var saveEditData = e => {
+                var userId  = e.currentTarget.parentElement.getAttribute('user-id')
+                var name    = document.querySelector('.edit-users-setting-value.name').value
+                var surname = document.querySelector('.edit-users-setting-value.surname').value
+                var login   = document.querySelector('.edit-users-setting-value.login').value
+                var avatar  = document.querySelector('.edit-users-setting-value.avatar').value
+                var bio     = document.querySelector('.edit-users-setting-value.bio').value
+                var data = {
+                    name    : name,
+                    surname : surname,
+                    login   : login,
+                    avatar  : avatar,
+                    bio     : bio
+                }
+
+                Helpers.AJAX.Post(location.href, {
+                    controller : 'Users',
+                    action     : 'ChangeData',
+                    id_user    : userId,
+                    data       : data
+                }).success(data => {
+                    try {
+                        var obj = JSON.parse(data)
+
+                        if(obj.response == 'Success') {
+                            editContainer.classList.remove('open-flex')
+
+                            Helpers.CreateModal({
+                                title : 'Success!',
+                                content : 'Successfully changed user data',
+                                success : true
+                            }, e => {
+                                location.reload()
+                            }, 1500)
+                        } else {
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : 'Error while changing user data(user id: ' + userId + ')',
+                                success : false
+                            })
+                        }
+                    } catch(e) {
+                        console.log(data)
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error while changing user data(user id: ' + userId + ')',
+                            success : false
+                        })
+                    }
+                })
+            }
+            if(saveEditUsers) {
+                saveEditUsers.addEventListener('click', saveEditData)
+            }
+        };
+        (() => {
+            addTableUsersEvents()
+        })();
+        (() => {
+            var searchForm = document.querySelector('.search-form.users')
+            var usersTable = document.querySelector('.table-main')
+
+            var searchUsers = e => {
+                e.preventDefault()
+
+                var input      = e.currentTarget.querySelector('.search-input').value
+                var users      = Helpers.Data.GetData('users-list')
+                var tableTbody = usersTable.querySelector('tbody')
+                var records = []
+
+                for(var i = 0; i < users.length; i++) {
+                    var login = users[i].login.toLowerCase()
+                    var name  = users[i].name.toLowerCase()
+                    var surname = users[i].surname.toLowerCase()
+                    var inputl = input.toLowerCase()
+
+                    if(name.includes(inputl) || surname.includes(inputl) || login.includes(inputl)) {
+                        records.push(users[i])
+                        continue;
+                    }
+                }
+
+                if(records.length > 0) {
+                    records = records.length > 15 ? records.splice(0, 15) : records
+                    tableTbody.innerHTML = ''
+
+                    var html = ''
+                    for(var i = 0; i < records.length; i++) { 
+                        html += '<tr id-user="' + records[i].id +  '">'
+                            html +=  '<td>' + records[i].id +      '</td>'
+                            html +=  '<td>' + records[i].name +    '</td>'
+                            html +=  '<td>' + records[i].surname + '</td>'
+                            html +=  '<td>' + records[i].login +   '</td>'
+                            html +=  '<td>' + records[i].avatar + '</td>'
+                            html +=  '<td>' + records[i].bio +    '</td>'
+                            html +=  '<td><div class="check-icon mngusers" style="background-color:' + (records[i].active ? '#009921' : '#a90000') + '" active="' + (records[i].active ? '1' : '0') + '">'
+                            html +=  '</div>'
+                            html +=  '</td>'
+                            html +=  '<td><div class="edit-open users">Edit</div></td>'
+                        html +=  '</tr>'
+                    }
+
+                    tableTbody.innerHTML = html
+                    setTimeout(() => {
+                        addTableUsersEvents()
+                    }, 50)
+                }
+            }
+
+            if(searchForm) {
+                searchForm.addEventListener('submit', searchUsers)
             }
         })();
 

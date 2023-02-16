@@ -1,16 +1,14 @@
 <?php 
-
-if(!$this->Auth->IsAuth()) {
-  $this->RequestHelper->Redirect('/');
-}
-
+    if(!$this->Auth->IsAuth()) {
+    $this->RequestHelper->Redirect('/');
+    }
 ?>
-
 <!DOCTYPE HTML>
 <html>
 <head>
   <?php 
-      include VIEWPATH . '/' . 'Partials' . '/' . 'HeadAdmin.php'
+      include VIEWPATH . '/' . 'Partials' . '/' . 'HeadAdmin.php';
+      echo $js_add;
   ?>
 </head>
 <body>  
@@ -30,10 +28,11 @@ if(!$this->Auth->IsAuth()) {
             Ustaw szablon
         </h2>
     </div>
-    <div class="label-container">
+    <!--
+    <div class="label-container" style="text-align:center">
         <label>Lista stron</label>
     </div>
-    
+    -->
     <table class="table-main">
         <thead>
             <tr>
@@ -77,8 +76,12 @@ if(!$this->Auth->IsAuth()) {
                     </td>
                     <td>
                         <?php 
-                            $template = $templates[$page['id_layout']];
-                            echo $template['title'];
+                            if($page['id_layout'] == 0) {
+                                echo 'N/A. <a href="pages-templates">Set layout</a>';
+                            } else {
+                                $template = $templates[$page['id_layout']];
+                                echo $template['title'];
+                            }
                         ?>
                     </td>
                     <td>
@@ -96,22 +99,48 @@ if(!$this->Auth->IsAuth()) {
         </table>
 
         <div class="page-settings-box" page-id="0">
-        <div class="close-x">&#10005;</div>
-        
-        <div class="main-title-container">
-            <label class="main-title">
-                Ustawienia strony
-            </label>
-        </div>
-        <div class="page-setting-container">
-            <div class="page-setting">
-                Tytuł strony:
+            <div class="close-x">&#10005;</div>
+            
+            <div class="main-title-container">
+                <label class="main-title">
+                    Ustawienia strony
+                </label>
             </div>
-            <input type="text" class="page-setting-value title"/>
+            <div class="page-setting-container">
+                <div class="page-setting">
+                    Tytuł strony:
+                </div>
+                <input type="text" class="page-setting-value title"/>
+            </div>
+            <div class="page-setting-container">
+                <div class="page-setting">
+                    SEO słowa<br> kluczowe(po przecinku):
+                </div>
+                <input type="text" class="page-setting-value seo-keywords"/>
+            </div>
+            <div class="page-setting-container">
+                <div class="page-setting">
+                    SEO opis:
+                </div>
+                <input type="text" class="page-setting-value seo-description"/>
+            </div>
+            <div class="page-setting-container">
+                <div class="page-setting">
+                    SEO image:
+                </div>
+                <input type="text" class="page-setting-value seo-image"/> <!--SEO IMAGE FILE COLLECTION-->
+            </div>
+            <div class="page-setting-container">
+                <div class="page-setting">
+                    Favicon:
+                </div>
+                <input type="text" class="page-setting-value favicon"/> <!--SEO IMAGE FILE COLLECTION-->
+            </div>
+            <div class="save-btn-settings page">
+                <div>Zapisz</div>
+            </div>
+            </div>
         </div>
-    </div>
-
-    </div>
     
 </body>
 </html>

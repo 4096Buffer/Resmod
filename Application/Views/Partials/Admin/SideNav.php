@@ -25,10 +25,12 @@
         <li>
           Lista stron
         </li>
-      </a>  
-      <li>
-        Dodaj nową
-      </li>
+      </a>
+      <a href="/add-page">  
+        <li>
+          Dodaj nową
+        </li>
+      </a>
       <div class="space-line"></div>
     </ol>
   </div>
@@ -36,9 +38,11 @@
   <button class="collapsible-sidenav" collapsible="true">Użytkownicy</button>
   <div class="collapsible-sidenav-content" active="false">
     <ol>
-      <li>
-        Zarządzanie
-      </li>
+      <a href="/manage-users">
+        <li>
+          Zarządzanie
+        </li>
+      </a>
       <li>
         Administratorzy
       </li>

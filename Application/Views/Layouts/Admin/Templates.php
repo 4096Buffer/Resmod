@@ -76,8 +76,12 @@ if(!$this->Auth->IsAuth()) {
                         </td>
                         <td>
                             <?php 
-                                $template = $templates[$page['id_layout']];
-                                echo $template['title'];
+                                if($page['id_layout'] == 0) {
+                                    echo 'Not provided';
+                                } else {
+                                    $template = $templates[$page['id_layout']];
+                                    echo $template['title'];
+                                }
                             ?>
                         </td>
                         <td><div class="check-icon templates"></div></td>

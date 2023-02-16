@@ -313,11 +313,10 @@ class LayoutController extends \Code\Core\BaseController {
 
 	}
 
-	public function PagesList() {
+	public function PagesListAdmin() {
 		/**
 		 * Get all admin user data from session
 		*/
-
 		$login   = $this->Auth->GetProfile()['login'];
 		$avatar  = $this->Auth->GetProfile()['avatar'];
 		$name    = $this->Auth->GetProfile()['name'];
@@ -338,7 +337,20 @@ class LayoutController extends \Code\Core\BaseController {
 		foreach($variables_g as $vg) {
 			$page_variables[$vg['id_page']][$vg['name']] = $vg;
 		}
+
+		$pages = $this->DataBase->Get("SELECT * FROM pages WHERE hidden = 0");
 		
+		foreach($pages as &$page) {
+			$variables = $this->DataBase->Get("SELECT * FROM variables WHERE id_page = ?", [ $page['id'] ]);
+			$page['variables'] = $variables;
+		}
+
+		$data = [];
+		$data['pages-list'] = $pages;
+
+		$script_js = 'Helpers.Data.AddData(' . json_encode($data) . ')';
+		$js_add = $this->HTML->CreateHTMLElement('script', $script_js);
+
 		/**
 		 * Add all variables to the 'View' class
 		*/
@@ -352,6 +364,66 @@ class LayoutController extends \Code\Core\BaseController {
 		$this->View->AddData('pages', $pages);
 		$this->View->AddData('templates', $templates);
 		$this->View->AddData('page_variables', $page_variables);
+		$this->View->AddData('js_add', $js_add);
+	}
+
+	public function AddPageAdmin() {
+		/**
+		 * Get all admin user data from session
+		*/
+
+		$login   = $this->Auth->GetProfile()['login'];
+		$avatar  = $this->Auth->GetProfile()['avatar'];
+		$name    = $this->Auth->GetProfile()['name'];
+		$surname = $this->Auth->GetProfile()['surname'];
+		$email   = $this->Auth->GetProfile()['email'];
+
+		/**
+		 * Add all variables to the 'View' class
+		*/
+
+		$this->View->AddData('login', $login);
+		$this->View->AddData('avatar', $avatar);
+		$this->View->AddData('name', $name);
+		$this->View->AddData('surname', $surname);
+		$this->View->AddData('email', $email);
+	}
+
+	public function ManageUsersAdmin() {
+		/**
+		 * Get all admin user data from session
+		*/
+
+		$login   = $this->Auth->GetProfile()['login'];
+		$avatar  = $this->Auth->GetProfile()['avatar'];
+		$name    = $this->Auth->GetProfile()['name'];
+		$surname = $this->Auth->GetProfile()['surname'];
+		$email   = $this->Auth->GetProfile()['email'];
+
+		$users = $this->DataBase->Get("SELECT * FROM users");
+
+		foreach ($users as &$user) {
+			unset($user['password']);
+		}
+
+		$data = [];
+		$data['users-list'] = $users;
+
+		$script_js = 'Helpers.Data.AddData(' . json_encode($data) . ')';
+		$js_add = $this->HTML->CreateHTMLElement('script', $script_js);
+
+		/**
+		 * Add all variables to the 'View' class
+		*/
+
+		$this->View->AddData('login', $login);
+		$this->View->AddData('avatar', $avatar);
+		$this->View->AddData('name', $name);
+		$this->View->AddData('surname', $surname);
+		$this->View->AddData('email', $email);
+		$this->View->AddData('users', $users);
+
+		$this->View->AddData('js_add', $js_add);
 	}
 }
 

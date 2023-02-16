@@ -84,7 +84,67 @@ var Helpers = (() => {
         }
 
         return send
-    } 
+    }
+
+    /**
+     * 
+     * @param {Object} data - Data to show modal 
+     * {
+     *  title: 'test',
+     *  content : 'test',
+     *  success : true,
+     * }
+     * @param {function} callbackEnd - Execute callback after closing modal
+     */
+
+    var CreateModal = function(data, callbackEnd = function() {}, timeout = 3000) {
+        var title   = data.title
+        var content = data.content
+        var success = data.success
+        
+        var modalOld = document.querySelector('.modal-popup')
+
+        if(modalOld) {
+            document.querySelector('.modal-popup').remove()
+        }
+        
+        var modal  = document.createElement('div')
+        var html   = ''
+
+        modal.classList.add('modal-popup')
+        
+        html += '<div class="close-x modal">&#10005;</div>'
+        html += '<h2>' + title   + '</h2>'
+        html += '<p>'  + content + '</h2>'
+
+        modal.innerHTML = html
+        modal.style.backgroundColor = success ? '#00640c' : '#810000'
+
+        document.body.appendChild(modal)
+
+        setTimeout(() => {
+            var modalX = modal.querySelector('.close-x, .modal')
+            modalX.addEventListener('click', e => {
+                modal.style.opacity = '0%'
+                modal.addEventListener('transitionend', () => {
+                    modal.remove()
+                    callbackEnd(e)
+                })
+                
+            })
+        }, 50)
+
+        setTimeout(() => { 
+            if(modal) {
+                modal.style.opacity = '0%'
+                modal.addEventListener('transitionend', () => {
+                    modal.remove()
+                    callbackEnd()
+                })
+            }
+        }, timeout)
+        
+    }
 
     return {
         CreateEventManager : function() {
@@ -92,6 +152,9 @@ var Helpers = (() => {
         },
         GetCurrentViewMode : function() {
             return GetCurrentViewMode()
+        },
+        CreateModal : function(data, callbackEnd = function() {}) {
+            return CreateModal(data, callbackEnd)
         }
     }
 })();

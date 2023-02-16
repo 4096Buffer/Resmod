@@ -53,7 +53,7 @@ if(!$this->Auth->IsAuth()) {
                 }
               ?>
               <li>
-                <?=$page['description']?> - <?=$page['views']?>
+                <?=$page['title']?> - <?=$page['views']?>
               </li>
       <?php } ?>
         </ol>

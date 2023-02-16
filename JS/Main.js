@@ -34,8 +34,8 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
             if(location.pathname == '/login') {
                 
                 var adminForm = document.querySelector('.admin-login-form-box').querySelector('form')
-                var adminFormLogin = document.querySelector('#admin-login-form-name')
-                var adminFormPassword = document.querySelector('#admin-login-form-pass')
+                var adminFormLogin = document.querySelector('#admin-login-login')
+                var adminFormPassword = document.querySelector('#admin-login-pass')
                 var adminFormController = adminForm.getAttribute('ajax-controller')
                 var adminFormInfoText = adminForm.querySelector('.info-text')
                 var adminFormAction = adminForm.getAttribute('ajax-action')
@@ -51,26 +51,24 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                         controller : adminFormController,
                         action : adminFormAction
                     }
+
                     var login = (data) => {
                         try {
                             var decodedJson = JSON.parse(data)
+                            var response = decodedJson.response
+                            var reason   = decodedJson.reason
                             
+                            if(response == "Error") {
+                                adminFormInfoText.innerHTML = reason
+                            } else if(response == "Success") {
+                                location.href = "/dashboard-admin"
+                            } else {
+                                alert("Invalid response data")
+                            }
                         }
                         catch(e) { 
                             console.log(data)
                             console.log("Can't parse json. (responseObject)")
-                        }
-                        
-                        var response = decodedJson.response
-                        var reason   = decodedJson.reason
-                        
-                        if(response == "Error") {
-                            adminFormInfoText.innerHTML = reason
-                                
-                        } else if(response == "Success") {
-                            location.href = "/dashboard-admin"
-                        } else {
-                            alert("Invalid response data")
                         }
                     }
 

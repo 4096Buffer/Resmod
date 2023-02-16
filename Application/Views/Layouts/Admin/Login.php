@@ -19,17 +19,20 @@ if($this->Auth->IsAuth()) {
     <div class="admin-login-container">
         <div class="admin-login-form-box">
             <form ajax-controller="AdminProfile" ajax-action="Login">
-                <div class="login-box">
+                <div class="admin-login-input-box">
                     <label>Login:</label>
-                    <input type="text" id="admin-login-form-name" name="login" required>
+                    <input type="text" class="admin-login-form-input" id="admin-login-login" name="login" required>
                 </div>
-                <div class="password-box">
+                <div class="admin-login-input-box">
                     <label>Password:</label>
-                    <input type="password" id="admin-login-form-pass" name="password" required>
+                    <input type="password" class="admin-login-form-input" id="admin-login-pass" name="password" required>
+                </div>
+
+                <span class="info-text" style="color:#970303;display: flex;justify-content: center;"></span>
+                <div class="admin-login-submit-container">
+                    <input type="submit" value="Zaloguj się" required>
                 </div>
                 
-                <input type="submit" id="admin-login-form-submit" value="Zaloguj się" required>
-                <span class="info-text" style="color:red"></span>
             </form>
         </div>
     </div>

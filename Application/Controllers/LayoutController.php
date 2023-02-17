@@ -425,6 +425,43 @@ class LayoutController extends \Code\Core\BaseController {
 
 		$this->View->AddData('js_add', $js_add);
 	}
+
+	public function ManageAdminsAdmin() {
+		/**
+		 * Get all admin user data from session
+		*/
+
+		$login   = $this->Auth->GetProfile()['login'];
+		$avatar  = $this->Auth->GetProfile()['avatar'];
+		$name    = $this->Auth->GetProfile()['name'];
+		$surname = $this->Auth->GetProfile()['surname'];
+		$email   = $this->Auth->GetProfile()['email'];
+
+		$admins = $this->DataBase->Get("SELECT * FROM admin_users");
+
+		foreach ($admins as &$admin) {
+			unset($admin['password']);
+		}
+
+		$data = [];
+		$data['admins-list'] = $admins;
+
+		$script_js = 'Helpers.Data.AddData(' . json_encode($data) . ')';
+		$js_add = $this->HTML->CreateHTMLElement('script', $script_js);
+
+		/**
+		 * Add all variables to the 'View' class
+		*/
+
+		$this->View->AddData('login', $login);
+		$this->View->AddData('avatar', $avatar);
+		$this->View->AddData('name', $name);
+		$this->View->AddData('surname', $surname);
+		$this->View->AddData('email', $email);
+		$this->View->AddData('admins', $admins);
+
+		$this->View->AddData('js_add', $js_add);
+	}
 }
 
 ?>

@@ -43,9 +43,11 @@
           Zarządzanie
         </li>
       </a>
-      <li>
-        Administratorzy
-      </li>
+      <a href="/manage-admins">
+        <li>
+          Administratorzy
+        </li>
+      </a>
       <div class="space-line"></div>
     </ol>
   </div>

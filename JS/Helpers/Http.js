@@ -34,11 +34,30 @@ Helpers.AJAX = (() => {
       loadScreen.style.display = 'flex'
       
       xhr.open("POST", url, true);
+
+      if(data instanceof FormData) {
+        contentType = null
+      } else if(typeof data === 'object' && data !== null) {
+        contentType = 'application/json'
+        data = JSON.stringify(data)
+      } else {
+        contentType = 'application/x-www-form-urlencoded'
+
+        if(typeof data == 'string' || typeof data == 'number' || typeof data == 'boolean') {
+          data = data.toString()
+        } else {
+          data = null
+        }
+
+      }
           
       //xhr.setRequestHeader("Content-type","multipart/form-data; charset=utf-8; boundary=" + Math.random().toString().substr(2));
-      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-      xhr.send(JSON.stringify(data))
-          
+      if(contentType) {
+        xhr.setRequestHeader('Content-type', contentType)
+      }
+      
+      xhr.send(data)
+      
       xhr.onreadystatechange = () => {
         if(xhr.readyState != 4) return;
               

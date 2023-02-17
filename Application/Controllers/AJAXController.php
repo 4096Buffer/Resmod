@@ -27,9 +27,9 @@ class AJAXController extends \Code\Core\BaseController {
 
     public function Run() {
         $obj = $this->RequestHelper->GetObjectFromJson();
+        
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->ExecuteController($obj['controller'], $obj['action']);
-            
+            $this->ExecuteController($obj['controller'], $obj['action']);    
             return true;
         } 
         

@@ -12,7 +12,7 @@ class Auth extends \Code\Core\BaseController {
 	public function __construct() {
 		parent::__construct();
 
-		$this->LoadLibrary('DataBase');
+		$this->LoadLibrary(['DataBase', 'RequestHelper']);
 
         if(!$this->profile && isset($_SESSION['id'])) {
             $this->profile = [
@@ -24,6 +24,8 @@ class Auth extends \Code\Core\BaseController {
                 'email'   => $_SESSION['email']
             ];
         }
+
+        
 	}
     
     private function GetActiveUsers() {
@@ -35,6 +37,7 @@ class Auth extends \Code\Core\BaseController {
 
         return [];
     }
+    
     
     private function RemoteLogout($user_id) {
         $result = $this->DataBase->DoQuery("UPDATE admin_users SET active = ? WHERE id = ?", [ '0', $user_id ]);
@@ -98,7 +101,7 @@ class Auth extends \Code\Core\BaseController {
             $row = $this->DataBase->GetFirstRow("SELECT * FROM admin_users WHERE id = ?", [ $id ]);
 
             if($row) {
-                if($row['active'] == 0) {
+                if($row['active'] == 0 || $row['enabled'] == 0) {
                     $this->UnAuth($id);
                     return false;
                 }
@@ -113,16 +116,16 @@ class Auth extends \Code\Core\BaseController {
     }
     
     public function UnAuth($user_id) {
-        if($this->IsAuth()) {
-            $result = $this->DataBase->DoQuery("UPDATE admin_users SET active = ? WHERE id = ?", [ '0', $user_id ]);
+        $result = $this->DataBase->DoQuery("UPDATE admin_users SET active = 0 WHERE id = ?", [ $user_id ]);
 
-            unset($_SESSION['id']);
-            unset($_SESSION['login']);
-            unset($_SESSION['avatar']);
-            unset($_SESSION['name']);
-            unset($_SESSION['surname']);
-            unset($_SESSION['email']);
-        }
+        unset($_SESSION['id']);
+        unset($_SESSION['login']);
+        unset($_SESSION['avatar']);
+        unset($_SESSION['name']);
+        unset($_SESSION['surname']);
+        unset($_SESSION['email']);
+
+        $this->RequestHelper->Redirect('/');
     }
 
     public function GetProfile($id = null) {

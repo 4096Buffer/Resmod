@@ -146,6 +146,57 @@ var Helpers = (() => {
         
     }
 
+    /**
+     * 
+     * @param {string} title - Title of the input box
+     * @param {string} type - Type of the input
+     * @param {function} callbackEnd - Execute callback after closing modal
+     */
+
+    var CreateInputBox = function(title, type, callbackEnd) {
+        if(typeof title !== 'string') {
+            console.error('Title must be a string')
+        }
+
+        if(typeof type !== 'string') {
+            console.error('Type must be a string')
+        }
+
+        if(typeof callbackEnd !== 'function') {
+            console.error('Callback must be a function')
+        }
+
+        var inputBoxBackground = document.createElement('div')
+            document.body.appendChild(inputBoxBackground)
+            inputBoxBackground.classList.add('input-box-background')
+        var inputBoxContainer  = document.createElement('div')
+            document.body.appendChild(inputBoxContainer)
+            inputBoxContainer.classList.add('input-box-container')
+        var inputBoxTitle      = document.createElement('div')
+            inputBoxContainer.appendChild(inputBoxTitle) 
+            inputBoxTitle.classList.add('input-box-title')
+            inputBoxTitle.innerHTML = title
+        var inputBox           = document.createElement('div')
+            inputBoxContainer.appendChild(inputBox)
+            inputBox.classList.add('input-box')
+        var input              = document.createElement('input')
+            inputBox.appendChild(input) 
+            input.type = type
+            input.classList.add('input-box-input')
+        var inputBoxSubmit     = document.createElement('div')
+            inputBoxContainer.appendChild(inputBoxSubmit)
+            inputBoxSubmit.classList.add('input-box-submit')
+        var buttonSubmit       = document.createElement('button')
+            inputBoxSubmit.appendChild(buttonSubmit)
+            buttonSubmit.innerText = 'Submit'
+
+        buttonSubmit.addEventListener('click', function(e) {
+            callbackEnd(input.value)
+            inputBoxContainer.remove()
+            inputBoxBackground.remove()
+        })
+    }
+
     return {
         CreateEventManager : function() {
             return new Event()
@@ -155,6 +206,9 @@ var Helpers = (() => {
         },
         CreateModal : function(data, callbackEnd = function() {}) {
             return CreateModal(data, callbackEnd)
+        },
+        CreateInputBox : function(title, type, callbackEnd) {
+            return CreateInputBox(title, type, callbackEnd)
         }
     }
 })();

@@ -8,8 +8,12 @@ namespace Code\Libraries;
 
 class RequestHelper extends \Code\Core\BaseController {
 
-    private $view_modes = [];
-	public function __construct() {
+    private $view_modes  = [];
+    private $content_type = [];
+    private $json  = [];
+    private $post =  [];
+	
+    public function __construct() {
 		parent::__construct();
 
 		$this->LoadLibrary('DataBase');
@@ -17,6 +21,23 @@ class RequestHelper extends \Code\Core\BaseController {
             'LiveEdit' => 'live-edit',
             'Standard' => ''
         ];
+
+        $headers = getallheaders();
+        if (array_key_exists('Content-Type', $headers)) {
+            $this->content_type = $headers['Content-Type'];
+        } else if (array_key_exists('content-type', $headers)) {
+            $this->content_type = $headers['content-type'];
+        } else if (array_key_exists('Content-type', $headers)) {
+            $this->content_type = $headers['Content-type'];
+        } else {
+            $this->content_type = 'text/plain';
+        }
+
+        if ($this->content_type === 'application/json') {
+            $this->json = json_decode(trim(file_get_contents('php://input')), true);
+        }
+        
+        $this->post = $_POST;
 	}
 
     public function SendJsonData($success, $data = null, $reason = null) {
@@ -44,11 +65,36 @@ class RequestHelper extends \Code\Core\BaseController {
         die($json_encoded);
     }
     
+    public function GetJSON(string $key = null) {
+        if(!is_null($key)) {
+            if(array_key_exists($key, $this->json)) {
+                return $this->json[$key];
+            }
+
+            return null;
+        }
+
+        return $this->json;
+    }
+
+    public function GetPost(string $key = null) {
+        if(!is_null($key)) {
+            if(array_key_exists($key, $this->post)) {
+                return $this->post[$key];
+            }
+
+            return null;
+        }
+
+        return $this->post;
+    }
+
     public function GetObjectFromJson() {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-            
-        return $data;
+        if ($this->content_type === 'application/json') {
+            return $this->GetJSON();
+        } else {
+            return $this->GetPost();
+        }
     }
 
     public function GetIpAdress() {

@@ -1155,7 +1155,6 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                             })
                         }
                     } catch(e) {
-                        console.log(data)
                         Helpers.CreateModal({
                             title : 'Error!',
                             content : 'Error while changing user data(user id: ' + userId + ')',
@@ -1189,7 +1188,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                     var surname = users[i].surname.toLowerCase()
                     var inputl = input.toLowerCase()
 
-                    if(name.includes(inputl) || surname.includes(inputl) || login.includes(inputl)) {
+                    if(name.indexOf(inputl) !== -1 || surname.indexOf(inputl) !== -1 || login.indexOf(inputl) !== -1) {
                         records.push(users[i])
                         continue;
                     }
@@ -1206,8 +1205,9 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                             html +=  '<td>' + records[i].name +    '</td>'
                             html +=  '<td>' + records[i].surname + '</td>'
                             html +=  '<td>' + records[i].login +   '</td>'
-                            html +=  '<td>' + records[i].avatar + '</td>'
-                            html +=  '<td>' + records[i].bio +    '</td>'
+                            html +=  '<td>' + records[i].email +   '</td>'
+                            html +=  '<td>' + records[i].avatar +  '</td>'
+                            html +=  '<td>' + records[i].bio +     '</td>'
                             html +=  '<td><div class="check-icon mngusers" style="background-color:' + (records[i].active ? '#009921' : '#a90000') + '" active="' + (records[i].active ? '1' : '0') + '">'
                             html +=  '</div>'
                             html +=  '</td>'
@@ -1219,6 +1219,18 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                     setTimeout(() => {
                         addTableUsersEvents()
                     }, 50)
+                    
+                    Helpers.CreateModal({
+                        title : 'Info!',
+                        content : 'Shown ' + records.length + (records.length > 1 ? ' records' : ' record'),
+                        success : true
+                    })
+                } else {
+                    Helpers.CreateModal({
+                        title : 'Info!',
+                        content : 'No user found!',
+                        success : false
+                    })
                 }
             }
 
@@ -1242,6 +1254,352 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
             */
         })();
 
+        var addTableAdminsEvents = () => {
+            var checkActiveUser = document.getElementsByClassName('check-icon mngadmins')
+
+            var changeActive = e => {
+                var current = e.currentTarget
+                var userId = current.parentElement.parentElement.getAttribute('id-admin')
+                var newVal = current.getAttribute('active') == '1' ? '0' : '1'
+
+                if(userId == Helpers.Data.GetData('profile').id) {
+                    Helpers.CreateModal({
+                        title : 'Error!',
+                        content : 'You cant disable your own account!',
+                        success : false
+                    })
+                    return;
+                }
+
+                Helpers.AJAX.Post(location.href, {
+                    controller : 'AdminProfile', 
+                    action     : 'ChangeEnabled',
+                    id_user    : userId,
+                    enabled    : newVal
+                }).success(data => {
+                    try {
+                        var obj = JSON.parse(data)
+                        
+                        if(obj.response == 'Success') {
+                            if(current.getAttribute('active') == '1') {
+                                current.setAttribute('active', '0')
+                                current.style.backgroundColor = '#a50000'
+                            } else {
+                                current.setAttribute('active', '1')
+                                current.style.backgroundColor = '#009921'
+                            }
+
+                            Helpers.CreateModal({
+                                title : 'Success!',
+                                content : 'Successfully changed property "enabled"',
+                                success : true
+                            })
+                        } else {
+                            console.log(data)
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : 'Error changing property "enabled"',
+                                success : false
+                            })
+                        }
+                    } catch(e) {
+                        console.log(data)
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error while changing property "active"',
+                            success : false
+                        })
+                    }
+                })
+            }
+
+            for(var i = 0; i < checkActiveUser.length; i++) {
+                checkActiveUser[i].addEventListener('click', changeActive)
+            }
+
+            var editOpenAdmins = document.querySelectorAll('.edit-open.admins')
+            var editContainer = document.querySelector('.edit-admins-box')
+
+            var openContainer = e => {
+                var adminId   = e.currentTarget.parentElement.parentElement.getAttribute('id-admin')
+                var admins    = Helpers.Data.GetData('admins-list')
+                var name     = document.querySelector('.edit-users-setting-value.name')
+                var surname  = document.querySelector('.edit-users-setting-value.surname')
+                var login    = document.querySelector('.edit-users-setting-value.login')
+                var avatar   = document.querySelector('.edit-users-setting-value.avatar')
+                var level   = document.querySelector('.edit-users-setting-value.level')
+
+                editContainer.setAttribute('admin-id', adminId)
+                
+                for(var i = 0; i < admins.length; i++) {
+                    if(admins[i].id == adminId) {
+                        name.value    = admins[i].name
+                        surname.value = admins[i].surname
+                        login.value   = admins[i].login
+                        avatar.value  = admins[i].avatar
+                    }
+                }
+                editContainer.classList.add('open-flex')
+            }
+
+            for(var i = 0; i < editOpenAdmins.length; i++) {
+                editOpenAdmins[i].addEventListener('click', openContainer)
+            }
+            
+            var saveEditUsers = document.querySelector('.save-btn-settings.admins')
+           
+            var saveEditData = e => {
+                var adminId  = e.currentTarget.parentElement.getAttribute('admin-id')
+                var name    = document.querySelector('.edit-users-setting-value.name').value
+                var surname = document.querySelector('.edit-users-setting-value.surname').value
+                var login   = document.querySelector('.edit-users-setting-value.login').value
+                var avatar  = document.querySelector('.edit-users-setting-value.avatar').value
+                var data = {
+                    name    : name,
+                    surname : surname,
+                    login   : login,
+                    avatar  : avatar
+                }
+
+                Helpers.CreateInputBox('Type your password:', 'password', value => {
+                    var sendProfile = Helpers.Data.GetData('profile')
+                    sendProfile.password = value
+
+                    Helpers.AJAX.Post(location.href, {
+                        controller : 'AdminProfile',
+                        action     : 'ChangeData',
+                        id_admin   : adminId,
+                        data       : data,
+                        profile    : sendProfile
+                    }).success(data => {
+                        try {
+                            var obj = JSON.parse(data)
+
+                            if(obj.response == 'Success') {
+                                editContainer.classList.remove('open-flex')
+
+                                Helpers.CreateModal({
+                                    title : 'Success!',
+                                    content : 'Successfully changed admin data',
+                                    success : true
+                                })
+
+
+                            } else {
+                                Helpers.CreateModal({
+                                    title : 'Error!',
+                                    content : obj.reason,
+                                    success : false
+                                })
+                            }
+                        } catch(e) {
+                            console.log(data)
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : 'Error while changing admin data(user id: ' + adminId + ')',
+                                success : false
+                            })
+                        }
+                    })
+                })
+            }
+            
+            if(saveEditUsers) {
+                saveEditUsers.addEventListener('click', saveEditData)
+            }
+        };
+        (() => {
+            addTableAdminsEvents()
+        })();
+        (() => {
+            var searchForm = document.querySelector('.search-form.admins')
+            var adminsTable = document.querySelector('.table-main')
+
+            var searchUsers = e => {
+                e.preventDefault()
+
+                var input      = e.currentTarget.parentElement.querySelector('.search-input').value
+                var admins      = Helpers.Data.GetData('admins-list')
+                var tableTbody = adminsTable.querySelector('tbody')
+                var records = []
+
+                for(var i = 0; i < admins.length; i++) {
+                    var login = admins[i].login.toLowerCase()
+                    var name  = admins[i].name.toLowerCase()
+                    var surname = admins[i].surname.toLowerCase()
+                    var inputl = input.toLowerCase()
+
+                    if(name.indexOf(inputl) !== -1 || surname.indexOf(inputl) !== -1 || login.indexOf(inputl) !== -1) { //indexOf is the fastest way to check if string contains substring
+                        records.push(admins[i])
+                        continue;
+                    }
+                }
+
+                if(records.length > 0) {
+                    records = records.length > 15 ? records.splice(0, 15) : records
+                    tableTbody.innerHTML = ''
+
+                    var html = ''
+                    for(var i = 0; i < records.length; i++) {
+                        html += '<tr id-user="' + records[i].id +  '">\n'
+                            html +=  '<td>' + records[i].id +      '</td>\n'
+                            html +=  '<td>' + records[i].name +    '</td>\n'
+                            html +=  '<td>' + records[i].surname + '</td>\n'
+                            html +=  '<td>' + records[i].login +   '</td>\n'
+                            html +=  '<td>' + records[i].email +   '</td>\n'
+                            html +=  '<td>' + records[i].avatar.substr(0, 12) + '...' + '</td>\n'
+                            html +=  '<td>' + records[i].level +   '</td>\n'
+                            html +=  '<td>' + (records[i].active ? 'Now' : records[i].last_active) + '</td>\n'
+                            html +=  '<td><div class="check-icon mngadmins" style="background-color:' + (records[i].enabled ? '#009921' : '#a90000') + '" active="' + (records[i].enabled ? '1' : '0') + '"></div></td>\n'
+                            html +=  '<td><div class="edit-open admins">Edit</div></td>\n'
+                        html +=  '</tr>'
+                        
+                    }
+
+                    tableTbody.innerHTML = html
+                    setTimeout(() => {
+                        addTableAdminsEvents()
+                    }, 50)
+                    
+                    //Helpers.CreateModal({
+                  //      title : 'Info!',
+                   //     content : 'Shown ' + records.length + (records.length > 1 ? ' records' : ' record'),
+                    //    success : true
+                   // })
+                } else {
+                  //  Helpers.CreateModal({
+                  //      title : 'Info!',
+                  //      content : 'No user found!',
+                  //      success : false
+                   // })
+                }
+            }
+
+            if(searchForm) {
+                searchForm.querySelector('.search-input').addEventListener('input', searchUsers)
+            }
+        })();
+
+        (() => {
+            var addAdminOptions = document.querySelectorAll('.add-admin-option')
+
+            for(var i = 0; i < addAdminOptions.length; i++) {
+                addAdminOptions[i].querySelector('input').addEventListener('focus', e => {
+                    var option = e.currentTarget.parentElement
+                    var label  = option.querySelector('label')
+                    var input  = e.currentTarget
+
+                    label.style.color = '#278500'
+                    label.style.fontWeight = 'bold'
+
+                    input.style.borderBottom = '3px solid black'
+                })
+
+                addAdminOptions[i].querySelector('input').addEventListener('blur', e => {
+                    var option = e.currentTarget.parentElement
+                    var label  = option.querySelector('label')
+                    var input  = e.currentTarget
+
+                    label.style.color = '#000'
+                    label.style.fontWeight = '100'
+
+                    input.style.borderBottom = '2px solid black'
+                })
+            }
+        })();
+
+        (() => {
+            var adminAddForm = document.querySelector('.add-admin-form')
+
+            var submitForm = e => {
+                e.preventDefault()
+                var name     = adminAddForm.querySelector('.add-admin-input.name').value
+                var surname  = adminAddForm.querySelector('.add-admin-input.surname').value
+                var login    = adminAddForm.querySelector('.add-admin-input.login').value
+                var password = adminAddForm.querySelector('.add-admin-input.password').value
+                var email    = adminAddForm.querySelector('.add-admin-input.email').value
+                var avatar   = adminAddForm.querySelector('.add-admin-input.avatar').files[0]
+                
+                var formDataAvatar = new FormData()
+                
+
+                
+                formDataAvatar.append('controller', 'Files')
+                formDataAvatar.append('action', 'UploadFile')
+                formDataAvatar.append('name', 'avatar')
+                formDataAvatar.append('dir', 'Avatars')
+                formDataAvatar.append('avatar', avatar)
+                
+                Helpers.AJAX.Post(location.href, formDataAvatar).success(data => {
+                    try {
+                        var obj = JSON.parse(data)
+                        if(obj.response == 'Success') {
+                            var formData       = new FormData()
+                            var profileData = {
+                                name     : name,
+                                surname  : surname,
+                                login    : login,
+                                password : password,
+                                email    : email,
+                                avatar   : obj.data.dest
+                            }
+
+                            formData.append('controller', 'AdminProfile')
+                            formData.append('action', 'CreateAdminAccount')
+                            formData.append('profile_data', JSON.stringify(profileData))
+
+                            Helpers.AJAX.Post(location.href, formData).success(datad => {
+                                try {
+                                    var objd = JSON.parse(datad)
+                                    
+                                    if(objd.response == 'Success') {
+                                        Helpers.CreateModal({
+                                            title : 'Success!',
+                                            content : 'Successfully created admin account (id :' + objd.data.id + ').<br> Refresh to see changes.',
+                                            success : true
+                                        }, () => {
+                                            location.reload()
+                                        })
+                                    } else {
+                                        Helpers.CreateModal({
+                                            title : 'Error!',
+                                            content : objd.reason,
+                                            success : false
+                                        })
+                                    }
+                                } catch(e) {
+                                    Helpers.CreateModal({
+                                        title : 'Error!',
+                                        content : 'Error while creating admin account',
+                                        success : false
+                                    })
+                                }
+                            })
+                        } else {
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : obj.reason,
+                                success : false
+                            })
+                        }
+                    } catch (e) {
+                        console.log(e)
+                        console.log(data)
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error while uploading avatar',
+                            success : false
+                        })
+                    }
+                })
+
+                
+            }
+
+            if(adminAddForm) {
+                adminAddForm.addEventListener('submit', submitForm)
+            }
+        })();
 
     })
 }).catch(err => {

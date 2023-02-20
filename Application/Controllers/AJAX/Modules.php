@@ -17,7 +17,12 @@ class Modules extends \Code\Core\BaseController {
 
     private function GetLastModuleAdded() {
         $modules = $this->DataBase->Get("SELECT * FROM modules_added ORDER BY sort ASC");
-        return \end($modules);
+        $last    = ['sort' => 0];
+        if(!is_null($modules)) {
+            $last = \end($modules);
+        }
+
+        return $last;
     }
 
     public function AddModule() {

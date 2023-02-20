@@ -764,52 +764,8 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
             if(buttonSave) {
                 buttonSave.addEventListener('click', saveContent)
             }
-
-            var modulesDeleteBtns = document.querySelectorAll('.module-live-edit-icon.delete') //delete button ADD!!!
             
-            var deleteModule = e => {
-                var moduleDOM = e.currentTarget.parentElement
-                var moduleId  = moduleDOM.getAttribute('module-id')
-                
-                Helpers.AJAX.Post(location.href, {
-                    controller : 'Modules',
-                    action     : 'DeleteModule',
-                    module_id  : moduleId
-                }).success(data => {
-                    try {
-                        var obj = JSON.parse(data)
-
-                        if(obj.response == 'Success') {
-                            moduleDOM.style.opacity = '0%'
-                            moduleDOM.addEventListener('transitionend', () => {
-                                moduleDOM.remove()
-                            })
-
-                            Helpers.CreateModal({
-                                title : 'Success!',
-                                content : 'Successfully deleted module(id: ' + moduleId + ')',
-                                success : true
-                            })
-                        } else {
-                            Helpers.CreateModal({
-                                title : 'Error!',
-                                content : 'Error while deleting module',
-                                success : false
-                            })
-                        }
-                    } catch(e) {
-                        Helpers.CreateModal({
-                            title : 'Error!',
-                            content : 'Error while deleting module',
-                            success : false
-                        })
-                    }
-                })
-            }
-
-            for(var i = 0; i < modulesDeleteBtns.length; i++) {
-                modulesDeleteBtns[i].addEventListener('click', deleteModule)
-            }
+            
         })();
         
         (() => {
@@ -913,22 +869,38 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
         (() => {
             var savePageSettings = document.querySelector('.save-btn-settings.page')
 
+            var getRowByPageId = id => {
+                var pagesTable = document.querySelector('.table-main.pages-list')
+                var tbody      = pagesTable.querySelector('tbody')
+                var rows       = tbody.children
+
+                for(var i = 0; i < rows.length; i++) {
+                    if(rows[i].getAttribute('id-page') == id) {
+                        return rows[i]
+                    }
+                }
+
+                return null;
+            }
+
             var save = e => {
-                var title       = document.querySelector('.page-setting-value.title').value
-                var keywords    = document.querySelector('.page-setting-value.seo-keywords').value
-                var description = document.querySelector('.page-setting-value.seo-description').value
-                var image       = document.querySelector('.page-setting-value.seo-image').value
-                var favicon     = document.querySelector('.page-setting-value.favicon').value
+                var title       = document.querySelector('.page-setting-value.title')
+                var keywords    = document.querySelector('.page-setting-value.seo-keywords')
+                var description = document.querySelector('.page-setting-value.seo-description')
+                var image       = document.querySelector('.page-setting-value.seo-image')
+                var favicon     = document.querySelector('.page-setting-value.favicon')
 
                 var pageId = e.currentTarget.parentElement.getAttribute('page-id')
                 
                 var sendData = {
-                    title : title,
-                    keywords : keywords,
-                    description : description,
-                    image : image,
-                    favicon : favicon
+                    title : title.value,
+                    keywords : keywords.value,
+                    description : description.value,
+                    image : image.value,
+                    favicon : favicon.value
                 }
+
+                var row = getRowByPageId(pageId)
 
                 Helpers.AJAX.Post(location.href, {
                     controller : 'Page',
@@ -940,14 +912,16 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                         var obj = JSON.parse(data)
 
                         if(obj.response == 'Success') {
+                            row.children[1].innerText = title.value
+                            row.children[2].innerText = description.value.length > 14 ? description.value.substr(0, 14) : description.value
+                            
                             Helpers.CreateModal({
                                 title : 'Success!',
                                 content : 'Successfully changed page settings',
                                 success : true
-                            }, e => {
-                                location.reload()
-                            }, 1500)
+                            })
                         } else {
+                           
                             Helpers.CreateModal({
                                 title : 'Error!',
                                 content : 'Error changing page settings',
@@ -955,6 +929,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                             })
                         }
                     } catch(e) {
+                        console.log(e)
                         Helpers.CreateModal({
                             title : 'Error!',
                             content : 'Error changing page settings',
@@ -974,20 +949,20 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 var addPageSubmitBtn  = addPageForm.querySelector('.add-page-submit')
 
                 var addPageSubmit = e => {
-                    var title = addPageForm.querySelector('.add-page-input.title').value
-                    var address = addPageForm.querySelector('.add-page-input.address').value
-                    var seoDesc = addPageForm.querySelector('.add-page-input.seo-description').value
-                    var seoKeywords = addPageForm.querySelector('.add-page-input.seo-keywords').value
-                    var seoImage = addPageForm.querySelector('.add-page-input.seo-image').value
-                    var favicon = addPageForm.querySelector('.add-page-input.favicon').value
+                    var title = addPageForm.querySelector('.add-page-input.title')
+                    var address = addPageForm.querySelector('.add-page-input.address')
+                    var seoDesc = addPageForm.querySelector('.add-page-input.seo-description')
+                    var seoKeywords = addPageForm.querySelector('.add-page-input.seo-keywords')
+                    var seoImage = addPageForm.querySelector('.add-page-input.seo-image')
+                    var favicon = addPageForm.querySelector('.add-page-input.favicon')
 
                     var pageData = {
-                        title        : title,
-                        raddress     : address,
-                        seo_desc     : seoDesc,
-                        seo_keywords : seoKeywords,
-                        seo_image    : seoImage,
-                        favicon      : favicon
+                        title        : title.value,
+                        raddress     : address.value,
+                        seo_desc     : seoDesc.value,
+                        seo_keywords : seoKeywords.value,
+                        seo_image    : seoImage.value,
+                        favicon      : favicon.value
                     }
 
                     Helpers.AJAX.Post(location.href, {
@@ -1583,8 +1558,6 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                             })
                         }
                     } catch (e) {
-                        console.log(e)
-                        console.log(data)
                         Helpers.CreateModal({
                             title : 'Error!',
                             content : 'Error while uploading avatar',

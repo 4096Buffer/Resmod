@@ -77,7 +77,10 @@ if(!$this->Auth->IsAuth()) {
                 <!--<input type="submit" class="search-submit" value="Szukaj"/>-->
             </form>
         <?php } ?>
-        
+
+        <h2 class="h2-main-add-templates">
+            Stwórz konto administratora
+        </h2>
         <div class="add-admin-container">
            <form class="add-admin-form">
                 <div class="add-admin-option">
@@ -85,7 +88,7 @@ if(!$this->Auth->IsAuth()) {
                     <input type="text" class="add-admin-input name"/>
                 </div>
                 <div class="add-admin-option">
-                    <label>Surame:</label>
+                    <label>Surname:</label>
                     <input type="text" class="add-admin-input surname"/>
                 </div>
                 <div class="add-admin-option">

@@ -15,10 +15,12 @@ var Content = (function() {
         }
     }
 
-    VariablesTypes.prototype.GetType = function(name) {
+    VariablesTypes.prototype.CreateType = function(name, variable) {
         if(name in this.types) {
-            return this.types[name]
+            return new this.types[name](variable);
         }
+
+        return undefined;
     }
 
     var InputType = function(variable) {
@@ -26,19 +28,56 @@ var Content = (function() {
 
         var DOM = this.variable.GetDOM()
 
-        DOM.contentEditable = true
+        this.DOM = DOM
+        this.DOM.contentEditable = true
         
-        DOM.addEventListener('keydown', e => {
+        this.DOM.addEventListener('keydown', e => {
             setTimeout(() => {
-                var newValue = DOM.innerHTML
+                var newValue = this.DOM.innerHTML
                 if(this.variable.value !== newValue) {
                     this.variable.ChangeValue(newValue) 
                 }
             }, 16)
         })
+
+        DOM.addEventListener('blur', e => {
+            if(DOM.innerText === '') {
+                DOM.innerText =  this.variable.oldValue          
+                this.variable.value = this.variable.oldValue     
+            } 
+        })
     }
 
+    InputType.prototype.variable = null;
+    
+    InputType.prototype.Remove = function() {
+        this.variable = null
+        this.DOM.contentEditable = false
+    }
+
+    var WysiwygType = function(variable) {
+        this.variable = variable
+        var wysiwygObject = Content.Addons.Wysiwyg.Build(variable)
+        var DOM = this.variable.GetDOM()
+
+        this.wysiwygObject = wysiwygObject
+        this.DOM           = DOM
+        this.DOM.contentEditable = true
+
+        wysiwygObject.BuildDOM()
+        wysiwygObject.PrepareObjectDOM()
+    }
+    
     InputType.prototype.variable = null
+
+    WysiwygType.prototype.Remove = function() {
+        this.variable = null
+        this.DOM.contentEditable = false
+
+        this.wysiwygObject.RemoveObject()
+
+        this.wysiwygObject = null
+    }
 
     var CMSModule = function(id, global, globalExcept, idDefModule, idPage, sort) {
 
@@ -68,7 +107,7 @@ var Content = (function() {
                     for(var j = 0; j < variables.length; j++) {
                         var v = variables[j]
                         var buildVariable     = new CMSVariable(this, v.id, v.name, v.default_value, v.id_variable, v.type, v.value)
-                        var buildVariableType = new InputType(buildVariable) 
+                        var buildVariableType = variablesTypes.CreateType(v.type, buildVariable)
                         
                         this.variables.push(buildVariableType)
                     }
@@ -136,11 +175,12 @@ var Content = (function() {
 
     var event         = Helpers.CreateEventManager()
     var getVariables  = []
-    var variableTypes = new VariablesTypes()
+    var variablesTypes = new VariablesTypes()
     var modules       = []
 
-    var addVariableTypes = function() {
-        variableTypes.AddType('InputType', InputType)
+    var addVariablesTypes = function() {
+        variablesTypes.AddType('InputType', InputType)
+        variablesTypes.AddType('WysiwygType', WysiwygType)
     }
 
     var createCMSModules = function() {
@@ -194,6 +234,7 @@ var Content = (function() {
         createCMSModules()
     }
 
+
     var rebuildContent = function(callback = function() {}) {
         var pageId = Helpers.Data.GetData('page').id
         Helpers.AJAX.Post('/', {
@@ -205,9 +246,9 @@ var Content = (function() {
 
             getVariables = obj.data
 
-            addVariableTypes()
+            addVariablesTypes()
             rebuildModules()
-            callback()
+            addDeleteEvent()
         })
     }
 
@@ -223,21 +264,85 @@ var Content = (function() {
             var newModule       = new CMSModule(id, global, globalExcept, idModule, idPage, sort)
             var moduleContainer = document.querySelector('.modules')
             var obj = JSON.parse(data)
-
+            
             rebuildContent(function() {
                 newModule.FetchVariables()
-                modules.push(newModule)
             })
             
 
             if(obj.response == 'Success') {
                 moduleContainer.innerHTML += obj.data
+                setTimeout(() => {
+                    addDeleteEvent()
+                }, 16)
                 
             } else {
                 alert('Cant get module. Restart page!')
             }
         })
         
+    }
+
+    var addDeleteEvent = function() {
+        var modulesDeleteBtns = document.querySelectorAll('.module-live-edit-icon.delete') //delete button ADD!!!
+            
+            var deleteModule = e => {
+                e.stopImmediatePropagation()
+                var moduleDOM = e.currentTarget.parentElement
+                var moduleId  = moduleDOM.getAttribute('module-id')
+                
+                Helpers.AJAX.Post(location.href, {
+                    controller : 'Modules',
+                    action     : 'DeleteModule',
+                    module_id  : moduleId
+                }).success(data => {
+                    try {
+                        var obj = JSON.parse(data)
+
+                        if(obj.response == 'Success') {
+                            moduleDOM.style.opacity = '0%'
+                            moduleDOM.addEventListener('transitionend', () => {
+                                removeModule(moduleId)
+                                moduleDOM.remove()
+                            })
+
+                            Helpers.CreateModal({
+                                title : 'Success!',
+                                content : 'Successfully deleted module(id: ' + moduleId + ')',
+                                success : true
+                            })
+                        } else {
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : 'Error while deleting module',
+                                success : false
+                            })
+                        }
+                    } catch(e) {
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error while deleting module',
+                            success : false
+                        })
+                    }
+                })
+            }
+
+            for(var i = 0; i < modulesDeleteBtns.length; i++) {
+                modulesDeleteBtns[i].addEventListener('click', deleteModule)
+            }
+    }
+    var removeModule = function(id) {
+        for(var i = 0; i < modules.length; i++) {
+            if(modules[i].id == id ) {
+                for(var j = 0; j < modules[i].variables.length; j++) {
+                    modules[i].variables[j].Remove()
+                }
+
+                delete modules[i]
+                break;
+            }
+        }
     }
 
     event.AddEvent('LoadUp', e => {
@@ -277,6 +382,7 @@ var Content = (function() {
             }
         })
     })
+
     
     return {
         GetModules : function() {
@@ -284,6 +390,11 @@ var Content = (function() {
         },
         GetSendJSON : function() {  
             return buildJSON()
+        },
+        Addons : function() {
+        },
+        RemoveModule : function(id) {
+            return removeModule()
         }
     }
 })();

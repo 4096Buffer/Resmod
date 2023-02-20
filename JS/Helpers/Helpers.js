@@ -1,6 +1,24 @@
 var Helpers = (() => {
     //Add here a small functions that don't need a whole file
 
+    (function(){
+        window.WindowWidth = 0;
+        window.WindowHeight = 0;
+      
+        var resizeWindowSize = function() {
+          WindowWidth = window.innerWidth
+            || document.documentElement.clientWidth
+            || document.body.clientWidth;
+      
+          WindowHeight = window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight;
+        };
+      
+        window.addEventListener('load', resizeWindowSize);
+        window.addEventListener('resize', resizeWindowSize);
+    })();
+
     var eventTypes = {}
     var viewModes  = {
         'LiveEdit' : 'live-edit',

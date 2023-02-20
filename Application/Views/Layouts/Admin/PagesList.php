@@ -33,7 +33,7 @@
         <label>Lista stron</label>
     </div>
     -->
-    <table class="table-main">
+    <table class="table-main pages-list">
         <thead>
             <tr>
                 <th>Id</th>
@@ -67,7 +67,7 @@
                         <?php 
                             $r = $page['route address'];
                             if(strlen($r) > 14) {
-                                echo substr($r, 0, 14);
+                                echo trim(substr($r, 0, 14));
                                 echo '..';
                             } else {
                                 echo $r;

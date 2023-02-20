@@ -812,10 +812,8 @@ body {
 
 
 cmsmodule {
-  display: flex;
-  border: 2px solid black;
+  height: max-content;
   width: max-content;
-  padding: 2%;
   /* Firefox */
   -moz-transition: all 200ms ease-in;
   /* WebKit */
@@ -831,6 +829,9 @@ cmsmodule .module-live-edit-icon {
   height: max-content;
   padding: 0.2rem;
   cursor: pointer;
+  position: absolute;
+  right: 20%;
+  border: 1px solid;
 }
 
 cmsmodule a {
@@ -1352,4 +1353,75 @@ cmsmodule a {
   outline: none;
   font-size: 0.8rem;
   cursor: pointer;
+}
+
+.wysiwyg-container {
+  position: fixed;
+  display: flex;
+  background: #fff;
+  width: 24rem;
+  padding: 0.5rem;
+  box-shadow: 17px 17px 79px -8px rgba(66, 68, 90, 1);
+}
+
+.wysiwyg-container .wysiwyg-option {
+  margin-left: 2%;
+  margin-right: 2%;
+  font-size: 1.2rem;
+  border: 1px solid #b9b9b9;
+  width: 1.6rem;
+  height: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer !important;
+  user-select: none;
+  /* Firefox */
+  -moz-transition: all 50ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 50ms ease-in;
+  /* Opera */
+  -o-transition: all 50ms ease-in;
+  /* Standard */
+  transition: all 50ms ease-in;
+}
+
+.wysiwyg-container .wysiwyg-option input {
+  cursor: pointer !important;
+}
+
+.wysiwyg-container .wysiwyg-option select {
+  cursor: pointer !important;
+}
+
+.wysiwyg-container .wysiwyg-option.font-size {
+  width: max-content;
+}
+.wysiwyg-container .wysiwyg-option.bold {
+  font-weight: bold;
+}
+
+.wysiwyg-container .wysiwyg-option.italic {
+  font-style: italic;
+}
+
+.wysiwyg-container .wysiwyg-option.underline {
+  text-decoration: underline;
+}
+
+.wysiwyg-container .wysiwyg-option.color {
+  text-decoration: underline;
+}
+
+.wysiwyg-container .wysiwyg-option.active {
+  background-color: #e1e1e1;
+}
+
+.module-text-container {
+  text-align: center;
+}
+
+.module-title-container h2 {
+  text-align: center;
+  font-size: 2.6em;
 }

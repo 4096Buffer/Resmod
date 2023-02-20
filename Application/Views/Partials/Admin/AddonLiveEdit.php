@@ -31,7 +31,7 @@
 </div>
 
 <div class="button-fixed" style="bottom: 0; left:0">
-    <a href="/dashboard-admin">
+    <a href="/pages-list">
         <button>
             Wróc do panelu
         </button>

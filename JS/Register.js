@@ -21,8 +21,8 @@ var lo_ = (e) => {
         
         Helpers.AJAX.Post(location.href, sd).success(data => {
             var ro = data;
-            var de = JSON.parse(ro)
             
+            var de = JSON.parse(ro)
             if(de.response == 'Success') {
                 id = de.data.id
                 se()

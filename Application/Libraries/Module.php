@@ -55,6 +55,11 @@ class Module extends \Code\Core\BaseController {
 	private function FetchModules() {
 		$fetches = $this->DataBase->Get("SELECT * FROM modules_added ORDER BY sort ASC");
 
+		if(!$fetches) {
+			$this->modules = [];
+			return;
+		}
+
 		foreach($fetches as $fetch) {
 			$fetchA = $this->DataBase->GetFirstRow("SELECT * FROM modules WHERE id = ?", [ $fetch['id_module'] ]);
 
@@ -103,11 +108,11 @@ class Module extends \Code\Core\BaseController {
 		$this->View->AddData('mvars', $mvars_c);
 		
 		$html = '';
-
+		
 		$html .= '<cmsmodule module-id="'. $module['id'] . '">';
-			$html .= '<div class="module-live-edit-icon copy">Copy</div>';
+			//$html .= '<div class="module-live-edit-icon copy">Copy</div>';
 				//echo '<a href="/modules-edit?id='. $module['id'] . '&redirect-back=' . $redirect_back . '"><div class="module-live-edit-icon edit">Edit</div></a>';
-			$html .= '<div class="module-live-edit-icon delete">Delete</div>';
+			$html .= '<div class="module-live-edit-icon delete">D</div>';
 			$html .= '<div class="module-edit-content">';
 				$html .= $this->View->Get($this->GetPath($module['view']));
 			$html .= '</div>';
@@ -136,9 +141,9 @@ class Module extends \Code\Core\BaseController {
 			$redirect_back = $this->RequestHelper->GetHref();
 
 			echo '<cmsmodule module-id="'. $module['id'] . '">';
-				echo '<div class="module-live-edit-icon copy">Copy</div>';
+				//echo '<div class="module-live-edit-icon copy">Copy</div>';
 				//echo '<a href="/modules-edit?id='. $module['id'] . '&redirect-back=' . $redirect_back . '"><div class="module-live-edit-icon edit">Edit</div></a>';
-				echo '<div class="module-live-edit-icon delete">Delete</div>';
+				echo '<div class="module-live-edit-icon delete">D</div>';
 				echo '<div class="module-edit-content">';
 					$this->View->Load($this->GetPath($module['view']));
 				echo '</div>';

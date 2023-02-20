@@ -142,6 +142,11 @@ class Page extends \Code\Core\BaseController {
 
         $modules = $this->Module->GetModules();
         
+        if(is_null($modules)) {
+            $this->RequestHelper->SendJsonData(true, []);
+            return;
+        }
+
         foreach($modules as $module) {
             if($module['id_page'] !== $id) {
                 continue;

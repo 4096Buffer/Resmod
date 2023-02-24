@@ -52,6 +52,10 @@ class ViewController extends \Code\Core\BaseController {
             call_user_func(array($class, 'LiveEdit'));
         }
 
+        if(!isset($current_page['layout'])) {
+            $this->RequestHelper->Redirect($this->Auth->IsAuth() ? '/pages-templates' : '/no-template-set');
+        }
+
         if($current_page['layout']['controller'] != null) {
             require_once $this->GetControllerPath($current_page['layout']['controller']);
             

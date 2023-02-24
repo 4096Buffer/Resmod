@@ -28,12 +28,12 @@ if(!$this->Auth->IsAuth()) {
     
     <div class="main-add-templates-box">
         <h2 class="h2-main-add-templates">
-            Ustaw szablon
+            Change template
         </h2>
     </div>
     <form class="form-add-template">
         <div class="label-container">
-            <label>Wybierz stronę:</label>
+            <label>Choose subpage:</label>
         </div>
         <table class="table-main">
             <thead>
@@ -90,7 +90,7 @@ if(!$this->Auth->IsAuth()) {
             </tbody>
         </table>
         <div class="label-container">
-            <label>Wybierz szablon:</label>
+            <label>Choose template:</label>
         </div>
         <!--
         <div class="templates-select-current">
@@ -125,19 +125,19 @@ if(!$this->Auth->IsAuth()) {
         <div class="templates-form-data-submit">
             <div class="templates-list-data">
                 <label>
-                    Strona:
+                    Subpage:
                 </label>
                 <div class="data-list" id="data-list-page">
-                    Nie wybrano
+                    Not provided
                 </div>
                 <label>
-                    Szablon:
+                    Template:
                 </label>
                 <div class="data-list" id="data-list-template">
-                    Nie wybrano
+                    Not provided
                 </div>  
             </div>
-            <input type="submit" value="Dodaj szablon" class="templates-change-submit">
+            <input type="submit" value="Change template" class="templates-change-submit">
         </div>
         </div>
     </form>

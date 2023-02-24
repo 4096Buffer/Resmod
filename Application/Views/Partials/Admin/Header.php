@@ -8,11 +8,10 @@
     </div>
     <div class="header-admin-profile-context-menu" open="false">
         <ol>
-            <li>@<?=$login?></li>
-            <li>Twój profile</li>
-            <li>Ustawienia</li>
-            <li href="javascript:void(0)" class="button-logout" ajax-controller="AdminProfile" ajax-action="Logout">Wyloguj się</li>
-            <li>Pomoc</li>
+            <li style="cursor:default">@<?=$login?></li>
+            <li>Your profile</li>
+            <li href="javascript:void(0)" class="button-logout" ajax-controller="AdminProfile" ajax-action="Logout">Logout</li>
+            <li>Help</li>
         </ol>
     </div>
 </header>

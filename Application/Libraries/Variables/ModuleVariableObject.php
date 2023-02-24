@@ -18,11 +18,10 @@ class ModuleVariableObject extends \Code\Core\BaseController {
     protected $value;
     
     
-	public function __construct($variable = null) {
+	public function __construct($variable) {
 		parent::__construct();
 
 		$this->LoadLibrary(['DataBase', 'Auth', 'HTML', 'RequestHelper']);
-        
         $this->id            = $variable['id'];
         $this->name          = $variable['name'];
         $this->default_value = $variable['default_value'];
@@ -33,22 +32,30 @@ class ModuleVariableObject extends \Code\Core\BaseController {
         $this->value         = $variable['value'];
 	}
     
-    public function EchoContent($content) {
+    public function EchoContent($content, $attributes = null) {
         if(!$this->Auth->IsAuth()) {
             echo $content;
         } else {
             $html_args = [
                 [
-                    'name'  => 'var-name',
-                    'value' => $this->name
+                    'var-name' => $this->name
                 ],
                 [
-                    'name'  => 'type',
-                    'value' => 'text'
+                    'type' => 'text'
                 ]
             ];
-            
-            
+
+            if(!is_null($attributes)) {
+                foreach($attributes as $key => $value) {
+                    $new_arg = [
+                        $key, 
+                        $value
+                    ];
+
+                    $html_args[] = $new_arg;
+                }
+            }
+
             echo $this->HTML->CreateHTMLElement('cmselement', $content, $html_args);
         }
     }

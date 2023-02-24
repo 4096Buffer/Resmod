@@ -314,6 +314,46 @@ class Page extends \Code\Core\BaseController {
         $this->RequestHelper->SendJsonData(true, $add_page);
     }
 
+
+    public function DeletePage() {
+        if(!$this->Auth->IsAuth()) {
+            $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
+            return;
+        }
+
+        $data = $this->RequestHelper->GetObjectFromJson();
+        
+        if(is_null($data)) {
+            $this->RequestHelper->SendJsonData(false, null, 'No data has been provided');
+            return;
+        }
+
+        $id = $data['id'] ?? 0;
+
+        $page = $this->DataBase->GetFirstRow("SELECT * FROM pages WHERE id = ?", [ $id ]);
+
+        if(is_null($page)) {
+            $this->RequestHelper->SendJsonData(false, null, 'Wrong id');
+            return;
+        }
+        
+        $delete = $this->DataBase->DoQuery("DELETE FROM pages WHERE id = ?", [ $page['id'] ]);
+
+        $modules_added = $this->DataBase->DoQuery("SELECT * FROM modules_added WHERE id_page = ?", [ $page['id'] ]);
+        foreach($modules_added as $module_added) {
+            $delete_variables = $this->DataBase->DoQuery("DELETE FROM modules_variables_values WHERE id_module = ?", [ $module_added['id'] ]);
+            $delete_modules_added = $this->DataBase->DoQuery("DELETE FROM modules_added WHERE id = ?", [ $module_added['id'] ]);
+        }
+
+        if($this->DataBase->ErrorCode() !== 0) {
+            $this->RequestHelper->SendJsonData(false, null, 'Unknown DB error');
+            return;
+        }
+
+
+        $this->RequestHelper->SendJsonData(true);
+    }
+
     
 }
 

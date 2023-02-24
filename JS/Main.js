@@ -21,7 +21,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                     clearInterval(interval)
                     return
                 } 
-                opacity+=1
+                opacity+=10
                 document.body.style.opacity = opacity + "%"
             }
 

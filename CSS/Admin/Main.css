@@ -814,14 +814,6 @@ body {
 cmsmodule {
   height: max-content;
   width: max-content;
-  /* Firefox */
-  -moz-transition: all 200ms ease-in;
-  /* WebKit */
-  -webkit-transition: all 200ms ease-in;
-  /* Opera */
-  -o-transition: all 200ms ease-in;
-  /* Standard */
-  transition: all 200ms ease-in;
 }
 
 cmsmodule .module-live-edit-icon {
@@ -838,14 +830,20 @@ cmsmodule a {
   text-decoration: none;
 }
 
+.add-module-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .add-module-bar {
-  background-color: #666;
+  background-color: #3a3a3a;
   color: #fff;
-  font-size: 5rem;
+  font-size: 4rem;
   text-align: center;
-  width: 60%;
+  width: 30%;
   margin: 5% 20% 5% 20%;
-  border-radius: 10px;
+  border-radius: 4px;
   cursor: pointer;
   /* Firefox */
   -moz-transition: all 200ms ease-in;
@@ -919,7 +917,6 @@ cmsmodule a {
   /* WebKit */
   -webkit-transition: all 200ms ease-in;
   /* Opera */
-  -o-transition: all 200ms ease-in;
   /* Standard */
   transition: all 200ms ease-in;
 }
@@ -1417,11 +1414,42 @@ cmsmodule a {
   background-color: #e1e1e1;
 }
 
-.module-text-container {
-  text-align: center;
+.context-menu {
+  position: fixed;
+  z-index: 29000;
+  box-shadow: 0 0 14px 0 rgb(0 0 0 / 75%);
+  background: #FFF;
+  user-select: none;
+  min-width: 160px;
+  display: block;
 }
 
-.module-title-container h2 {
-  text-align: center;
-  font-size: 2.6em;
+.context-menu .context-menu-element {
+  position: relative;
+}
+
+.context-menu .context-menu-element .context-menu-element-title {
+  color: #000;
+  background: #d9d7d8;
+  transition: .2s all ease-in-out;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  padding: 0 20px;
+  line-height: 40px;
+  font-size: 16px;
+  border-bottom: 1px solid #FFF;
+  white-space: nowrap;
+  /* Firefox */
+  -moz-transition: all 150ms ease-in;
+  /* WebKit */
+  -webkit-transition: all 150ms ease-in;
+  /* Opera */
+  -o-transition: all 150ms ease-in;
+  /* Standard */
+  transition: all 150ms ease-in;
+}
+
+.context-menu .context-menu-element .context-menu-element-title:hover {
+  background-color:#bdbdbd;
 }

@@ -28,7 +28,7 @@ if(!$this->Auth->IsAuth()) {
         
         <div class="main-add-templates-box">
             <h2 class="h2-main-add-templates">
-                Zarządzaj użytkownikami
+                Manage users
             </h2>
         </div>
         <?php 
@@ -86,41 +86,41 @@ if(!$this->Auth->IsAuth()) {
             
             <div class="main-title-container" style="margin-bottom:2%">
                 <label class="main-title">
-                    Ustawienia użytkownika
+                    User settings
                 </label>
             </div>
             <div class="edit-users-setting-container">
                 <div class="edit-users-setting">
-                    Imię użytkownika:
+                    Name:
                 </div>
                 <input type="text" class="edit-users-setting-value name"/>
             </div>
             <div class="edit-users-setting-container">
                 <div class="edit-users-setting">
-                    Nazwisko użytkownika:
+                    Surname:
                 </div>
                 <input type="text" class="edit-users-setting-value surname"/>
             </div>
             <div class="edit-users-setting-container">
                 <div class="edit-users-setting">
-                    Login użytkownika:
+                    Login:
                 </div>
                 <input type="text" class="edit-users-setting-value login"/>
             </div>
             <div class="edit-users-setting-container">
                 <div class="edit-users-setting">
-                    Avatar użytkownika:
+                    Avatar:
                 </div>
                 <input type="text" class="edit-users-setting-value avatar"/> <!--SEO IMAGE FILE COLLECTION-->
             </div>
             <div class="edit-users-setting-container">
                 <div class="edit-users-setting">
-                    BIO użytkownika:
+                    BIO:
                 </div>
                 <input type="text" class="edit-users-setting-value bio"/> <!--SEO IMAGE FILE COLLECTION-->
             </div>
             <div class="save-btn-settings users">
-                <div>Zapisz</div>
+                <div>Save</div>
             </div>
             </div>
         </div>

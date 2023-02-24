@@ -25,7 +25,7 @@
     
     <div class="main-add-templates-box">
         <h2 class="h2-main-add-templates">
-            Ustaw szablon
+            Subpages list
         </h2>
     </div>
     <!--
@@ -44,6 +44,7 @@
                 <th>Active</th>
                 <th>Edit</th>
                 <th>Settings</th>
+                <th>Perm remove</th>
             </tr>
         </thead>
         <tbody>
@@ -67,7 +68,7 @@
                         <?php 
                             $r = $page['route address'];
                             if(strlen($r) > 14) {
-                                echo trim(substr($r, 0, 14));
+                                echo substr($r, 0, 14);
                                 echo '..';
                             } else {
                                 echo $r;
@@ -92,6 +93,9 @@
                     </td>
                     <td>
                         <div class="settings-open" style="cursor:pointer;">Settings</div>
+                    </td>
+                    <td>
+                        <div class="delete-page" style="cursor:pointer;">Remove</div>
                     </td>
                 </tr>
             <?php } ?>

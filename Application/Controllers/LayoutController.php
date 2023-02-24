@@ -231,7 +231,6 @@ class LayoutController extends \Code\Core\BaseController {
 			m.view, m.controller, m.action, m.group 
 			FROM modules_added ma 
 			INNER JOIN modules m ON ma.id_module = m.id WHERE ma.id = ?", [ $module_id ]);
-
 		if(!$module) {
 			$this->RequestHelper->Redirect('/');
 		}
@@ -461,6 +460,26 @@ class LayoutController extends \Code\Core\BaseController {
 		$this->View->AddData('admins', $admins);
 
 		$this->View->AddData('js_add', $js_add);
+	}
+
+	public function SettingsAdmin() {
+		/**
+		 * Get all admin user data from session
+		*/
+		$login   = $this->Auth->GetProfile()['login'];
+		$avatar  = $this->Auth->GetProfile()['avatar'];
+		$name    = $this->Auth->GetProfile()['name'];
+		$surname = $this->Auth->GetProfile()['surname'];
+		$email   = $this->Auth->GetProfile()['email'];
+		/**
+		 * Add all variables to the 'View' class
+		*/
+
+		$this->View->AddData('login', $login);
+		$this->View->AddData('avatar', $avatar);
+		$this->View->AddData('name', $name);
+		$this->View->AddData('surname', $surname);
+		$this->View->AddData('email', $email);
 	}
 }
 

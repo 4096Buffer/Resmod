@@ -10,17 +10,21 @@
                 return {};
             }
 
-            this.variable       = variable
-            this.objectDOM      = undefined
-            this.focus          = false
-            this.elementFocus   = false
-            this.selection      = {}
-            this.hide           = true
+            this.variable         = variable
+            this.objectDOM        = undefined
+            this.focus            = false
+            this.elementFocus     = false
+            this.selection        = {}
+            this.hide             = true
             this.checkHideEvent   =   checkHideEvent.bind(this)
             this.checkHideToolbar = checkHideToolbar.bind(this)
 
             this.BuildDOM()
-            setTimeout(this.PrepareObjectDOM(), 50)
+            setTimeout(() => {
+                this.PrepareObjectDOM()
+            }, 50)
+
+            
         }
 
         WysiwygObject.prototype.variable     = null
@@ -28,6 +32,7 @@
         WysiwygObject.prototype.elementFocus = false
         WysiwygObject.prototype.focus        = false
         WysiwygObject.prototype.selection    = null
+        WysiwygObject.prototype.contextMenu  = null
 
         var fontSizes = {
             '8'  : '8px',

@@ -215,6 +215,141 @@ var Helpers = (() => {
         })
     }
 
+    /*
+    var ContextMenu = function(dom) {
+        this.groups = []
+        this.blocks = {}
+        this.dom    = dom
+        this.eventScope = Helpers.NameEvents.CreateNEventScope()
+        this.objectDOM = null
+
+        this.Preload()
+    }
+
+    ContextMenu.prototype.groups     = null
+    ContextMenu.prototype.blocks     = null
+    ContextMenu.prototype.dom        = null
+    ContextMenu.prototype.eventScope = null
+    ContextMenu.prototype.objectDOM  = null
+
+    ContextMenu.prototype.AddGroups = function(groups) {
+        if(groups.constructor.name === 'Array') {
+            this.groups = groups
+        } else {
+            this.groups.push(groups)
+        }
+    }
+
+    ContextMenu.prototype.AddBlocks = function(blocks, group) {
+        indexGroup = this.groups.indexOf(group)
+
+        if(blocks.constructor.name === 'Array') {
+            this.blocks = blocks
+        } else if(this.blocks.constructor.name !== 'Array' && this.groups.length !== 0) {
+            this.blocks[this.groups[indexGroup]].push(blocks)
+        } else {
+            this.blocks['default'] = typeof this.blocks['default'] === 'undefined' || this.blocks['default'].length === 0 ? [] : this.blocks['default']
+            this.blocks['default'].push(blocks)
+        }
+
+        this.Preload()
+    }
+
+    ContextMenu.prototype.Preload = function() {
+        var self = this
+        if(document.querySelector('.context-menu')) {
+            document.querySelector('.context-menu').remove()
+        }
+        
+        this.BuildHTML()
+        setTimeout(() => {
+            self.objectDOM = document.querySelector('.context-menu')
+            self.PreloadEvents()
+        }, 16)
+
+        
+    }
+
+    var getBlockDOM = function(self, key) {
+        var cmElements = self.objectDOM.querySelectorAll('.context-menu-element')
+        
+        for(var i = 0; i < cmElements.length; i++) {
+            var el = cmElements[i]
+
+            if(el.classList.contains(key.replace(' ', '-').toLowerCase())) {
+                return el
+            }
+            console.log(el.classList)
+        }
+
+        return null
+    }
+
+    var buildHtmlBlocks = function(self) {
+        var html = ''
+        
+        if(self.groups.length === 0) {
+            var defaults = self.blocks.default
+
+            if(typeof defaults === 'undefined') {
+                return ''
+            }
+
+            for(var i = 0; i < defaults.length; i++) {
+                html += `<div class="context-menu-element ${defaults[i].key.replace(' ', '-').toLowerCase()}">`
+                    html += `<div class="context-menu-element-title">${defaults[i].key}</div>`
+                html += '</div>'
+            }
+        }
+
+        return html
+    }
+
+    ContextMenu.prototype.BuildHTML = function() {
+        var html = ''
+        html += '<div class="context-menu" style="display:none">'
+            html += '<div class="context-menu-box">'
+                html += buildHtmlBlocks(this)
+            html += '</div>'
+        html += '</div>'
+
+        document.body.innerHTML += html
+    }
+
+    ContextMenu.prototype.PreloadEvents = function() {
+        this.eventScope.AddEvent('contextmenu', this.dom, 'cm__click', e => {
+            e.preventDefault()
+
+            var x = e.offsetX, y = e.offsetY,
+            cmWidth = this.objectDOM.offsetWidth,
+            cmHeight = this.objectDOM.offsetHeight
+
+            if(x > (WindowWidth - cmWidth - window.offsetWidth)) { // replace with collapsible menus
+
+            }
+
+            x = x > WindowWidth - cmWidth ? WindowWidth - cmWidth : x
+            y = y > WindowHeight - cmHeight ? WindowHeight - cmHeight : y
+
+            this.objectDOM.style.left = `${x}px`
+            this.objectDOM.style.top = `${y}px`
+            this.objectDOM.style.display = 'block'
+        })
+
+        if(typeof this.blocks['default'] !== 'undefined') {
+            var defaults = this.blocks['default']
+
+            for(var i = 0; i < defaults.length; i++) {
+                this.eventScope.AddEvent('click', getBlockDOM(this, defaults[i].key), `cm__click__${defaults[i].key.replace(' ', '__').toLowerCase()}`, defaults[i].callback)
+            }
+        }
+    }
+
+    ContextMenu.prototype.Reset = function() {
+    }
+
+    */
+
     return {
         CreateEventManager : function() {
             return new Event()
@@ -227,6 +362,12 @@ var Helpers = (() => {
         },
         CreateInputBox : function(title, type, callbackEnd) {
             return CreateInputBox(title, type, callbackEnd)
+        },
+        /*
+        CreateContextMenu : function(dom) {
+            return new ContextMenu(dom)
         }
+        */
+       
     }
 })();

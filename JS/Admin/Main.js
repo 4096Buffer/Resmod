@@ -184,35 +184,6 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
         })();
 
         (() => {
-            var modulesList = document.querySelector('#modules-list');
-            var onChange = e => {
-                var target = e.target.options[e.target.selectedIndex]
-                var boxes  = document.getElementsByClassName('modules-add-list-box')
-                var find   = undefined
-
-                for(var i = 0; i < boxes.length; i++) {
-                    if(boxes[i].getAttribute('show-value') == target.value) {
-                        find = boxes[i]
-                        break;
-                    }
-                }
-
-                if(!find) {
-                    for(var i = 0; i < boxes.length; i++) {
-                        boxes[i].style.display = 'none'
-                    }
-                } else {
-                    find.style.display = 'block';
-                }
-                
-            }
-
-            if(modulesList) {
-                modulesList.addEventListener('change', onChange)
-            }
-        })();
-
-        (() => {
             var collaps = document.getElementsByClassName('collapsible-sidenav')
 
             for(var i = 0; i < collaps.length; i++) {
@@ -386,7 +357,8 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                             content : 'Successfully changed template',
                             success : true
                         })
-                        location.reload()
+
+                        location.href = '/pages-list'
                     } else {
                         Helpers.CreateModal({
                             title : 'Error!',
@@ -864,6 +836,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
             for(var i = 0; i < settingsPageBtn.length; i++) {
                 settingsPageBtn[i].addEventListener('click', openSettings)
             }
+
         })();
 
         (() => {
@@ -982,7 +955,6 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                                     location.href = '/pages-list'
                                 })
                             } else {
-                                console.log(data)
                                 Helpers.CreateModal({
                                     title : 'Error!',
                                     content : 'Error while creating page',
@@ -990,7 +962,6 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                                 })
                             }
                         } catch(e) {
-                            console.log(data)
                             Helpers.CreateModal({
                                 title : 'Error!',
                                 content : 'Error while creating page',
@@ -1001,6 +972,62 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 }
 
                 addPageSubmitBtn.addEventListener('click', addPageSubmit)
+            }
+        })();
+
+        (() => {
+            var deletePageBtns = document.querySelectorAll('.delete-page')
+            
+            var deletePage = e => {
+                var tr = e.currentTarget.parentElement.parentElement
+
+                if(typeof tr.tagName === 'undefined' || tr.tagName.toLowerCase() !== 'tr') {
+                    console.log(tr.tagName)
+                    return;
+                }
+
+                var pageId = tr.getAttribute('id-page')
+                if(!pageId) {
+                    return;
+                }
+
+                
+                if(!window.confirm('Are you sure you want to delete this page? You cant undo this action')) return;
+
+                Helpers.AJAX.Post(location.href, {
+                    controller : 'Page',
+                    action     : 'DeletePage',
+                    id         : pageId
+                }).success(data => {
+                    try {
+                        var obj = JSON.parse(data)
+
+                        if(obj.response == 'Success') {
+                            tr.remove()
+                            Helpers.CreateModal({
+                                title : 'Success!',
+                                content : 'Successfully removed the page!',
+                                success : true
+                            })
+                        } else {
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : obj.reason,
+                                success : false
+                            })
+                        }
+                    } catch(e) {
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error while deleting page!',
+                            success : false
+                        })
+                    }
+                })
+            }
+
+            for(var i = 0; i < deletePageBtns.length; i++) {
+                deletePageBtns[i].addEventListener('click', deletePage)
             }
         })();
 

@@ -1,12 +1,12 @@
 <?php if($this->Auth->IsAuth()) { ?>
 <div class="module-add-box">
     <div class="module-add-box-title">
-        Wybierz moduł
+        Choose module:
     </div>
     <div class="select-main-container module-groups2" style="width: 50%;padding: 2%;margin:auto;">
         <div class="select-main module-groups" style="padding: 3%;background-color:#4a4a4a;">
           <div class="select-main-title" style="width: 93.4%;font-size:1.2rem;">
-            Wybierz kategorię
+            Choose category:
           </div>
           <div class="select-main-arrow" style="width:2rem;height: 1.5rem;width:1.5rem;"></div>
         </div>
@@ -21,19 +21,22 @@
     <div class="close-x">&#10005;</div>   
 </div>
 
-<div class="add-module-bar">
-    +
+<div class="add-module-center">
+    <div class="add-module-bar">
+        +
+    </div>
 </div>
+
 <div class="button-fixed save" style="bottom: 0; right:0">
     <button>
-        Zapisz
+        Save
     </button>
 </div>
 
 <div class="button-fixed" style="bottom: 0; left:0">
     <a href="/pages-list">
         <button>
-            Wróc do panelu
+            Go back
         </button>
     </a>
 </div>

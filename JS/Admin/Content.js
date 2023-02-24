@@ -1,8 +1,10 @@
 var Content = (function() {
+
     if(Helpers.GetCurrentViewMode().mode !== 'LiveEdit') {
         return;
     }
-
+    
+    
     var VariablesTypes = function() {
         this.types = {}
     }
@@ -68,7 +70,7 @@ var Content = (function() {
         wysiwygObject.PrepareObjectDOM()
     }
     
-    InputType.prototype.variable = null
+    WysiwygType.prototype.variable = null
 
     WysiwygType.prototype.Remove = function() {
         this.variable = null
@@ -77,6 +79,10 @@ var Content = (function() {
         this.wysiwygObject.RemoveObject()
 
         this.wysiwygObject = null
+    }
+
+    var LinkType = function(variable) {
+        
     }
 
     var CMSModule = function(id, global, globalExcept, idDefModule, idPage, sort) {
@@ -97,7 +103,7 @@ var Content = (function() {
     CMSModule.prototype.idPage       = null
     CMSModule.prototype.sort         = null
     CMSModule.prototype.variables    = null
-    
+
     CMSModule.prototype.FetchVariables = function() {
         if(getVariables) {
             for(var i = 0; i < getVariables.length; i++) {
@@ -194,27 +200,49 @@ var Content = (function() {
     }
     
     /**
+     * 
+     * We are only using the 'variable' key thats why we don't need to send other non-important objects
+    */
+
+    var getFixedModules = function() {
+        var fm = modules
+
+        for(var i = 0; i < fm.length; i++) {
+            fm[i].variables.forEach(v => {
+                for(var k in v) {
+                    if(Object.getPrototypeOf(v[k]).constructor.name !== 'CMSVariable') {
+                        delete v[k]
+                    }
+                }
+            });
+        }
+
+        return fm
+    }
+
+    /**
      * Credits to Supantha Paul from https://codedamn.com
      * For giving the solution :)
     */
 
     var buildJSON = function() {
         var cache = [];
-        var str = JSON.stringify(modules, function(key, value) {
+        var str = JSON.stringify(getFixedModules(), function(key, value) {
           if(typeof value === "object" && value !== null) {
             if (cache.indexOf(value) !== -1) {
-              return;
+              return
             }
             
-            cache.push(value);
+            cache.push(value)
           }
-          return value;
+          return value
         });
         
-        cache = null;
+        cache = null
 
         return str
     }
+
     var getModuleHTML = function(idModule, callback) {
         var idPage = Helpers.Data.GetData('page').id
 
@@ -248,7 +276,6 @@ var Content = (function() {
 
             addVariablesTypes()
             rebuildModules()
-            addDeleteEvent()
         })
     }
 
@@ -272,66 +299,53 @@ var Content = (function() {
 
             if(obj.response == 'Success') {
                 moduleContainer.innerHTML += obj.data
-                setTimeout(() => {
-                    addDeleteEvent()
-                }, 16)
-                
             } else {
                 alert('Cant get module. Restart page!')
             }
         })
-        
     }
 
-    var addDeleteEvent = function() {
-        var modulesDeleteBtns = document.querySelectorAll('.module-live-edit-icon.delete') //delete button ADD!!!
-            
-            var deleteModule = e => {
-                e.stopImmediatePropagation()
-                var moduleDOM = e.currentTarget.parentElement
-                var moduleId  = moduleDOM.getAttribute('module-id')
-                
-                Helpers.AJAX.Post(location.href, {
-                    controller : 'Modules',
-                    action     : 'DeleteModule',
-                    module_id  : moduleId
-                }).success(data => {
-                    try {
-                        var obj = JSON.parse(data)
+    var deleteModule = function(dom) {
+        console.log(dom)
+        var moduleId = dom.getAttribute('module-id')
 
-                        if(obj.response == 'Success') {
-                            moduleDOM.style.opacity = '0%'
-                            moduleDOM.addEventListener('transitionend', () => {
-                                removeModule(moduleId)
-                                moduleDOM.remove()
-                            })
+        Helpers.AJAX.Post(location.href, {
+            controller : 'Modules',
+            action     : 'DeleteModule',
+            module_id  : moduleId
+        }).success(data => {
+            try {
+                var obj = JSON.parse(data)
 
-                            Helpers.CreateModal({
-                                title : 'Success!',
-                                content : 'Successfully deleted module(id: ' + moduleId + ')',
-                                success : true
-                            })
-                        } else {
-                            Helpers.CreateModal({
-                                title : 'Error!',
-                                content : 'Error while deleting module',
-                                success : false
-                            })
-                        }
-                    } catch(e) {
-                        Helpers.CreateModal({
-                            title : 'Error!',
-                            content : 'Error while deleting module',
-                            success : false
-                        })
-                    }
+                if(obj.response == 'Success') {
+                    dom.style.opacity = '0%'
+                    dom.addEventListener('transitionend', () => {
+                        removeModule(moduleId)
+                        dom.remove()
+                    })
+
+                    Helpers.CreateModal({
+                        title : 'Success!',
+                        content : 'Successfully deleted module(id: ' + moduleId + ')',
+                        success : true
+                    })
+                } else {
+                    Helpers.CreateModal({
+                        title : 'Error!',
+                        content : 'Error while deleting module',
+                        success : false
+                    })
+                }
+            } catch(e) {
+                Helpers.CreateModal({
+                    title : 'Error!',
+                    content : 'Error while deleting module',
+                    success : false
                 })
             }
-
-            for(var i = 0; i < modulesDeleteBtns.length; i++) {
-                modulesDeleteBtns[i].addEventListener('click', deleteModule)
-            }
+        })
     }
+
     var removeModule = function(id) {
         for(var i = 0; i < modules.length; i++) {
             if(modules[i].id == id ) {
@@ -382,6 +396,7 @@ var Content = (function() {
             }
         })
     })
+    
 
     
     return {
@@ -393,8 +408,14 @@ var Content = (function() {
         },
         Addons : function() {
         },
-        RemoveModule : function(id) {
+        RemoveModule : function(id) { //delete from array
             return removeModule()
+        },
+        DeleteModule : function(dom) { //perm delete from db
+            return deleteModule(dom)
+        },
+        Test : function() {
+            return getFixedModules()
         }
     }
 })();

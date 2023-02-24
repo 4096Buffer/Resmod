@@ -1,6 +1,6 @@
 body {
   font-family: "Lato", sans-serif;
-  opacity:0%;
+  opacity:0;
 }
 
 .admin-login-container {
@@ -72,4 +72,20 @@ body {
   border-right: 0;
   border-bottom: 2px solid white;
   padding: 2%;
+}
+
+.module-text-container {
+  text-align: center;
+}
+
+.module-title-container h2 {
+  text-align: center;
+  font-size: 2.6em;
+}
+
+.module-link-container {
+  width: 100%;
+  max-width: 108rem;
+  margin: 0 auto;
+  text-align: center;
 }

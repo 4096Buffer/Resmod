@@ -1,7 +1,7 @@
 Helpers.NameEvents = (() => {
     var scopes = {}
 
-    var NEventObject = function(name, dom) {
+    var NEventObject = function(name) {
         this.name       = name
         this.events     = {}
     }
@@ -22,16 +22,15 @@ Helpers.NameEvents = (() => {
             callback  : callback,
             dom       : dom
         }
-
+        
         if(dom === null || (typeof dom === 'object' && dom.constructor.name === 'Array')) {
-            console.error('NEvent: The DOM object is invalid! (nevent name ' + name + ')')
+            console.error('NEvent: The DOM object is invalid! (nevent name ' + this.name + ')')
             return;
         }
 
         this.events[id] = event
 
-        dom.addEventListener(eventName, callback, true)
-
+        dom.addEventListener(eventName, callback)
         return event
     }
 

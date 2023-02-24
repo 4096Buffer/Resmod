@@ -103,6 +103,7 @@ class Module extends \Code\Core\BaseController {
 			call_user_func(array($class, $module['action']));
 		}
 
+		
 		$mvars_c = new \Code\Libraries\Variables\ModuleVariables($module['id'], $page_id);
 		
 		$this->View->AddData('mvars', $mvars_c);

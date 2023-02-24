@@ -1,57 +1,79 @@
 <div class="sidenav">
-  <button class="collapsible-sidenav" collapsible="false" href="/dashboard-admin">Kokpit</button>
+  <button class="collapsible-sidenav" collapsible="false" href="/dashboard-admin">Dashboard</button>
 
-  <button class="collapsible-sidenav" collapsible="true">Wygląd</button>
+  <button class="collapsible-sidenav" collapsible="true">Appearance</button>
   <div class="collapsible-sidenav-content" active="false">
     <ol>
       <a href="/pages-templates">
         <li>
-          Szablony
+          Templates
         </li>
       </a>
       <a href="/download-templates">
         <li>
-          Dodaj szablony
+          Download templat..
         </li>
       </a>
       <div class="space-line"></div>
     </ol>
   </div>
 
-  <button class="collapsible-sidenav" collapsible="true">Strony</button>
+  <button class="collapsible-sidenav" collapsible="true">Subpages</button>
   <div class="collapsible-sidenav-content" active="false">
     <ol>
       <a href="/pages-list">
         <li>
-          Lista stron
+          Manage
         </li>
       </a>
       <a href="/add-page">  
         <li>
-          Dodaj nową
+          Create page
         </li>
       </a>
       <div class="space-line"></div>
     </ol>
   </div>
 
-  <button class="collapsible-sidenav" collapsible="true">Użytkownicy</button>
+  <button class="collapsible-sidenav" collapsible="true">Articles</button>
   <div class="collapsible-sidenav-content" active="false">
     <ol>
       <a href="/manage-users">
         <li>
-          Zarządzanie
+          Create article
         </li>
       </a>
       <a href="/manage-admins">
         <li>
-          Administratorzy
+          Manage articles
+        </li>
+      </a>
+      <a href="/manage-admins">
+        <li>
+          Manage categories
         </li>
       </a>
       <div class="space-line"></div>
     </ol>
   </div>
 
-  <button class="collapsible-sidenav" collapsible="false" href="/settings">Ustawienia</button> 
+  <button class="collapsible-sidenav" collapsible="true">Users</button>
+  <div class="collapsible-sidenav-content" active="false">
+    <ol>
+      <a href="/manage-users">
+        <li>
+          Manage users
+        </li>
+      </a>
+      <a href="/manage-admins">
+        <li>
+          Manage administrators
+        </li>
+      </a>
+      <div class="space-line"></div>
+    </ol>
+  </div>
+
+  <button class="collapsible-sidenav" collapsible="false" href="/settings">Settings</button> 
 </div>
 

@@ -60,8 +60,8 @@ class ModuleVariables extends \Code\Core\BaseController {
         $object_space = '\Code\Libraries\Variables\Types\\' . $type;
         if(class_exists($object_space)) {
             $object = new $object_space($variable);
-        } 
-        
+        }
+		
         return $object;
     }
     
@@ -73,7 +73,7 @@ class ModuleVariables extends \Code\Core\BaseController {
 				$find = $this->CreateObjectValue($variable);
 			}
 		}
-
+		
         if(is_null($find)) {
 			return null;
         }

@@ -27,54 +27,53 @@ if(!$this->Auth->IsAuth()) {
         
         <div class="main-add-templates-box">
             <h2 class="h2-main-add-templates">
-                Stwórz stronę
+                Create subpage
             </h2>
         </div>
         <div class="form-add-page-container">
             <form class="form-add-page">
                 <div class="add-page-input-box">
                     <label>
-                        Tytuł strony:
+                        Title:
                     </label>
                     <input type="text" class="add-page-input title" value="Example title">
                 </div>
                 <div class="add-page-input-box">
                     <label>
-                        Adres strony:
+                        Address:
                     </label>
                     <input type="text" class="add-page-input address" value="/example-title">
                 </div>
                 <div class="add-page-input-box">
                     <label>
-                        SEO Opis strony:
+                        SEO description:
                     </label>
                     <input type="text" class="add-page-input seo-description" value="This is description of your page! My page is the best :)">
                 </div>
                 <div class="add-page-input-box">
                     <label>
-                        SEO słowa kluczowe strony:
+                        SEO keywords(after comma):
                     </label>
                     <input type="text" class="add-page-input seo-keywords" value="my page, about cats, resmod, animals, dogs">
                 </div>
                 <div class="add-page-input-box">
                     <label>
-                        SEO zdjęcie strony:
+                        SEO image:
                     </label>
                     <input type="text" class="add-page-input seo-image" value="N/A">
                 </div>
                 <div class="add-page-input-box">
                     <label>
-                        Favicon strony:
+                        Favicon:
                     </label>
                     <input type="text" class="add-page-input favicon" value="N/A">
                 </div>
                 <div class="add-page-submit-box">
                     <div class="add-page-submit">
-                        Stwórz stronę
+                        Create page
                     </div>
                 </div>
             </form>
-            
         </div>
     </div>
 <body>

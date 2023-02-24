@@ -52,7 +52,9 @@ class AJAXController extends \Code\Core\BaseController {
                 if(method_exists($class, $action)) { 
                     call_user_func(array($class, $action));
                 }
-            } 
+            } else {
+                echo 'nAH';
+            }
         }
     }
     

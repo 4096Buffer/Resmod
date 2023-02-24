@@ -28,7 +28,7 @@ if(!$this->Auth->IsAuth()) {
         
         <div class="main-add-templates-box">
             <h2 class="h2-main-add-templates">
-                Zarządzaj administratorami
+                Manage administrators
             </h2>
         </div>
         <?php 
@@ -79,7 +79,7 @@ if(!$this->Auth->IsAuth()) {
         <?php } ?>
 
         <h2 class="h2-main-add-templates">
-            Stwórz konto administratora
+            Create new administrator account
         </h2>
         <div class="add-admin-container">
            <form class="add-admin-form">
@@ -120,35 +120,35 @@ if(!$this->Auth->IsAuth()) {
             
             <div class="main-title-container" style="margin-bottom:2%">
                 <label class="main-title">
-                    Ustawienia użytkownika
+                    User settings
                 </label>
             </div>
             <div class="edit-users-setting-container">
                 <div class="edit-users-setting">
-                    Imię administratora:
+                    Name:
                 </div>
                 <input type="text" class="edit-users-setting-value name"/>
             </div>
             <div class="edit-users-setting-container">
                 <div class="edit-users-setting">
-                    Nazwisko administratora:
+                    Surname:
                 </div>
                 <input type="text" class="edit-users-setting-value surname"/>
             </div>
             <div class="edit-users-setting-container">
                 <div class="edit-users-setting">
-                    Login administratora:
+                    Login:
                 </div>
                 <input type="text" class="edit-users-setting-value login"/>
             </div>
             <div class="edit-users-setting-container">
                 <div class="edit-users-setting">
-                    Avatar administratora:
+                    Avatar:
                 </div>
                 <input type="text" class="edit-users-setting-value avatar"/> <!--SEO IMAGE FILE COLLECTION-->
             </div>
             <div class="save-btn-settings admins">
-                <div>Zapisz</div>
+                <div>Save</div>
             </div>
             </div>
         </div>

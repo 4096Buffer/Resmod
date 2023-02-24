@@ -19,11 +19,11 @@ class HTML extends \Code\Core\BaseController {
     private function PrepareArguments(array $args) {
         $arg = '';
         
-        foreach($args as $a) {
-            $name  = $a['name'];
-            $value = $a['value']; 
+        foreach($args as $carg) {
+            foreach($carg as $c => $v) {
+                $arg .= $c . '="' . $v . '" ';
+            }
             
-            $arg .= $name . '="' . $value . '" ';
         }
         
         return $arg;

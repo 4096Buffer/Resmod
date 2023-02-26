@@ -1,6 +1,6 @@
 <?php 
 
-namespace Code\Libraries\Articles;
+namespace Code\Libraries;
 
 class Articles extends \Code\Core\BaseController {
     private $articles;
@@ -18,14 +18,17 @@ class Articles extends \Code\Core\BaseController {
         return $object;
     }
 
+    
+
     public function PreloadArticle($id) {
         foreach($this->articles as $article) {
             if($article->GetId() == $id) {
-                $fetch = $this->DataBase->Get("SELECT * FROM `articles` WHERE `id` = ?", [ $id ]);
+                $fetch = $this->DataBase->GetFirstRow("SELECT * FROM `articles` WHERE `id` = ?", [ $id ]);
                 $new   = $this->CreateObject($fetch);
 
                 unset($article);
-                $this->articles[] = $new;
+
+                $this->articles[$new->GetId()] = $new;
                 
                 sort($this->articles);
             }
@@ -34,11 +37,27 @@ class Articles extends \Code\Core\BaseController {
 
     public function LoadArticles() {
         $articles = $this->DataBase->Get("SELECT * FROM `articles`");
+        if(is_null($articles)) {
+            $articles = [];
+            return;
+        }
+
         sort($articles);
+
+        foreach($articles as &$article) {
+            $obj = $this->CreateObject($article);
+
+            $this->articles[$article['id']] = $obj;
+        }
+        
     }
 
     public function Get($id) {
         $this->PreloadArticle($id);
+
+        if(!isset($this->articles[$id])) {
+            $this->LoadArticles();
+        }
 
         return $this->articles[$id];
     }
@@ -64,7 +83,7 @@ class Articles extends \Code\Core\BaseController {
                 break;
             case '3':
                 $article = $this->Get($id);
-                $link = '/articles/' . \str_replace(' ', '-', $article['title']); //remove spaces and add dashes
+                $link = '/articles/' . \str_replace(' ', '-', $article->GetTitle()); //remove spaces and add dashes
                 break;
             default:
                 $link = '';
@@ -79,22 +98,22 @@ class Articles extends \Code\Core\BaseController {
         $content          = $data['content'];
         $image            = $data['image'];
         $link_type        = $data['link_type'];
+        $state            = $data['state'];
         $category         = $data['category'];
         $comments_enabled = $data['comments_enabled'];
         $author_id        = $data['author_id'];
 
-        $insert = $this->DataBase->DoQuery("INSERT INTO `articles` VALUES (NULL, ?, ?, ?, ?, 1, ?, current_timestamp(), ?, ?)", [ $title, $content, $image, '', $category, $comments_enabled, $author_id]);
+        $insert = $this->DataBase->DoQuery("INSERT INTO `articles` VALUES (NULL, ?, ?, ?, ?, 1, ?, current_timestamp(), ?, ?, ?)", [ $title, $content, $image, '', $category, $comments_enabled, $state, $author_id]);
 
-        if(!$this->DataBase->ErrorCode()) {
+        if($this->DataBase->ErrorCode() !== 0) {
             return false;
         }
         
         $id   = $this->GetLastAdded()['id'];
         $link = $this->CreateLink($id, $link_type);
-        $this->PreloadArticle($id);
-        $this->DataBase->DoQuery("UPDATE `articles` SET `link` = ? WHERE `id` = ?", [ $link, $id ]);
 
-        return $this->articles[$id];
+        $this->DataBase->DoQuery("UPDATE `articles` SET `link` = ? WHERE `id` = ?", [ $link, $id ]);
+        return $this->Get($id);
     }
     
     public function ChangeData($id, $data) {

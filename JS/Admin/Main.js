@@ -1865,6 +1865,74 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 }
             })
         })();
+
+        (() => {
+            var addArticleForm = document.querySelector('.add-article-form')
+            if(!addArticleForm)return;
+
+            var submitBtn = addArticleForm.querySelector('input[type=submit]')
+
+            var createArticle = e => {
+                e.preventDefault()
+
+                var title    = addArticleForm.querySelector('.title').value
+                var linkType = addArticleForm.querySelector('.link-type-container').getAttribute('active')
+                var status   = addArticleForm.querySelector('.select-main-list.article-states').querySelector('.select-main-option[active=true]').getAttribute('value')
+                var category = addArticleForm.querySelector('.select-main-list.article-categories').querySelector('.select-main-option[active=true]').getAttribute('value')
+                var image    = '#'
+                var commentsEnabled = 1
+                var content  = addArticleForm.querySelector('.textarea').innerHTML
+                var authorId = Helpers.Data.GetData('profile').id
+
+                var createData = {
+                    title            : title,
+                    content          : content,
+                    image            : image,
+                    link_type        : linkType,
+                    category         : category,
+                    state            : status,
+                    comments_enabled : commentsEnabled,
+                    author_id        : authorId
+                }
+
+                Helpers.AJAX.Post(location.href, {
+                    controller : 'ArticlesAJAX',
+                    action     : 'CreateArticle',
+                    create_data : createData
+                }).success(data => {
+                    try {
+                        var obj = JSON.parse(data)
+
+                        if(obj.response === 'Success') {
+                            Helpers.CreateModal({
+                                title : 'Success!',
+                                content : 'Successfully created a new article!',
+                                success : true
+                            })
+
+                            setTimeout(() => {
+                                location.href = '/manage-articles'
+                            }, 2000)
+                        } else {
+                            Helpers.CreateModal({
+                                title : 'Error!',
+                                content : obj.reason,
+                                success : false
+                            })
+                        }
+                    } catch(e) {
+                        console.log(data)
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Unknwon error while creating article!',
+                            success : false
+                        })
+                    }
+                })
+            }
+
+            addArticleForm.addEventListener('submit', createArticle)
+        })();
     })
 }).catch(err => {
     /*

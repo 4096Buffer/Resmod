@@ -32,7 +32,11 @@ class ArticleObject extends \Code\Core\BaseController {
     }
     
     public function GetComments() {
-        $comments = $this->DataBase->Get("SELECT * FROM `comments` WHERE `article_id` = ?", [ $this->id ]);
+        $comments = $this->DataBase->Get("SELECT * FROM `articles_comments` WHERE `article_id` = ?", [ $this->id ]);
+
+        if(is_null($comments)) {
+            return [];
+        }
 
         foreach($comments as &$comment) {
             $author_id = $comment['author_id'];

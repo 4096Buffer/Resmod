@@ -51,7 +51,6 @@ class Libraries {
     }
 
     $directoryPath = $this->GetDirectoryPath($name);
-
     if (is_dir($directoryPath) && is_file($this->GetLibraryDirPath($name))) {
       $this->LoadDirectory($directoryPath);
     } else if (is_file($this->GetLibraryPath($name))) {
@@ -59,6 +58,7 @@ class Libraries {
     }
 
     $library_space = '\Code\Libraries\\' . $name;
+    
       
     if (class_exists($library_space)) {
       $this->libraries[$name] = new $library_space();

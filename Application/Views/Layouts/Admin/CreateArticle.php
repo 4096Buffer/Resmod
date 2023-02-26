@@ -81,10 +81,10 @@
                                     </div>
                                     <div class="select-main-arrow" style="width:1rem;height: 1rem;"></div>
                                     </div>
-                                    <div class="select-main-list article-states" style="padding:0;position:relative;">
-                                        <?php foreach($categories as $category) { ?>
-                                            <label class="select-main-option" style="margin: 1%; font-size: 1rem; display:flex; float:left;" active="true"><!--<input type="checkbox" class="custom-checkbox"/>--><div class="select-main-option-content"><?=$category['name']?></div></label>    
-                                        <?php } ?>
+                                    <div class="select-main-list article-categories" style="padding:0;position:relative;">
+                                        <?php $i = 0; foreach($categories as $category) { ?>
+                                            <label class="select-main-option" style="margin: 1%; font-size: 1rem; display:flex; float:left;" value="<?=$category['name']?>" active="<?=$i==0 ? 'true' : 'false'?>"><!--<input type="checkbox" class="custom-checkbox"/>--><div class="select-main-option-content"><?=$category['name']?></div></label>    
+                                        <?php $i++;} ?>
                                     </div>
                                 </div>
                             </div>

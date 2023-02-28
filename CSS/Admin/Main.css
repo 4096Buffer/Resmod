@@ -1680,3 +1680,13 @@ cmsmodule a {
 .add-article-form .submit-container input:hover {
   background-color:#8b8a8a;
 }
+
+.file-system.file-upload-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.file-system.file-upload-container .file-upload-button {
+
+}

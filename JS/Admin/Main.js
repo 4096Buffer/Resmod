@@ -1602,12 +1602,15 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
         })();
 
         (() => {
-            var linkTypeBtn       = document.querySelector('.link-type-open')
-            var linkTypeContainer = document.querySelector('.link-type-container') 
-            var radios            = linkTypeContainer.querySelectorAll('input[type=radio]')
-            var newLink           = document.querySelector('.link-settings').querySelector('.new-link')
             var addArticleForm    = document.querySelector('.add-article-form')
-            var articleTitle      = document.querySelector('.title')
+            if(!addArticleForm) return;
+            var linkTypeBtn       = addArticleForm.querySelector('.link-type-open')
+            var linkTypeContainer = addArticleForm.querySelector('.link-type-container') 
+            var radios            = linkTypeContainer.querySelectorAll('input[type=radio]')
+            var newLink           = addArticleForm.querySelector('.link-settings').querySelector('.new-link')
+            var articleTitle      = addArticleForm.querySelector('.title')
+            var linkSettings      = addArticleForm.querySelector('.link-settings')
+            var lastArticleId     = 1
 
             if(linkTypeBtn) {
                 linkTypeBtn.addEventListener('click', e => {
@@ -1617,16 +1620,32 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 })
             }
 
+
+            Helpers.AJAX.Post(location.href, {
+                controller : 'ArticlesAJAX',
+                action     : 'GetLastArticle'
+            }).success(data => {
+                try {
+                    var obj = JSON.parse(data)
+
+                    if(obj.response === 'Success') {
+                        lastArticleId = obj.data.id + 1
+                    }
+
+                
+                } catch(e) {console.log(data)}
+            })
+
             var makeLinkType = (title, type) => {
                 var link = ''
 
-                console.log(title)
+                
                 switch(type) {
                     case '1':
-                        link = '/article/1'
+                        link = `/article/${lastArticleId}`
                         break;
                     case '2':
-                        link = '/article?id=1'
+                        link = `/article?id=${lastArticleId}`
                         break;
                     case '3':
                         title = !title ? 'no-title' : title
@@ -1640,6 +1659,20 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
 
                 return link
             }
+
+            if(articleTitle) {
+                articleTitle.addEventListener('input', e => {
+                    if(e.target.value) {
+                        linkSettings.style.display = 'flex'
+
+                        if(linkTypeContainer.getAttribute('active') === '3') {
+                            newLink.innerHTML = `Link : ${makeLinkType(e.target.value, linkTypeContainer.getAttribute('active'))}`
+                        }
+                    } else {
+                        linkSettings.style.display = 'none'
+                    }
+                })
+            }            
 
             var setLinkType = e => {
                 var value = e.currentTarget.value
@@ -1895,6 +1928,18 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                     author_id        : authorId
                 }
 
+                for(var key in createData) {
+                    if(!createData[key]){
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : `Key '${key}' has to be specified`,
+                            success : false
+                        })
+
+                        return;
+                    }
+                }
+
                 Helpers.AJAX.Post(location.href, {
                     controller : 'ArticlesAJAX',
                     action     : 'CreateArticle',
@@ -1921,7 +1966,6 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                             })
                         }
                     } catch(e) {
-                        console.log(data)
                         Helpers.CreateModal({
                             title : 'Error!',
                             content : 'Unknwon error while creating article!',

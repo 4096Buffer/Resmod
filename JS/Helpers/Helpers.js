@@ -1,5 +1,11 @@
+String.prototype.replaceAt = function(index, replacement) {
+    return this.substring(0, index) + replacement + this.substring(index + replacement.length);
+}
+
 var Helpers = (() => {
     //Add here a small functions that don't need a whole file
+
+    
 
     (function(){
         window.WindowWidth = 0;
@@ -360,6 +366,15 @@ var Helpers = (() => {
         parent.style.paddingTop = `${padding}px`
     }
 
+    var latinAlphabet = [
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 
+        'h', 'i', 'j', 'k', 'l', 'm', 'n', 
+        'o', 'p', 'q', 'r', 's', 't', 'u', 
+        'w', 'x', 'y', 'z'
+    ]
+
+    
+
     return {
         CreateEventManager : function() {
             return new Event()
@@ -375,6 +390,9 @@ var Helpers = (() => {
         },
         ScaleElementToParent : function(el, parent) {
             return ScaleElementToParent(el, parent)
+        },
+        GetLatinAlphabet : function() {
+            return latinAlphabet
         }
 
         /*

@@ -8,7 +8,7 @@ class Files extends \Code\Core\BaseController {
 	public function __construct() {
 		parent::__construct();
 
-		$this->LoadLibrary(['DataBase', 'View', 'RequestHelper', 'Auth']);
+		$this->LoadLibrary(['DataBase', 'View', 'RequestHelper', 'Auth', 'FileSystem']);
 	}
     
     
@@ -38,26 +38,9 @@ class Files extends \Code\Core\BaseController {
         $name = $data['name'];
         $dir  = $data['dir'];
 
-        if(!array_key_exists($name, $_FILES)) {
-            $this->RequestHelper->SendJsonData(false, null, 'Invalid file name');
-            return;
-        }
+        $data_return = $this->FileSystem->UploadFile($name, $dir);
 
-        $file = $_FILES[$name];
-        
-        $file_name = $file['name'];
-        $file_tmp  = $file['tmp_name'];
-        $split_ext = explode('.', $file_name);
-        $file_ext  = end($split_ext);
-        $new_name  = md5(uniqid('', true)) . '.' . $file_ext;
-        $dest      = UPLPATH . '/' . $dir . '/' . $new_name ;
-
-        if(!move_uploaded_file($file_tmp, $dest)) {
-            $this->RequestHelper->SendJsonData(false, null, 'Error while moving uploaded file');
-            return;
-        }
-
-        $this->RequestHelper->SendJsonData(true, [ 'dest' => $dest ]);
+        $this->RequestHelper->SendJsonData($data_return['error'], $data_return['data'] ?? null, $data_return['reason'] ?? null);
     }
     
 }

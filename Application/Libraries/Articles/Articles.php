@@ -8,7 +8,7 @@ class Articles extends \Code\Core\BaseController {
 	public function __construct() {
 		parent::__construct();
 
-		$this->LoadLibrary(['DataBase', 'RequestHelper']);
+		$this->LoadLibrary(['DataBase', 'RequestHelper', 'FileSystem']);
         $this->LoadArticles();
 	}
 
@@ -70,6 +70,27 @@ class Articles extends \Code\Core\BaseController {
             return null;
         }
     }
+
+    private function ClearTitle($title) {
+        $alphabet = [
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 
+            'h', 'i', 'j', 'k', 'l', 'm', 'n', 
+            'o', 'p', 'q', 'r', 's', 't', 'u', 
+            'w', 'x', 'y', 'z'
+        ];
+
+        $new_title = strtolower($title);
+
+        for($i = 0; $i < strlen($new_title); $i++) {
+            $char = $new_title[$i];
+                        
+            if(array_key_exists($char, $alphabet) && is_numeric($char)) {
+                $new_title[$char] = '-';
+            }
+        }
+
+        return $new_title;
+    }
     
     private function CreateLink($id, $type) {
         $link = '';
@@ -83,7 +104,8 @@ class Articles extends \Code\Core\BaseController {
                 break;
             case '3':
                 $article = $this->Get($id);
-                $link = '/articles/' . \str_replace(' ', '-', $article->GetTitle()); //remove spaces and add dashes
+                $title = $this->ClearTitle($article->GetTitle());
+                $link = '/articles/' . $title;
                 break;
             default:
                 $link = '';
@@ -96,24 +118,39 @@ class Articles extends \Code\Core\BaseController {
     public function Create($data) {
         $title            = $data['title'];
         $content          = $data['content'];
-        $image            = $data['image'];
         $link_type        = $data['link_type'];
         $state            = $data['state'];
         $category         = $data['category'];
         $comments_enabled = $data['comments_enabled'];
         $author_id        = $data['author_id'];
+        
+        if(!array_key_exists('image', $_FILES)) {
+            return [ 'error' => true, 'reason' => 'Image(Thumbnail) not found!' ];
+        }
 
-        $insert = $this->DataBase->DoQuery("INSERT INTO `articles` VALUES (NULL, ?, ?, ?, ?, 1, ?, current_timestamp(), ?, ?, ?)", [ $title, $content, $image, '', $category, $comments_enabled, $state, $author_id]);
+        $upload = $this->FileSystem->UploadFile('image', 'Thumbnails');
+
+        if($upload['error']) {
+            $this->RequestHelper->SendJsonData(false, null, $upload['reason']);
+            return;
+        }
+
+        $insert = $this->DataBase->DoQuery("INSERT INTO `articles` VALUES (NULL, ?, ?, ?, ?, 1, ?, current_timestamp(), ?, ?, ?)", [ $title, $content, basename($upload['data']['dest']), '', $category, $comments_enabled, $state, $author_id]);
 
         if($this->DataBase->ErrorCode() !== 0) {
-            return false;
+            return [ 'error' => true, 'reason' => 'Unknown DB Error!' ];
         }
         
         $id   = $this->GetLastAdded()['id'];
         $link = $this->CreateLink($id, $link_type);
 
         $this->DataBase->DoQuery("UPDATE `articles` SET `link` = ? WHERE `id` = ?", [ $link, $id ]);
-        return $this->Get($id);
+        
+        if($this->DataBase->ErrorCode() !== 0) {
+            return [ 'error' => true, 'reason' => 'Unknown DB Error!' ];
+        }
+
+        return [ 'error' => false, 'data' => $this->Get($id)];
     }
     
     public function ChangeData($id, $data) {

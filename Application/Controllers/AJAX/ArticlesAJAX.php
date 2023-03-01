@@ -10,6 +10,8 @@ class ArticlesAJAX extends \Code\Core\BaseController { //Added AJAX to class nam
 		$this->LoadLibrary(['DataBase', 'View', 'RequestHelper', 'Auth', 'Articles']);
     }
     
+    
+
     public function CreateArticle() {
         if(!$this->Auth->IsAuth()) {
             $this->RequestHelper->SendJsonData(false, null, 'User is not authorized');
@@ -23,12 +25,11 @@ class ArticlesAJAX extends \Code\Core\BaseController { //Added AJAX to class nam
             return;
         }
 
-        $create_data = $data['create_data'] ?? null;
+        $create_data = json_decode($data['create_data'], true) ?? null;
         
         $used_data = [
             'title',
             'content',
-            'image',
             'link_type',
             'category',
             'state',
@@ -43,14 +44,14 @@ class ArticlesAJAX extends \Code\Core\BaseController { //Added AJAX to class nam
             }
         }
 
-        
+        $created = $this->Articles->Create($create_data);
 
-        if(!$created = $this->Articles->Create($create_data)) {
-            $this->RequestHelper->SendJsonData(false, null, 'Unknown DB error');
+        if($created['error']) {
+            $this->RequestHelper->SendJsonData(!$created['error'], null, $created['reason']);
             return;
         }
 
-        $this->RequestHelper->SendJsonData(true, $created);
+        $this->RequestHelper->SendJsonData(true, $created['data']);
     }
 
     public function GetArticleData() {

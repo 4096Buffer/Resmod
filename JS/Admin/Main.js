@@ -195,7 +195,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                         if(content.getAttribute('active') == 'false') {
                             content.style.display          = 'block'
                             setTimeout(() => {
-                                content.style.opacity          = '100%'
+                                content.style.opacity      = '100%'
                             }, 50)
                             e.target.style.background      = 'none'
                             e.target.style.backgroundColor = '#262626'

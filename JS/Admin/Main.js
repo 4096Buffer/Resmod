@@ -1522,11 +1522,8 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 var password = adminAddForm.querySelector('.add-admin-input.password').value
                 var email    = adminAddForm.querySelector('.add-admin-input.email').value
                 var avatar   = adminAddForm.querySelector('.add-admin-input.avatar').files[0]
-                
                 var formDataAvatar = new FormData()
-                
 
-                
                 formDataAvatar.append('controller', 'Files')
                 formDataAvatar.append('action', 'UploadFile')
                 formDataAvatar.append('name', 'avatar')
@@ -1639,8 +1636,30 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
 
             var makeLinkType = (title, type) => {
                 var link = ''
+                var alphabet = Helpers.GetLatinAlphabet()
 
-                
+                var clearTitle = function(title) {
+                    var newTitle = title
+
+                    if(!newTitle) {
+                        newTitle = 'no-title'
+                        return;
+                    }
+
+                    newTitle = newTitle.toLowerCase()
+
+                    for(var i = 0; i < newTitle.length; i++) {
+                        let char = newTitle.charAt(i)
+                        
+                        if(alphabet.indexOf(char.toLowerCase()) === -1 && !parseInt(char)) {
+                            
+                            newTitle = newTitle.replaceAt(i, '-')
+                        }
+                    }
+
+                    return newTitle
+                }
+
                 switch(type) {
                     case '1':
                         link = `/article/${lastArticleId}`
@@ -1649,8 +1668,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                         link = `/article?id=${lastArticleId}`
                         break;
                     case '3':
-                        title = !title ? 'no-title' : title
-                        title = title.replace(' ', '-')
+                        title = clearTitle(title)
                         link  = `/article/${title}`
                         break;
                     default:
@@ -1913,8 +1931,8 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 var linkType = addArticleForm.querySelector('.link-type-container').getAttribute('active')
                 var status   = addArticleForm.querySelector('.select-main-list.article-states').querySelector('.select-main-option[active=true]').getAttribute('value')
                 var category = addArticleForm.querySelector('.select-main-list.article-categories').querySelector('.select-main-option[active=true]').getAttribute('value')
-                var image    = '#'
                 var commentsEnabled = 1
+                var image    = addArticleForm.querySelector('#file-system-upload').files[0]
                 var content  = addArticleForm.querySelector('.textarea').innerHTML
                 var authorId = Helpers.Data.GetData('profile').id
 
@@ -1941,11 +1959,14 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                     }
                 }
 
-                Helpers.AJAX.Post(location.href, {
-                    controller : 'ArticlesAJAX',
-                    action     : 'CreateArticle',
-                    create_data : createData
-                }).success(data => {
+                var formData = new FormData()
+
+                formData.append('controller', 'ArticlesAJAX')
+                formData.append('action', 'CreateArticle')
+                formData.append('image', image)
+                formData.append('create_data', JSON.stringify(createData))
+
+                Helpers.AJAX.Post(location.href, formData).success(data => {
                     try {
                         var obj = JSON.parse(data)
 
@@ -1967,6 +1988,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                             })
                         }
                     } catch(e) {
+                        console.log(data)
                         Helpers.CreateModal({
                             title : 'Error!',
                             content : 'Unknwon error while creating article!',
@@ -2032,8 +2054,6 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                         var calculateX = (parseFloat(currentImage.width) * 0.0625)
                         var calculateY = (parseFloat(currentImage.height) * 0.0625)
 
-                        console.log(calculateX)
-                        console.log(calculateY)
                         image.style.width = calculateX.toString() + 'rem'
                         image.style.height = calculateY.toString() + 'rem'
                         //Helpers.ScaleElementToParent(image, imagePreview)

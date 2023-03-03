@@ -1722,7 +1722,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                     var findTitle = newLink.innerText.replace(expression, '')
                     var makeLink = makeLinkType(findTitle, '3')
                     
-                    newLink.innerText = makeLink
+                    newLink.innerText = makeLink //set
                 }
             })
 

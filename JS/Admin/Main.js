@@ -1602,10 +1602,11 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
         (() => {
             var addArticleForm    = document.querySelector('.add-article-form')
             if(!addArticleForm) return;
+            var scopeGlobal = document.GlobalScope.GetVariable('create-article-scope')
             var linkTypeBtn       = addArticleForm.querySelector('.link-type-open')
             var linkTypeContainer = addArticleForm.querySelector('.link-type-container') 
             var radios            = linkTypeContainer.querySelectorAll('input[type=radio]')
-            var newLink           = addArticleForm.querySelector('.link-settings').querySelector('.new-link')
+            var newLink           = addArticleForm.querySelector('.link-settings').querySelector('.new-link').querySelector('.article-link')
             var articleTitle      = addArticleForm.querySelector('.title')
             var linkSettings      = addArticleForm.querySelector('.link-settings')
             var lastArticleId     = 1
@@ -1652,7 +1653,6 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                         let char = newTitle.charAt(i)
                         
                         if(alphabet.indexOf(char.toLowerCase()) === -1 && !parseInt(char)) {
-                            
                             newTitle = newTitle.replaceAt(i, '-')
                         }
                     }
@@ -1679,13 +1679,17 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 return link
             }
 
+            newLink.makeLinkType = makeLinkType
+
             if(articleTitle) {
                 articleTitle.addEventListener('input', e => {
                     if(e.target.value) {
                         linkSettings.style.display = 'flex'
 
                         if(linkTypeContainer.getAttribute('active') === '3') {
-                            newLink.innerHTML = `Link : ${makeLinkType(e.target.value, linkTypeContainer.getAttribute('active'))}`
+                            var link = newLink.makeLinkType(e.target.value, linkTypeContainer.getAttribute('active'))
+                            scope.SetVariable('article__titlelink', link)
+                            newLink.innerHTML = `${link}`
                         }
                     } else {
                         linkSettings.style.display = 'none'
@@ -1695,13 +1699,32 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
 
             var setLinkType = e => {
                 var value = e.currentTarget.value
-                linkTypeContainer.setAttribute('active', value)
-                newLink.innerHTML = `Link: ${makeLinkType(articleTitle.value, value)}`
 
+                newLink.contentEditable = false
+                linkTypeContainer.setAttribute('active', value)
+
+                var link = newLink.makeLinkType(value, linkTypeContainer.getAttribute('active'))
+                
+                if(value === '3') {
+                    newLink.contentEditable = true
+                    scope.SetVariable('article__titlelink', link)
+                }
+
+                newLink.innerHTML = `${link}`
                 setTimeout(() => {
                     linkTypeContainer.classList.remove('open-flex')
                 }, 50)
             }
+
+            window.addEventListener('click', e => {
+                if(e.target !== newLink && linkTypeContainer.getAttribute('active') === '3') {
+                    var expression = new RegExp('/article/', 'i')
+                    var findTitle = newLink.innerText.replace(expression, '')
+                    var makeLink = makeLinkType(findTitle, '3')
+                    
+                    newLink.innerText = makeLink
+                }
+            })
 
             if(radios) {
                 for(var i = 0; i < radios.length; i++) {
@@ -1938,6 +1961,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
 
                 var createData = {
                     title            : title,
+                    link             : link,
                     content          : content,
                     image            : image,
                     link_type        : linkType,
@@ -2041,7 +2065,7 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
 
                     currentLabel.innerText = file.name.length > 10 ? ((file.name.substr(0, 6)).indexOf(ext) == -1 ? file.name.substr(0, 6) + '...' + ext : file.name.substr(0, 6)) : file.name
 
-                    var scope = document.GlobalScope.GetVariable('create-article-scope')
+                    
 
                     imageView.addEventListener('click', e => {
                         if(!currentImage)return;

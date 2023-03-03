@@ -63,7 +63,16 @@ class Users extends \Code\Core\BaseController {
         $id_user = $data['id_user'] ?? null;
         $data    = $data['data'] ?? null;
 
+        $used_data = [
+            'name', 'surname', 'email', 'login', 'bio'
+        ];
+
         foreach($data as $key => $value) {
+            if(!array_key_exists($key, $used_data)) {
+                $this->RequestHelper->SendJsonData(false, null, 'Invalid data');
+                return;
+            }
+
             $update = $this->DataBase->DoQuery("UPDATE users SET " . $key . "= ? WHERE id = ?", [ $value, $id_user ]);
         }
 

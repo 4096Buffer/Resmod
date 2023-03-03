@@ -1,0 +1,9 @@
+{
+    "settings" : [
+        {
+            "label" : "Wait time",
+            "type"  : "Number",
+            "value" : 3000
+        }
+    ]
+}

@@ -1561,9 +1561,15 @@ cmsmodule a {
   box-shadow: 0px 1px 14px 1px #959090;
 }
 
+
+
 .link-settings .link {
   margin-left: 1rem;
   max-width: 8.9rem;
+}
+
+.link-settings .new-link {
+  display: flex;
 }
 
 .link-type-container {

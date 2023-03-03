@@ -14,16 +14,6 @@ Helpers.Scope = (() => {
     }
 
     ScopeObject.prototype.SetVariable = function(name, value) {
-
-        //for(var i = 0; i < this.variables.length; i++) {
-        //    if(this.variables[i] == object) {
-        //        if(this.variables[i].static) {
-        //            console.error('Cannot edit static variable \'' + this.variables[i].name + '\' ')
-        //            return;
-        //        }
-        //    }
-        //}
-
         this.variables[name] = value
     }
 

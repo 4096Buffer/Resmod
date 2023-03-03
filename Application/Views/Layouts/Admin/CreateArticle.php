@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <div class="link-settings" style="display: none">
-                            <label class="new-link">Link:</label>
+                            <label class="new-link">Link: <div class="article-link" style="cursor:text"></div></label>
                             <div class="link">/</div>
                             <label style="margin-left:3%">Link type:</label>
                             <span class="link-type-current"></span>

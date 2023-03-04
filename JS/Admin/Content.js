@@ -262,6 +262,15 @@ var Content = (function() {
         createCMSModules()
     }
 
+    var rebuildEvents = function() {
+        for(let i = 0; i < modules.length; i++) {
+            deleteButton = modules[i].GetDOM().querySelector('.module-live-edit-icon.delete')
+
+            deleteButton.addEventListener('click', e => {
+                deleteModule(modules[i].GetDOM())
+            })
+        }
+    }
 
     var rebuildContent = function(callback = function() {}) {
         var pageId = Helpers.Data.GetData('page').id
@@ -276,6 +285,7 @@ var Content = (function() {
 
             addVariablesTypes()
             rebuildModules()
+            rebuildEvents()
         })
     }
 
@@ -306,7 +316,6 @@ var Content = (function() {
     }
 
     var deleteModule = function(dom) {
-        console.log(dom)
         var moduleId = dom.getAttribute('module-id')
 
         Helpers.AJAX.Post(location.href, {
@@ -358,6 +367,8 @@ var Content = (function() {
             }
         }
     }
+
+   
 
     event.AddEvent('LoadUp', e => {
         rebuildContent()

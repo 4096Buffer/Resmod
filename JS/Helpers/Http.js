@@ -1,6 +1,6 @@
 Helpers.AJAX = (() => {
   return {
-    Post: (url, data = null) => {
+    Post: (url, data = null, headers = {}) => {
       var xhr = new XMLHttpRequest();
       var success = undefined;
       var error   = undefined;
@@ -31,7 +31,7 @@ Helpers.AJAX = (() => {
         }
       }
       
-      loadScreen.style.display = 'flex'
+      //loadScreen.style.display = 'flex'
       
       xhr.open("POST", url, true);
 
@@ -54,6 +54,10 @@ Helpers.AJAX = (() => {
       //xhr.setRequestHeader("Content-type","multipart/form-data; charset=utf-8; boundary=" + Math.random().toString().substr(2));
       if(contentType) {
         xhr.setRequestHeader('Content-type', contentType)
+      }
+
+      for(var key in headers) {
+        xhr.setRequestHeader(key, headers[key])
       }
       
       xhr.send(data)

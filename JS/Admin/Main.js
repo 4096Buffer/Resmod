@@ -311,6 +311,11 @@ Helpers.DOMHelper.waitForAllElm().then(() => {
                 var title = e.currentTarget.querySelector('.label-template').innerText
                 var dataListTemplate = templatesListData.querySelector('#data-list-template')
                 
+                for(var i = 0; i < templatesBoxes.length; i++) {
+                    templatesBoxes[i].style.backgroundColor = 'white'
+                    templatesBoxes[i].style.color = '#000'
+                }
+
                 e.currentTarget.style.backgroundColor = '#424242'
                 e.currentTarget.style.color = '#fff'
 

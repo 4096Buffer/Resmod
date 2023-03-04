@@ -45,8 +45,12 @@ class AppendFiles extends \Code\Core\BaseController {
 		$vscripts = $this->DataBase->Get("SELECT * FROM view_scripts");
 
 		foreach($vscripts as $vscript) {
-			$html = '<script type="text/javascript" src="' . JSPATH . '/ViewScripts/' . $vscript['path'] . '"></script>';
-			$vscript['html'] = $html;
+			$html_js  = '<script type="text/javascript" src="' . JSPATH . '/ViewScripts/' . $vscript['script_path'] . '"></script>';
+			$html_css = '<link rel="stylesheet" href="' . CSSPATH . '/ViewStyles/' . $vscript['style_path'] . '" />';
+			
+			$vscript['html_js'] = $html_js;
+			$vscript['html_css'] = $html_css;
+			
 			$this->view_scripts[] = $vscript;
 		}
 	}
@@ -83,10 +87,32 @@ class AppendFiles extends \Code\Core\BaseController {
             foreach($admins as $admin) {
                 echo $admin['html'];
             }
+
+			foreach($this->view_scripts as $vscript) {
+				if($vscript['admin'] == 0) continue;
+				if($vscript['enabled'] == 1) {
+					echo $vscript['html_css'];
+				}
+			}
+
+			foreach($this->view_scripts as $vscript) {
+				if($vscript['admin'] == 0) continue;
+				if($vscript['enabled'] == 1) {
+					echo $vscript['html_js'];
+				}
+			}
         } else {
 			foreach($this->view_scripts as $vscript) {
+				if($vscript['admin'] == 1) continue;
 				if($vscript['enabled'] == 1) {
-					echo $vscript['html'];
+					echo $vscript['html_css'];
+				}
+			}
+
+			foreach($this->view_scripts as $vscript) {
+				if($vscript['admin'] == 1) continue;
+				if($vscript['enabled'] == 1) {
+					echo $vscript['html_js'];
 				}
 			}
 		}

@@ -212,5 +212,5 @@ this.globalEvent.AddEvent('LoadUp', e => {
     }
     var chatGpt = new ChatGPT()
 
-    chatGpt.apiKey = 'YOUR API KEY'
+    chatGpt.apiKey = 'YOUR_API_KEY' //will ask in future
 })

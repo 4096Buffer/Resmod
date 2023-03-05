@@ -75,7 +75,7 @@ ChatGPT.prototype.Response = function(response, end = true, regenerate = false) 
     var responseBtn = input.querySelector('.response-controll')
     var newResponse = null
 
-    if(!regenerate && !this.lastResponse) {
+    if(!regenerate && (!this.lastResponse || !this.lastResponse.classList.contains('loading'))) {
         newResponse = document.createElement('div')
         newResponse.classList.add('message-block', 'bot')
     } else {
@@ -212,5 +212,5 @@ this.globalEvent.AddEvent('LoadUp', e => {
     }
     var chatGpt = new ChatGPT()
 
-    chatGpt.apiKey = 'YOUR_API_KEY' //will ask in future
+    chatGpt.apiKey = 'API_KEY'
 })

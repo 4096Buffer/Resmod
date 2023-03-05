@@ -29,6 +29,7 @@ class ViewController extends \Code\Core\BaseController {
     
 	public function Run() {
         $current_page = $this->Route->GetCurrentPage();
+        $pathname     = $this->RequestHelper->GetPathname();
 
         if($this->Auth->IsAuth() && $this->RequestHelper->GetViewMode()[0] == 'Standard') {
             if($current_page['hidden'] == 0) {
@@ -37,7 +38,7 @@ class ViewController extends \Code\Core\BaseController {
         }
 
         if($this->RequestHelper->GetViewMode()[0] == 'LiveEdit' && !$this->Auth->IsAuth()) {
-            $this->RequestHelper->Redirect($_SERVER['QUERY_STRING']);
+            $this->RequestHelper->Redirect($pathname);
         }
 
         if($this->RequestHelper->GetViewMode()[0] == 'LiveEdit') {
@@ -47,6 +48,7 @@ class ViewController extends \Code\Core\BaseController {
 
             call_user_func(array($class, 'LiveEdit'));
         }
+
 
         if(!isset($current_page['layout'])) {
             $this->RequestHelper->Redirect($this->Auth->IsAuth() ? '/pages-templates' : '/no-template-set');
@@ -63,7 +65,7 @@ class ViewController extends \Code\Core\BaseController {
 
         $layout      = $current_page['layout'];
         $layout_path = $this->GetLayoutPath($layout['view']);
-        $vars_c = new \Code\Libraries\Variables($current_page['id']);
+        $vars_c =   new \Code\Libraries\Variables($current_page['id']);
         $module_c = new \Code\Libraries\Module($current_page['id']);
                 
         $this->View->AddData('vars', $vars_c);

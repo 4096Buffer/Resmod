@@ -263,6 +263,9 @@ var Content = (function() {
     }
 
     var rebuildEvents = function() {
+        var addModuleBar = document.querySelector('.add-module-bar')
+        var moduleAddBox = document.querySelector('.module-add-box')
+
         for(let i = 0; i < modules.length; i++) {
             deleteButton = modules[i].GetDOM().querySelector('.module-live-edit-icon.delete')
 
@@ -270,6 +273,125 @@ var Content = (function() {
                 deleteModule(modules[i].GetDOM())
             })
         }
+
+        if(addModuleBar) {
+            addModuleBar.addEventListener('click', e => {
+                moduleAddBox.style.display = 'block'
+            })
+        }
+
+        var buttonSave = document.querySelector('.button-fixed.save')
+
+        var saveContent = e => {
+            var sendData = Content.GetSendJSON()
+
+            Helpers.AJAX.Post(location.href, {
+                controller : 'Modules',
+                action     : 'SaveCMS',
+                saveData   : sendData
+            }).success(data => {
+                try {
+                    var obj = JSON.parse(data)
+
+                    if(obj.response == 'Success') {
+                        Helpers.CreateModal({
+                            title : 'Success!',
+                            content : 'Successfully saved content',
+                            success : true
+                        })
+                    } else {
+                        Helpers.CreateModal({
+                            title : 'Error!',
+                            content : 'Error while saving content',
+                            success : false
+                        })
+                    }
+                } catch(e) {
+                    Helpers.CreateModal({
+                        title : 'Error!',
+                        content : 'Error while saving content',
+                        success : false
+                    })
+                }
+            })
+        }
+
+        buttonSave.addEventListener('click', saveContent)
+
+        var selectMainContainer = document.getElementsByClassName('select-main-container module-groups2')[0]
+        var selectMain = selectMainContainer.querySelector('.select-main')
+        var selectList      = selectMainContainer.querySelector('.select-main-list')
+        var select = e => {
+            var classList = selectList.classList
+
+            if(classList.contains('open-flex')) {
+                selectMain.style.setProperty('--arrow-rotation', 'rotate(180deg)')
+                selectList.style.opacity = '0%'
+                setTimeout(() => {
+                    classList.remove('open-flex')
+                }, 100)
+                        
+                } else {
+                    selectMain.style.setProperty('--arrow-rotation', 'rotate(0deg)')
+                    classList.add('open-flex')
+                    setTimeout(() => {
+                        selectList.style.opacity = '100%'
+                    }, 100)
+                }
+            }
+
+            selectMain.addEventListener('click', select)
+            var selectOptions = selectList.getElementsByClassName('select-main-option')
+
+            var showList = group => {
+                var modules = Helpers.Data.GetData('modules-list')
+                var container = document.querySelector('.modules-list-container')
+                var currentModules = []
+
+                container.innerHTML = ''
+                    
+                for(var i = 0; i < modules.length; i++) {
+                    if(modules[i].group == group) {
+                        currentModules.push(modules[i])
+                    }
+                }
+                if(currentModules.length > 0) {
+                    var search_enabled = currentModules.length > 12 ? true : false
+                    if(search_enabled) {
+                        currentModules.splice(12, currentModules.length)
+                    }
+
+                    var v = ''
+                    v += '<div class="modules-list">'
+                        for(var i = 0; i < currentModules.length; i++) {
+                            v += '  <div class="modules-list-item" module-id="' + currentModules[i].id + '">'
+                                v += currentModules[i].title
+                            v += '  </div>'
+                        }
+                    v += '</div>'
+                        
+                    container.innerHTML = v
+                    document.GlobalScope.CallFunction('content-module-upload')
+                }
+            }
+
+            var selectItem = e => {
+                for(var i = 0; i < selectOptions.length; i++) {
+                    if(selectOptions[i] != e.currentTarget) {
+                        selectOptions[i].setAttribute('active', 'false')
+                    }
+                }
+
+                selectMain.querySelector('.select-main-title').innerText = e.currentTarget.querySelector('.select-main-option-content').innerText
+                e.currentTarget.setAttribute('active', 'true')
+                showList(e.currentTarget.querySelector('.select-main-option-content').innerText)
+                    
+            }
+
+            for(var i = 0; i < selectOptions.length; i++) {
+                 selectOptions[i].addEventListener('click', selectItem)
+            }
+    
     }
 
     var rebuildContent = function(callback = function() {}) {
@@ -327,11 +449,8 @@ var Content = (function() {
                 var obj = JSON.parse(data)
 
                 if(obj.response == 'Success') {
-                    dom.style.opacity = '0%'
-                    dom.addEventListener('transitionend', () => {
-                        removeModule(moduleId)
-                        dom.remove()
-                    })
+                    removeModule(moduleId)
+                    dom.remove()
 
                     Helpers.CreateModal({
                         title : 'Success!',

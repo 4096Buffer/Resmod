@@ -91,6 +91,7 @@ class AppendFiles extends \Code\Core\BaseController {
 			foreach($this->view_scripts as $vscript) {
 				if($vscript['admin'] == 0) continue;
 				if($vscript['enabled'] == 1) {
+					if(!file_exists(CSSPATH . '/ViewStyles/' . $vscript['style_path'])) return; //CSS file for vscripts are optional
 					echo $vscript['html_css'];
 				}
 			}

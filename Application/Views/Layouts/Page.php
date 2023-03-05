@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<?php 
 		include VIEWPATH . '/'. 'Partials' . '/' . 'Head.php'

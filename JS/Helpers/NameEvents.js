@@ -16,6 +16,7 @@ Helpers.NameEvents = (() => {
      */
 
     NEventObject.prototype.AddEvent = function(eventName, dom, id, callback) {
+        console.log('here')
         var event = {
             eventName : eventName,
             id        : id,
@@ -30,7 +31,9 @@ Helpers.NameEvents = (() => {
 
         this.events[id] = event
 
-        dom.addEventListener(eventName, callback)
+        dom.addEventListener(eventName, callback, true)
+
+        
         return event
     }
 
@@ -43,19 +46,16 @@ Helpers.NameEvents = (() => {
     }
 
     NEventObject.prototype.RemoveEvent = function(id) {
-        
         if(!this.GetEvent(id)) {
             return false;
         }
-
 
         var getEvent = this.GetEvent(id)
 
         getEvent.dom.removeEventListener(getEvent.eventName, getEvent.callback, true)
 
         delete this.events[id]
-        
-        console.log(this.events)
+
         return true
     }
 

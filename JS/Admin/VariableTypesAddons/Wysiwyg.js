@@ -255,7 +255,7 @@
                     }
                 }, 16)
             })
-            
+
             nEventScope.AddEvent('mouseup',     document,        'mouseupWindow',  this.checkHideToolbar)
             nEventScope.AddEvent('selectstart', variableDOM,     'selectVariable', this.checkHideToolbar)
             nEventScope.AddEvent('paste',       variableDOM,     'pasteVariable',  clearPaste)
@@ -402,7 +402,7 @@
             nEventScope.RemoveEvent('mouseupWindow')
             nEventScope.RemoveEvent('selectVariable')
 
-            document.querySelector('html').removeChild(this.objectDOM)
+            this.objectDOM.remove()
             
             this.variable       = null
             this.objectDOM      = null

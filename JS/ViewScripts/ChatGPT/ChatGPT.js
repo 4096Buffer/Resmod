@@ -138,6 +138,4 @@ this.globalEvent.AddEvent('LoadUp', e => {
     var chatGpt = new ChatGPT()
 
     chatGpt.apiKey = 'YOUR_API_KEY' //will ask in future
-
-    //setTimeout(() => {chatGpt.SendMessage('znam twoj adres ip o to on: 127.0.0.1')}, 50)
 })
